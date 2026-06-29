@@ -61,6 +61,7 @@ Per-repo: symlink or copy a skill subfolder into `.claude/skills/<name>/`
 | Skill | Trigger | Description |
 |---|---|---|
 | `skill-publish` | publish skill, sync skill to shared-skills, after writing new SKILL.md | Sync a new skill to shared-skills, update SKILLS.md, create Notion sub-page, and push |
+| `hello-world` | test skill, hello skill, say hello | Minimal test skill — greets the user and confirms the skill system is working |
 
 ---
 
