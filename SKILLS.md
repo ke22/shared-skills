@@ -56,6 +56,12 @@ Per-repo: symlink or copy a skill subfolder into `.claude/skills/<name>/`
 | `project-bootstrap` | new project, before repo or Notion page exists | Bootstrap a new project from rough notes into scaffold files |
 | `fe-polish` | front-end final polish, before publish, WCAG | Seven-phase front-end polish — adaptive experience, WCAG, SEO, browser compat |
 
+## Workspace
+
+| Skill | Trigger | Description |
+|---|---|---|
+| `skill-publish` | publish skill, sync skill to shared-skills, after writing new SKILL.md | Sync a new skill to shared-skills, update SKILLS.md, create Notion sub-page, and push |
+
 ---
 
 ## Broken symlinks (need repair)
