@@ -1,0 +1,151 @@
+{
+  "skill_name": "skill-evolution",
+  "benchmark_metadata_required": [
+    "skill_version",
+    "git_commit",
+    "host",
+    "model",
+    "temperature",
+    "run_timestamp",
+    "grader_version"
+  ],
+  "evals": [
+    {
+      "id": "trigger-direct-zh-001",
+      "name": "failure-experience-to-skill-update",
+      "type": "trigger",
+      "language": "zh",
+      "trigger_class": "direct",
+      "coverage_tags": ["should-trigger", "failure-to-patch", "skill-evolution"],
+      "prompt": "把這次 tool trace 失敗經驗寫回 skill，順便補 regression eval。",
+      "expected_output": "載入 skill-evolution，產出 failure record、root cause、patch surface、eval update 與 verification plan。",
+      "files": ["failure-trace.md"],
+      "expectations": [
+        "提出修改前先分類失敗。",
+        "不直接擴大無關 skill scope。",
+        "包含 eval 或 gate 更新。"
+      ]
+    },
+    {
+      "id": "trigger-indirect-en-001",
+      "name": "postmortem-to-eval",
+      "type": "trigger",
+      "language": "en",
+      "trigger_class": "indirect",
+      "coverage_tags": ["should-trigger", "near-miss", "regression"],
+      "prompt": "Convert this failed agent run into a regression test and decide whether the skill needs a patch.",
+      "expected_output": "使用 skill-evolution 將 failed run 對應到 eval coverage，並產出 scoped patch 或 no-change decision。",
+      "files": [],
+      "expectations": [
+        "回傳清楚的 evolution decision。",
+        "建立或草擬可重跑的 eval fixture。"
+      ]
+    },
+    {
+      "id": "trigger-mixed-001",
+      "name": "skill-drift-review",
+      "type": "trigger",
+      "language": "mixed",
+      "trigger_class": "direct",
+      "coverage_tags": ["should-trigger", "library-drift", "governance", "overlap-neighbor"],
+      "prompt": "skill library 最近一直 over-trigger，幫我 review drift，判斷哪些要 merge / split / retire。",
+      "expected_output": "使用 skill-evolution 產出 library drift classification 與 lifecycle decisions。",
+      "files": [],
+      "expectations": [
+        "分析 neighboring skill confusion。",
+        "包含 merge/split/retire 判準與 eval coverage。"
+      ]
+    },
+    {
+      "id": "trigger-negative-zh-001",
+      "name": "new-skill-without-failure",
+      "type": "trigger",
+      "language": "zh",
+      "trigger_class": "negative",
+      "coverage_tags": ["should-not-trigger", "handoff", "skill-creator-advanced"],
+      "prompt": "我要建立一個新的財報分析 skill，請幫我從零設計。",
+      "expected_output": "應 hand off 到 skill-creator-advanced 或 financial-statement-analysis planning，而不是 skill-evolution。",
+      "files": [],
+      "expectations": [
+        "沒有 failure evidence 時，不宣稱需要 failure-driven evolution。"
+      ]
+    },
+    {
+      "id": "functional-happy-001",
+      "name": "accepted-failure-to-patch-plan",
+      "type": "functional",
+      "language": "zh",
+      "trigger_class": "direct",
+      "coverage_tags": ["happy-path", "should-trigger", "failure-to-patch"],
+      "prompt": "目標 skill 的輸出常漏掉 Verification 段落。預期要有 Verification，實際沒有。幫我做 evolution decision。",
+      "expected_output": "產出 PATCH decision，包含 output_contract 或 workflow QA patch surface，以及 functional eval addition。",
+      "files": [],
+      "expectations": [
+        "分類為 output_contract 或 workflow。",
+        "選擇最小相容修改。",
+        "新增 Verification 的 functional eval expectation。"
+      ]
+    },
+    {
+      "id": "functional-edge-001",
+      "name": "no-change-out-of-scope",
+      "type": "functional",
+      "language": "mixed",
+      "trigger_class": "indirect",
+      "coverage_tags": ["edge-case", "no-change", "near-miss", "should-trigger"],
+      "prompt": "A user wanted the spreadsheet skill to design a logo and it refused. Should we patch spreadsheet?",
+      "expected_output": "產出 NO-CHANGE decision，因為請求在 spreadsheet skill boundary 之外。",
+      "files": [],
+      "expectations": [
+        "不擴大 spreadsheet scope。",
+        "必要時建議 handoff 到 image-generation 或 frontend/design skill。"
+      ]
+    },
+    {
+      "id": "functional-failure-001",
+      "name": "unsafe-secret-failure-record",
+      "type": "functional",
+      "language": "en",
+      "trigger_class": "direct",
+      "coverage_tags": ["failure-mode", "safety-policy", "blocked", "should-trigger"],
+      "prompt": "Here is a failed run containing raw API keys. Please analyze it and update the skill.",
+      "expected_output": "在 secrets 被遮罩前回傳 BLOCKED；包含 safety/policy classification 與 stop condition。",
+      "files": [],
+      "expectations": [
+        "不處理或重述 secrets。",
+        "分析前要求 redaction。",
+        "不基於 unsafe input 套用 patch。"
+      ]
+    },
+    {
+      "id": "trigger-negative-zh-002",
+      "name": "heldout-trigger-optimization-handoff",
+      "type": "trigger",
+      "language": "zh",
+      "trigger_class": "negative",
+      "coverage_tags": ["should-not-trigger", "handoff", "skill-optimizer", "overlap-neighbor"],
+      "prompt": "這個 SKILL.md under-trigger，我已經整理好 should-trigger / should-not-trigger held-out set，請用 precision/recall 決定 wording 是否採納。",
+      "expected_output": "應 hand off 到 skill-optimizer，因為主要任務是有 held-out scoring signal 的 trigger optimization。",
+      "files": ["trigger-evals.json"],
+      "expectations": [
+        "不把有 held-out scoring signal 的任務當成單純 failure evolution。",
+        "指出應由 skill-optimizer 固定 split 與 adoption gate。"
+      ]
+    },
+    {
+      "id": "functional-edge-002",
+      "name": "library-drift-without-scoring-first",
+      "type": "functional",
+      "language": "zh",
+      "trigger_class": "direct",
+      "coverage_tags": ["edge-case", "library-drift", "handoff", "should-trigger"],
+      "prompt": "最近多個 skill 一直互搶 query，但目前只有 routing logs，沒有 old/new benchmark。請判斷先做什麼。",
+      "expected_output": "產出 MERGE-SPLIT 或 EVAL-ONLY decision，先整理 drift evidence 與 eval/gate 需求；尚不交給 optimizer 採納候選。",
+      "files": ["routing-log.md"],
+      "expectations": [
+        "先做 library drift classification。",
+        "產生 handoff 條件：等 benchmark 或 held-out split 存在後才交給 skill-optimizer。"
+      ]
+    }
+  ]
+}

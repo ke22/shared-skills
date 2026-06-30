@@ -1,0 +1,59 @@
+name: skill-evolution
+status: draft
+owner: Allan Yiin
+archetype: ops
+primary_structure_pattern: pipeline
+lifecycle:
+  created_at: 2026-05-25
+  last_validated_at: 2026-06-18
+  last_released_at: null
+  review_interval_days: 60
+  next_review_due: 2026-07-24
+support:
+  primary_hosts:
+    - agent-skills
+    - codex
+    - openclaw
+  secondary_hosts:
+    - claude-code
+    - openai-agents-sdk
+    - mcp-backed-runtime
+  unsupported_hosts:
+    - stateless-chat-only
+risk:
+  external_side_effects: false
+  requires_secrets: false
+  data_sensitivity: medium
+dependencies:
+  scripts:
+    - scripts/normalize_failure_case.py
+  references:
+    - references/readiness_report.md
+    - references/failure-taxonomy.md
+    - references/evolution-playbook.md
+    - references/telemetry-playbook.md
+    - references/fusion-playbook.md
+    - references/retirement-playbook.md
+    - references/migration-template.md
+    - references/migration-governance.md
+    - references/source-map.md
+stewardship:
+  reviewers:
+    - platform
+  stale_after_days: 120
+  escalation:
+    stale: needs-maintenance
+    no_owner: orphaned
+portfolio:
+  overlaps_with:
+    - skill-creator-advanced
+    - skill-optimizer
+    - problem-decomposer
+    - longdoc-evidence-reader
+  hands_off_to:
+    - skill-creator-advanced
+    - skill-optimizer
+  depends_on: []
+  supersedes: []
+  deprecated_by: null
+  shares_tool_contract_with: []

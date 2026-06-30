@@ -1,0 +1,13 @@
+{
+  "must_include_sections": [
+    "結論",
+    "Failure record",
+    "Root cause",
+    "Evolution decision",
+    "Eval and gate updates",
+    "Verification",
+    "Residual risk"
+  ],
+  "must_not_include_placeholder_markers": true,
+  "minimum_use_cases": 2
+}
