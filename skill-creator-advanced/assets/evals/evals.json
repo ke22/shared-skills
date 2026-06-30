@@ -1,0 +1,225 @@
+{
+  "skill_name": "skill-creator-advanced",
+  "benchmark_metadata_required": [
+    "skill_version",
+    "git_commit",
+    "host",
+    "model",
+    "temperature",
+    "run_timestamp",
+    "grader_version"
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "name": "new-skill-draft",
+      "type": "functional",
+      "language": "zh",
+      "coverage_tags": [
+        "should-trigger",
+        "happy-path"
+      ],
+      "prompt": "請幫我建立一個處理 PDF 旋轉的 skill，先整理 2-3 個 use cases，再給我初版 SKILL.md 與 scripts/references/assets 規劃。",
+      "expected_output": "回覆包含 2-3 個 use cases、初版 skill 結構，以及可重用資源規劃。",
+      "files": [],
+      "expectations": [
+        "回覆定義至少 2 個具體 use cases。",
+        "回覆說明 description 應如何觸發。",
+        "回覆至少提出一個 deterministic script 或驗證步驟。"
+      ],
+      "trigger_class": "direct"
+    },
+    {
+      "id": 2,
+      "name": "trigger-debug",
+      "type": "trigger",
+      "language": "zh",
+      "coverage_tags": [
+        "should-trigger",
+        "edge-case"
+      ],
+      "prompt": "我的 skill 常常不會觸發，有時又亂觸發。請幫我診斷 under-trigger / over-trigger 的原因，並提出修改 description 的方向。",
+      "expected_output": "回覆區分 under-trigger 與 over-trigger 訊號，並提出具體 description 修法。",
+      "files": [],
+      "expectations": [
+        "回覆區分 under-trigger 與 over-trigger。",
+        "回覆包含 description 的具體調整方向。",
+        "回覆有提到真實 trigger phrases 或 should-trigger / should-not-trigger 測試。"
+      ],
+      "trigger_class": "direct"
+    },
+    {
+      "id": 3,
+      "name": "eval-benchmark-setup",
+      "type": "functional",
+      "language": "mixed",
+      "coverage_tags": [
+        "should-trigger",
+        "happy-path"
+      ],
+      "prompt": "請替這個 skill 規劃 evals、baseline 比較方式、workspace 結構，以及 review viewer 的使用流程。",
+      "expected_output": "回覆包含 assets/evals/evals.json、with-skill vs baseline、workspace/iteration 結構與 review 流程。",
+      "files": [],
+      "expectations": [
+        "回覆提到 assets/evals/evals.json。",
+        "回覆提到 with-skill 與 baseline 或 old_skill 比較。",
+        "回覆提到 workspace、benchmark 或 review viewer。"
+      ],
+      "trigger_class": "direct"
+    },
+    {
+      "id": 4,
+      "name": "positioning-and-name-audit",
+      "type": "functional",
+      "language": "zh",
+      "coverage_tags": [
+        "should-trigger",
+        "overlap-neighbor",
+        "edge-case"
+      ],
+      "prompt": "我要新增一個 skill，但怕跟現有 repo 內外技能太像。請先做 portfolio / competition audit，再檢查 name、description、metadata surface 會不會太難被找到。",
+      "expected_output": "回覆包含 archetype、鄰近技能、差異化理由，以及 naming / metadata 的 discovery 建議。",
+      "files": [],
+      "expectations": [
+        "回覆有判斷 router、executor、ops 或 utility。",
+        "回覆提到 repo 內外的相近技能或競品。",
+        "回覆有檢查 name、description、metadata、homepage 或 license 其中至少三項。"
+      ],
+      "trigger_class": "indirect"
+    },
+    {
+      "id": 5,
+      "name": "publish-surface-audit",
+      "type": "functional",
+      "language": "zh",
+      "coverage_tags": [
+        "should-trigger",
+        "edge-case"
+      ],
+      "prompt": "幫我檢查這個 skills repo 的 README、GitHub About、topics、homepage、license 與發布頁敘事是否一致，並告訴我公開採用率為什麼可能掉下來。",
+      "expected_output": "回覆包含 publish surface audit、discovery 缺口與具體修正順序。",
+      "files": [],
+      "expectations": [
+        "回覆提到 README 入口順序。",
+        "回覆提到 topics、homepage 或 About。",
+        "回覆有說明 discovery 或 trust signal 的風險。"
+      ],
+      "trigger_class": "indirect"
+    },
+    {
+      "id": 6,
+      "name": "one-off-prompt-negative",
+      "type": "trigger",
+      "language": "zh",
+      "coverage_tags": [
+        "should-not-trigger"
+      ],
+      "prompt": "幫我把這段 prompt 改順一點，不需要做成 skill，也不要做 eval。",
+      "expected_output": "不應啟用 skill-creator-advanced；應直接協助改寫或交給更合適的文字處理流程。",
+      "files": [],
+      "expectations": [
+        "辨識這是一次性 prompt 改寫。",
+        "不得產出 skill lifecycle 或 release gate 流程。"
+      ],
+      "trigger_class": "negative"
+    },
+    {
+      "id": 7,
+      "name": "english-skill-review",
+      "type": "trigger",
+      "language": "en",
+      "coverage_tags": [
+        "should-trigger",
+        "near-miss"
+      ],
+      "prompt": "Review this SKILL.md for trigger quality, boundary clarity, examples, and release readiness.",
+      "expected_output": "The skill should activate and produce findings about trigger quality, boundaries, examples, and readiness gates.",
+      "files": [],
+      "expectations": [
+        "Mentions trigger quality.",
+        "Mentions boundary clarity.",
+        "Mentions release readiness or release gates."
+      ],
+      "trigger_class": "indirect"
+    },
+    {
+      "id": 8,
+      "name": "broken-init-failure-mode",
+      "type": "functional",
+      "language": "mixed",
+      "coverage_tags": [
+        "should-trigger",
+        "failure-mode"
+      ],
+      "prompt": "init_skill_advanced.py runs in the repo but fails when the skill folder is copied standalone. Diagnose and fix the first-run experience.",
+      "expected_output": "回覆應指出 repo-root hidden dependency 風險，修成 standalone-safe，並補驗證命令。",
+      "files": [],
+      "expectations": [
+        "指出 initializer 不應依賴 repo root 才能執行。",
+        "提出或實作 standalone-safe 修正。",
+        "包含實際驗證命令。"
+      ],
+      "trigger_class": "indirect"
+    },
+    {
+      "id": 9,
+      "name": "registry-governance-private-skillhub",
+      "type": "functional",
+      "language": "zh",
+      "coverage_tags": [
+        "should-trigger",
+        "happy-path",
+        "edge-case"
+      ],
+      "prompt": "我們要把公司內部 skills 做成私有 registry，請幫我設計 namespace、owner/reviewer、RBAC、review gate、audit log、stable/beta channel、promotion 到 global 的流程，並說明哪些欄位應該進 skill_lifecycle.yaml。",
+      "expected_output": "回覆應把 registry governance 轉成 skill lifecycle 與 release gate 要求，而不是只建議上傳 .skill 檔。",
+      "files": [],
+      "expectations": [
+        "回覆包含 namespace 或 visibility 設計。",
+        "回覆區分 owner、reviewer、approver 或 auditor 角色。",
+        "回覆包含 audit log、review gate 或 promotion 流程。",
+        "回覆指出 skill_lifecycle.yaml 或 release evidence 應保存治理欄位。"
+      ],
+      "trigger_class": "indirect"
+    },
+    {
+      "id": 10,
+      "name": "quality-ranking-and-security-validation",
+      "type": "functional",
+      "language": "mixed",
+      "coverage_tags": [
+        "should-trigger",
+        "overlap-neighbor",
+        "failure-mode"
+      ],
+      "prompt": "I have 40 candidate skills in a repo and need a recommendation/ranking process. Please design quality scoring, maintenance tracking, duplicate detection, security validation, and CI gates before we publish them to a catalog.",
+      "expected_output": "The response should design a portfolio quality scoring and validation workflow covering fit, quality, maintenance, security, compatibility, and collision risk.",
+      "files": [],
+      "expectations": [
+        "Mentions quality scoring or ranking dimensions.",
+        "Mentions maintenance freshness or owner/review cadence.",
+        "Mentions security validation such as secrets, injection, suspicious commands, or supply-chain risk.",
+        "Mentions duplicate, collision, overlap, or query stealing detection."
+      ],
+      "trigger_class": "indirect"
+    },
+    {
+      "id": 11,
+      "name": "static-lint-vs-eval-kit-negative",
+      "type": "trigger",
+      "language": "zh",
+      "coverage_tags": [
+        "should-not-trigger",
+        "near-miss"
+      ],
+      "prompt": "請幫我設定一般 Python 專案的 ruff、mypy、pytest，不需要建立或檢查任何 SKILL.md，也不是 agent skill 品質工具鏈。",
+      "expected_output": "不應啟用 skill-creator-advanced；應交給一般 Python tooling / repo setup 流程。",
+      "files": [],
+      "expectations": [
+        "辨識這不是 skill authoring、skill registry 或 skill evaluation 任務。",
+        "不得產出 skill lifecycle、trigger eval 或 release gate 流程。"
+      ],
+      "trigger_class": "negative"
+    }
+  ]
+}

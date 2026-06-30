@@ -1,0 +1,76 @@
+{
+  "artifact_type": "benchmark-summary",
+  "source_path": "local-deterministic-harness-remediation",
+  "source_sha256": "not-applicable-deterministic-local-check",
+  "metadata": {
+    "skill_name": "skill-creator-advanced",
+    "skill_path": "skills/skill-creator-advanced",
+    "skill_version": "2026.5.16",
+    "git_commit": "local working tree",
+    "host": "local-codex",
+    "model": "deterministic-script-gates",
+    "temperature": "0",
+    "timestamp": "2026-05-16T00:00:00+08:00",
+    "run_timestamp": "2026-05-16T00:00:00+08:00",
+    "grader_version": "mechanical-gate-language-v1",
+    "evals_run": [
+      "quick_validate-wording",
+      "package-publish-gate",
+      "benchmark-version-match",
+      "stage-gate-precedence"
+    ],
+    "runs_per_configuration": 1
+  },
+  "run_summary": {
+    "with_harness_gate": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "bypass_baseline": {
+      "pass_rate": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+1.00",
+      "time_seconds": "+1.0",
+      "tokens": "+0"
+    }
+  },
+  "notes": [
+    "This deterministic harness benchmark covers the 2026.5.16 bypass-hardening change.",
+    "It verifies weak validation wording, package publish-gate blocking, benchmark version matching, and stage-gate precedence.",
+    "It is not a blind multi-model functional-quality benchmark."
+  ]
+}

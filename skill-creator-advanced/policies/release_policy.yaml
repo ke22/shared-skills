@@ -1,0 +1,19 @@
+release_policy:
+  required_checks:
+    - format
+    - structure
+    - workflow_contract
+    - semantic_rules
+    - gate_language
+    - lifecycle
+    - lifecycle_state
+    - eval_coverage
+    - eval_quality
+    - golden_trigger_set
+    - migration_governance
+  block_if:
+    - has_todo
+    - missing_owner
+    - stale_audit
+    - lifecycle_state_invalid
+    - high_risk_tool_without_approval_gate

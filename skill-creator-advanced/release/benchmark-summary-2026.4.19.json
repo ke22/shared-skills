@@ -1,0 +1,80 @@
+{
+  "artifact_type": "benchmark-summary",
+  "source_path": "C:\\Users\\allan\\PycharmProjects\\skills\\skills\\skill-creator-advanced-workspace\\iteration-2\\benchmark.json",
+  "source_sha256": "8736e7e77e7ee6093a132f6ccfdcf1bc2c7e51d7fd602bf39396f78147773da9",
+  "metadata": {
+    "skill_name": "skill-creator-advanced",
+    "skill_path": "skills/skill-creator-advanced",
+    "skill_version": "2026.4.19",
+    "git_commit": "a37bc71+local",
+    "host": "local-codex",
+    "model": "codex-session-offline-paired",
+    "temperature": "0",
+    "timestamp": "2026-04-19T16:17:44Z",
+    "run_timestamp": "2026-04-19T16:17:44Z",
+    "grader_version": "rubric-human-authored-v1",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "runs_per_configuration": 1
+  },
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 38.0,
+        "stddev": 0.0,
+        "min": 38.0,
+        "max": 38.0
+      },
+      "tokens": {
+        "mean": 1200.0,
+        "stddev": 0.0,
+        "min": 1200,
+        "max": 1200
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.5833,
+        "stddev": 0.2357,
+        "min": 0.3333,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 15.0,
+        "stddev": 0.0,
+        "min": 15.0,
+        "max": 15.0
+      },
+      "tokens": {
+        "mean": 450.0,
+        "stddev": 0.0,
+        "min": 450,
+        "max": 450
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.42",
+      "time_seconds": "+23.0",
+      "tokens": "+750"
+    }
+  },
+  "notes": [
+    "with_skill mean pass rate 1.00 vs without_skill 0.58",
+    "This paired benchmark uses offline rubric-authored outputs from this Codex session, not a blind multi-model production run.",
+    "The result is stronger than the mechanical smoke benchmark, but an external/blind eval would further reduce evaluator bias."
+  ]
+}

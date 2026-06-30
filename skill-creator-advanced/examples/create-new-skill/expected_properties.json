@@ -1,0 +1,12 @@
+{
+  "must_include_sections": [
+    "Use cases",
+    "Decision boundary",
+    "Eval plan"
+  ],
+  "must_not_include": [
+    "TODO",
+    "待補"
+  ],
+  "minimum_use_cases": 2
+}
