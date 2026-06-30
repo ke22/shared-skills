@@ -1,0 +1,170 @@
+{
+  "skill_name": "skill-optimizer",
+  "benchmark_metadata_required": [
+    "skill_version",
+    "git_commit",
+    "host",
+    "model",
+    "temperature",
+    "run_timestamp",
+    "grader_version"
+  ],
+  "evals": [
+    {
+      "id": "trigger-direct-zh-001",
+      "name": "skillopt-like-optimization",
+      "type": "trigger",
+      "language": "zh",
+      "trigger_class": "direct",
+      "coverage_tags": ["should-trigger", "skill-optimization", "benchmark-driven"],
+      "prompt": "請用 SkillOpt 的思路幫我優化這個既有 skill，要求有 baseline、validation gate 和 rollback path。",
+      "expected_output": "載入 skill-optimizer，產出 optimization spec、資料切分、candidate edits、gate results 與 adoption decision。",
+      "files": ["target-skill/SKILL.md", "benchmark.json"],
+      "expectations": [
+        "區分 optimizer proposal 與採納決策。",
+        "包含 train / validation / test 或 held-out split。",
+        "不直接覆蓋現有 skill。"
+      ]
+    },
+    {
+      "id": "trigger-indirect-en-001",
+      "name": "benchmark-improve-existing-skill",
+      "type": "trigger",
+      "language": "en",
+      "trigger_class": "indirect",
+      "coverage_tags": ["should-trigger", "paired-benchmark", "existing-skill"],
+      "prompt": "I have old and new runs for this agent skill. Decide whether the new skill should be adopted based on held-out evals and cost.",
+      "expected_output": "Use skill-optimizer to compare baseline and candidate with validation/test/ROI gates and return accept or reject.",
+      "files": ["old-run.json", "candidate-run.json"],
+      "expectations": [
+        "Reports baseline and candidate versions.",
+        "Checks pass rate, cost, latency and regression gates.",
+        "Returns an adoption decision with residual risk."
+      ]
+    },
+    {
+      "id": "trigger-mixed-001",
+      "name": "trigger-optimization-heldout",
+      "type": "trigger",
+      "language": "mixed",
+      "trigger_class": "direct",
+      "coverage_tags": ["should-trigger", "trigger-eval", "held-out", "overlap-neighbor"],
+      "prompt": "這個 SKILL.md description under-trigger，幫我做 trigger train/held-out eval，不要只靠感覺改 wording。",
+      "expected_output": "使用 skill-optimizer 固定 trigger eval split，提出 bounded description candidate，並用 held-out precision/recall 採納。",
+      "files": ["SKILL.md", "trigger-evals.json"],
+      "expectations": [
+        "固定 should-trigger / should-not-trigger 測試集。",
+        "避免每輪換題造成假進步。",
+        "檢查 neighbor confusion。"
+      ]
+    },
+    {
+      "id": "trigger-negative-zh-001",
+      "name": "create-new-skill-no-benchmark",
+      "type": "trigger",
+      "language": "zh",
+      "trigger_class": "negative",
+      "coverage_tags": ["should-not-trigger", "handoff", "skill-creator-advanced"],
+      "prompt": "我要從零建立一個新的財報分析 skill，還沒有任何 benchmark 或既有 skill。",
+      "expected_output": "應 hand off 到 skill-creator-advanced，而不是 skill-optimizer。",
+      "files": [],
+      "expectations": [
+        "沒有既有 skill 或 scoring signal 時不宣稱可優化。",
+        "提示先建立 skill 與 eval seed。"
+      ]
+    },
+    {
+      "id": "trigger-negative-zh-002",
+      "name": "single-failure-postmortem",
+      "type": "trigger",
+      "language": "zh",
+      "trigger_class": "negative",
+      "coverage_tags": ["should-not-trigger", "handoff", "skill-evolution", "near-miss"],
+      "prompt": "這次 agent 忘了跑 verification，幫我把這個失敗經驗寫回 skill。",
+      "expected_output": "應 hand off 到 skill-evolution，因為這是單一 failure-to-eval / lifecycle 修正。",
+      "files": ["failure-trace.md"],
+      "expectations": [
+        "不把單一失敗包裝成 benchmark-driven optimization。",
+        "要求先正規化 failure record。"
+      ]
+    },
+    {
+      "id": "functional-happy-001",
+      "name": "accept-candidate-after-heldout-gate",
+      "type": "functional",
+      "language": "zh",
+      "trigger_class": "direct",
+      "coverage_tags": ["happy-path", "accept", "validation-gate", "should-trigger"],
+      "prompt": "Baseline pass rate 0.62，candidate validation 0.78，test 0.75，token 增加 5%，over-trigger 0。請決定是否採納。",
+      "expected_output": "產出 ACCEPT decision，列 baseline/candidate、validation/test/ROI gate、採納 edits 與 rollback path。",
+      "files": [],
+      "expectations": [
+        "不只報分數，也說明 split 與 scorer。",
+        "確認成本與 trigger gate 未超標。",
+        "保留 rollback path。"
+      ]
+    },
+    {
+      "id": "functional-edge-001",
+      "name": "benchmark-design-without-scoring-signal",
+      "type": "functional",
+      "language": "mixed",
+      "trigger_class": "indirect",
+      "coverage_tags": ["edge-case", "benchmark-design", "no-scoring-signal", "should-trigger"],
+      "prompt": "We want to optimize this skill, but we only have vibes and no evals, scorer, or logs.",
+      "expected_output": "產出 BENCHMARK-DESIGN decision，而不是修改 skill；列出需要的 split、scorer、baseline 與 gate。",
+      "files": ["SKILL.md"],
+      "expectations": [
+        "明說沒有 scoring signal 不能宣稱已優化。",
+        "提出最小可行 benchmark。",
+        "不產生無界 candidate patch。"
+      ]
+    },
+    {
+      "id": "functional-failure-001",
+      "name": "reject-contaminated-validation",
+      "type": "functional",
+      "language": "en",
+      "trigger_class": "direct",
+      "coverage_tags": ["failure-mode", "reject", "contamination", "should-trigger"],
+      "prompt": "The candidate improved on validation, but the optimizer generated edits from the same validation examples. Can we adopt it?",
+      "expected_output": "Return REJECT or BLOCKED because validation is contaminated; require a fresh held-out split before adoption.",
+      "files": [],
+      "expectations": [
+        "Detects train/validation contamination.",
+        "Does not accept candidate based on leaked validation.",
+        "Requests fresh held-out evaluation."
+      ]
+    },
+    {
+      "id": "trigger-negative-zh-003",
+      "name": "routing-drift-without-scoring-handoff",
+      "type": "trigger",
+      "language": "zh",
+      "trigger_class": "negative",
+      "coverage_tags": ["should-not-trigger", "handoff", "skill-evolution", "overlap-neighbor"],
+      "prompt": "最近 skill library 互搶 query，我只有幾段 routing logs，沒有 benchmark、scorer 或 held-out set。請幫我修。",
+      "expected_output": "應 hand off 到 skill-evolution 先做 drift classification、evidence inventory 與 eval/gate 設計。",
+      "files": ["routing-log.md"],
+      "expectations": [
+        "不在缺 scoring signal 時採納 candidate patch。",
+        "要求先由 skill-evolution 正規化 drift evidence。"
+      ]
+    },
+    {
+      "id": "functional-handoff-001",
+      "name": "accepted-candidate-release-handoff",
+      "type": "functional",
+      "language": "mixed",
+      "trigger_class": "direct",
+      "coverage_tags": ["happy-path", "handoff", "skill-creator-advanced", "validation-gate", "should-trigger"],
+      "prompt": "Candidate passed held-out validation and final test. What happens before packaging and publish?",
+      "expected_output": "回傳 ACCEPT decision，但明確 hand off 到 skill-creator-advanced 跑 stage/release/package gates。",
+      "files": ["candidate-report.json"],
+      "expectations": [
+        "區分 optimization adoption 和 publish readiness。",
+        "指出 release/package gate 屬於 skill-creator-advanced。"
+      ]
+    }
+  ]
+}

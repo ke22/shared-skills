@@ -64,6 +64,7 @@ Per-repo: symlink or copy a skill subfolder into `.claude/skills/<name>/`
 | `hello-world` | test skill, hello skill, say hello | Minimal test skill — greets the user and confirms the skill system is working |
 | `skill-creator-advanced` | skill review, 建立新 skill, 改版現有 skill, 優化 SKILL.md, 補 trigger eval | Skill 建立、評估、benchmark 與打包迭代流程 |
 | `skill-evolution` | 根據失敗經驗改進 skill, skill evolution, over-trigger, under-trigger, postmortem to eval | 把失敗經驗轉成 skill 演化決策、eval 與治理證據 |
+| `skill-optimizer` | 優化 skill, 用 benchmark 改 skill, 跑 SkillOpt, 提高 pass rate, 比較 old vs new skill | 以 SkillOpt 式驗證門檻優化既有 skill |
 
 ---
 
