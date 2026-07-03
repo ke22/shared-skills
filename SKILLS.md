@@ -55,6 +55,7 @@ Per-repo: symlink or copy a skill subfolder into `.claude/skills/<name>/`
 | `llm-wiki` | build a wiki from documents, compounding knowledge base | Turn documents into a persistent, compounding wiki |
 | `project-bootstrap` | new project, before repo or Notion page exists | Bootstrap a new project from rough notes into scaffold files |
 | `fe-polish` | front-end final polish, before publish, WCAG | Seven-phase front-end polish — adaptive experience, WCAG, SEO, browser compat |
+| `audience-deck` | 做簡報, 換個對象再講一次, build a deck, present to [audience] | Reframe one research bank per audience — locks audience first, outputs action-title outline then HTML/pptx |
 
 ## Workspace
 
