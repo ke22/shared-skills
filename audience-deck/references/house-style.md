@@ -1,46 +1,94 @@
-# House Style — 從 v5 deck 抽出的版型系統
+# House Style — 版型系統
 
 按需載入。要建構或改版面時讀這份。目的：任何人（或任何 Claude session）重建頁面都維持一致外觀。
+
+## 0. 權威來源：先掃專案現有簡報，再用本檔（硬規則）
+
+**建構任何 HTML deck 前，第一件事是掃描專案的簡報資料夾，比對當前模板——不要直接套本檔的 tokens。**
+
+- 先找專案裡最新的成品 deck（掃描專案的簡報輸出資料夾，取最近修改的 `.html`），把它的 `:root` tokens、標題骨架（indicator-bar）、元件（table-design / 手機 mockup / 卡片 / 動畫）當**權威**，新頁面直接沿用同一套 CSS。
+- 本檔的 tokens 是**當專案還沒有任何成品 deck 時的 fallback**，不是覆蓋現有模板的依據。專案模板與本檔衝突時，**以專案現有成品為準**，並回頭把本檔同步更新。
+- 真的要從零決定配色與字體時，避免落入制式 AI 感設計——不要預設 Inter / Roboto / 系統字體＋淡紫漸層這種到哪個專案都一樣的組合。比照 `frontend-design` skill 的判斷方式：先想清楚這份 deck 的基調（嚴謹學術／活潑業界／內部工作會議…），再選字體與配色，讓設計看起來是為這場報告做的，不是套版。
+- 為什麼：house-style.md 會隨時間與實際 deck 分岔（曾發生過舊 tokens 與現行成品 tokens 兩套並存、導致新 deck 套錯色的情況）。掃描現有成品能保證新舊頁面同場並排不違和。
+
+> **這裡刻意不寫死任何特定檔名或版本號**——先前版本曾在這裡記錄一個具體檔名當「目前權威實體」的快取，但那份記錄後來被發現查無實體（見 rubric.md v1.2 修正紀錄）。掃描結果永遠是即時的：每次建新 deck 前，實際跑一次「列出輸出資料夾、取最近修改者」，不要相信任何寫在文件裡的舊檔名快取，包含這一段。
+
+## 0.5 產出契約：檔案、資料夾、命名與版本（硬規則）
+
+每次建 deck，**一律同時產兩個檔、放同一資料夾、用同一組檔名**：
+
+- **兩份都要產**：
+  - `.html` — 套 house style 的成品簡報（單檔、inline CSS/JS、可直接開）。
+  - `.md` — 純內容鏡像（action title ＋ bullet ＋ citation），供 Obsidian 閱讀、diff、餵給 pptx skill。兩份**內容必須同步**，只差呈現層。
+- **輸出資料夾判定順序（不寫死任何專案的路徑）**：
+  1. 使用者明講的資料夾——直接用，優先度最高。
+  2. 專案內既有成品 deck 所在資料夾——動手前實際掃描專案找出來，不要憑之前的紀錄或印象猜測路徑。
+  3. 兩者都沒有（專案內沒有既有 deck，使用者也沒指定）——動手寫檔前先問使用者放哪裡，不要沿用其他專案的路徑，也不要自己決定一個。
+- **動手寫檔前的強制動作**：不論落在上面哪一種情況，寫入任何 `.html`/`.md` 前，先實際列出目標資料夾現有檔案（沒有資料夾就回報「資料夾不存在」，視為情況 3 的「無既有 deck」），並把這份列表寫進回報——版號與 archive 與否，都要從這份實際列表推算，不能憑記憶或假設既有檔案長怎樣。
+- **命名系統**：`{主題}_v{major}.{minor}.{html|md}`
+  - `{主題}` 用可讀中文短名，與內容一致、跨版本穩定。同一份 deck 的 `.html` 與 `.md` 用**完全相同的主題名與版本號**。
+  - 聽眾若是取捨重點（Phase 2），可在主題後綴聽眾標記：`{主題}_{advisor|industry|committee}_v{major}.{minor}`。
+- **版本號規則**：
+  - `major` — 結構性改版（換聽眾、增刪頁、重排論證骨架）時 +1，`minor` 歸零。
+  - `minor` — 同結構下的內容/文案/樣式修訂 +1。
+  - 預設**原地覆寫同版號檔**；只有在使用者要保留舊版對照時才升號並保留舊檔。升 `major` 時，把前一版移到輸出資料夾下的 `_archive/`（若無此資料夾則建立），避免同資料夾堆疊多版造成「哪份才是現行」的混淆。**只搬移（archive），不刪除**——舊版內容永遠保留得到。
+  - 首次產出從 `v1.0` 起算（除非沿用既有 deck 的版本脈絡）。
+- **交叉指標**：`.md` frontmatter 標 `html: {同名}.html`；若專案有 wiki，wiki 內對應 topic 頁指向 `.html` 完整路徑。
+
+> 產出後回報時，明確列出兩個檔名與版本號，讓使用者一眼知道現行版本是哪個。
 
 ## Design tokens（CSS custom properties，可直接用於 HTML deck）
 
 ```css
 :root {
-  /* palette — 取自 v5，與 academic-pptx 預設同色系 */
-  --c-primary:    #1F4E79;  /* 深藍：action title、深色卡底 */
-  --c-accent:     #2563EB;  /* 亮藍：kicker、強調、流程箭頭、數字 */
-  --c-accent-2:   #2E75B6;  /* 中藍：次強調 */
-  --c-ink:        #1A1A1A;  /* 內文近黑 */
-  --c-muted:      #6B7280;  /* 頁底 citation 灰字 */
-  --c-card:       #F4F7FB;  /* 淺藍灰卡底 */
-  --c-bg:         #FFFFFF;  /* 內容頁背景一律白 */
-  --c-ok:         #22A559;  /* 綠勾（正面結果） */
-  --c-warn:       #E23B3B;  /* 紅叉（缺口） */
+  /* palette — fallback tokens；若專案已有掃描得到的成品 deck，一律以那份實際模板為準（見 §0） */
+  --color-primary:   #0F45B3;  /* 深藍：main-title、indicator-bar 底、強調字 */
+  --color-secondary: #2A64D8;  /* 亮藍：sec-title pill、表頭、箭頭、次強調 */
+  --color-bg-light:  linear-gradient(135deg, #f5f8fc 0%, #e2ebf8 100%); /* 內容頁底 */
+  --color-bg-dark:   radial-gradient(circle at center, #1E50C5 0%, #0C2E85 100%); /* 封面/轉場底 */
+  --color-surface:   #FFFFFF;  /* 卡片底 */
+  --color-success:   #68A758;  /* 綠勾（正面結果、達成） */
+  --color-danger:    #C54B3C;  /* 紅叉（缺口、風險、失效） */
+  --text-main:       #2B2B2B;  /* 內文（白底 12.6:1，WCAG AA） */
+  --text-muted:      #5A6472;  /* 頁碼 / citation 灰字（5.6:1，AA；勿用 #888 僅 3.5:1） */
+  --text-inverse:    #FFFFFF;
 
-  /* type scale (pt 對映 pptx / rem 對映 HTML) */
-  --t-action-title: 26pt;   /* 兩行為上限，bold */
-  --t-kicker:       13pt;    /* 小節標籤，bold，--c-accent */
-  --t-card-title:   18pt;    /* bold */
-  --t-body:         14pt;
-  --t-citation:     10pt;    /* --c-muted，頁底 */
-
-  --font: "Noto Sans TC", "PingFang TC", Arial, sans-serif; /* 全簡報單一字族 */
-  --accent-bar: 6px;        /* action title 左側直條 */
-  --gap: 24px;
+  --space-sm: 20px; --space-md: 40px; --space-lg: 60px; --space-xl: 80px;
+  --radius-sm: 10px; --radius-md: 20px; --radius-pill: 999px;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, "Microsoft JhengHei", "PingFang TC", sans-serif;
 }
 ```
 
-配色規則：最多三色使用（primary / accent / 一個 alert 色）。色彩用來**導引視線**（標出關鍵發現、alert box），不做裝飾漸層。
+畫布：`.slide-canvas` 固定 **1920×1080**，用 JS `transform: scale(min(vw/1920, vh/1080))` 置中縮放；每頁 `.slide` 絕對定位、`opacity` 切換。導覽：← / → / Space / 點擊左右半屏。
+
+配色規則：最多三色使用（primary / secondary / 一個 alert 色）。色彩用來**導引視線**（標出關鍵發現、alert box），漸層只用於底色與 indicator-bar，不做裝飾性漸層。無障礙：內文一律 `--text-main`、灰字一律 `--text-muted`（勿更淺）。
+
+## 標題骨架與核心元件（2026-07-06 改版：單一大標題取代 kicker+title+lede 三層）
+
+**改版依據**：對照 2025 IXDA 台灣世界互動設計日簡報（唐玄輝／DITL）的版面——每頁只有一句純黑粗體大標題扛全部核心訊息，左側細直條 accent bar，標題下直接接內容（bullet／圖／表），沒有另外的小 kicker 標籤或第二句子句分攤意思。舊版把核心訊息拆成 `sec-title`（小節標籤）＋ `main-title`（主張）＋ `.lede`（補充子句）三層，容易在改版時三處各講一部分、讀者要拼裝才懂重點；改成單一大標題後，一頁只需要唸一句話就懂這頁在講什麼。
+
+- **標題組（預設）**：只用 `main-header-group`（左側 14px 漸層 `indicator-bar` 直條 ＋ `main-title`）。**main-title 一句扛全部核心訊息，且力求一行**——原本會分別寫進 kicker 與 lede 的資訊，不是硬併成一句長句，而是**篩選出這頁唯一該記住的判斷句**，其餘細節交給 body（卡片/表格/清單）講，不要為了塞資訊硬拉成兩行。**不再預設加 `sec-title` 或 `.lede`。**
+  - `main-title` 字級由 50px 放大到 **64px**，`line-height:1.3`，顏色改為 `--text-main`（近黑，比照 IXDA 全黑標題），不再整句用 `--color-primary`；要標記關鍵詞組時用 `<b>`（`--color-primary`），其餘維持黑，避免整頁死藍。
+  - **一行字數預算**：畫布 1920px、`.layout-standard` 左右各留 100px，可用寬度約 1720px；64px 粗體中文字約 64px 寬，**單行上限約 22–24 個全形字**（含標點）。超過就精簡句子（換詞、砍掉次要子句），不要放任它換行成兩行——兩行是容忍值，不是目標；能一行絕不兩行。
+  - `indicator-bar` 高度隨 `main-title` 自動撐開（`self-stretch`），寬度、漸層色不變。
+- **`sec-title` 與 `.lede`：例外元件，非預設。** 兩者都不用才是常態，不需要特別說明；只有以下情境才加：
+  - `sec-title` 純粹當「章節代號／版本標籤」用（例如要掛 `.ver-pill` 版本徽章），且**不能承載任何論述文字**；一般版本徽章優先掛在 `.slide-nav` 旁（如 `<div class="slide-nav">02 / 驗證焦點 <span class="ver-pill">DK v2</span></div>`），不需要額外開一個 `sec-title` div。
+  - `.lede` 只在 `main-title` 已經精簡到單行字數上限、body 也確實沒有講到某個「轉折/但書」子句時才加，且要明顯比 main-title 小一級、次要語氣。**加 lede 前先檢查 body 是否已經隱含這句話**（例如表格欄位、卡片標題、頁底 note 已經講過）——講過就不要再加，寧可整句拿掉也不要三處重複同一個意思。
+- **卡片**：`.card`（白底、`--radius-md`、hover 上浮陰影）；grid-2 / grid-3 排列。
+- **表格**：`.table-design`（`--color-secondary` 深藍表頭、白底、可用 `tr.hl`／`tr.hl2` 加左側色條標記重點列）。
+- **綠勾清單**：`.ok-item`（圓形綠勾 ＋ 標題 ＋ 說明），自我批判/成果頁用。
+- **手機 mockup**：`.phone`（420×800、深色外框、`phone-bar` 標題列、`pb.bot`／`pb.user` 對話泡、`mini-chip` 選項），demo/機制頁用。
+- **進場動畫**：`fadeUp`／`barGrow`（indicator-bar）／`softIn`（卡片、表格逐項延遲），必附 `@media (prefers-reduced-motion: reduce)` 降級。
+- **citation**：`.slide-citation` 一律頁底、`--text-muted` 灰字、小級。
 
 ## 通用頁面骨架
 
-每一頁內容頁都是這個骨架，只換 body：
+每一頁內容頁都是這個骨架，只換 body；預設沒有 kicker、沒有 lede，`main-title` 一行扛完整核心訊息：
 
 ```
 ┌─────────────────────────────────────────────┐
-│ [kicker 小節標籤]                              │  ← accent 色，左上
-│ ▌大標題第一行                                  │  ← 左側 accent-bar 直條
-│ ▌大標題第二行（action title，句子，非標籤）    │
+│ ▌大標題（64px，近黑，一行，action title）      │  ← 左側 accent-bar 直條
 │                                               │
 │           [ BODY：換下面 8 種版型之一 ]         │
 │                                               │
@@ -76,6 +124,9 @@
 ## 一致性硬規則
 
 - Citation 永遠頁底、灰字、小級，格式不變。
-- Action title 一律左側 accent-bar 直條；kicker 一律 accent 色小字。
+- Action title 一律左側 accent-bar 直條。
+- **預設一頁只用一句 `main-title`（64px、近黑、力求一行）扛核心訊息，不拆 kicker(`sec-title`)＋title＋lede 三層**——三層各講一部分會讓讀者要拼裝才懂重點；`sec-title`／`.lede` 只在標題骨架章節列出的例外情境才加，且加之前要先確認 body 沒有已經講過同一句話（見標題骨架章節）。
 - 同一類內容用同一版型（三個痛點都用版型 4，三組結果都用版型 7）——重複才有節奏，別每頁換花樣。
 - 一頁一版型；body 不混用兩種版型。
+- Action title（以及例外加上的 `.lede`）都是可獨立朗讀的斷言句，不加「（交付物清單）」「（風險預警）」這類括號分類尾綴——句子本身就該講清楚這頁在講什麼，不需要再貼一個類別名。
+- 例外情況下若真的加了 kicker／`sec-title`，不掛「· 為什麼...」「· 為何...」這種反問句後綴；理由要講，就直接寫進 main-title，或拆成單獨一頁講深。
