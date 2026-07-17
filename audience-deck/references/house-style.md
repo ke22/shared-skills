@@ -20,14 +20,18 @@
 - **兩份都要產**：
   - `.html` — 套 house style 的成品簡報（單檔、inline CSS/JS、可直接開）。
   - `.md` — 純內容鏡像（action title ＋ bullet ＋ citation），供 Obsidian 閱讀、diff、餵給 pptx skill。兩份**內容必須同步**，只差呈現層。
-- **輸出資料夾判定順序（不寫死任何專案的路徑）**：
+- **輸出資料夾判定順序**：
   1. 使用者明講的資料夾——直接用，優先度最高。
   2. 專案內既有成品 deck 所在資料夾——動手前實際掃描專案找出來，不要憑之前的紀錄或印象猜測路徑。
-  3. 兩者都沒有（專案內沒有既有 deck，使用者也沒指定）——動手寫檔前先問使用者放哪裡，不要沿用其他專案的路徑，也不要自己決定一個。
-- **動手寫檔前的強制動作**：不論落在上面哪一種情況，寫入任何 `.html`/`.md` 前，先實際列出目標資料夾現有檔案（沒有資料夾就回報「資料夾不存在」，視為情況 3 的「無既有 deck」），並把這份列表寫進回報——版號與 archive 與否，都要從這份實際列表推算，不能憑記憶或假設既有檔案長怎樣。
-- **命名系統**：`{主題}_v{major}.{minor}.{html|md}`
-  - `{主題}` 用可讀中文短名，與內容一致、跨版本穩定。同一份 deck 的 `.html` 與 `.md` 用**完全相同的主題名與版本號**。
-  - 聽眾若是取捨重點（Phase 2），可在主題後綴聽眾標記：`{主題}_{advisor|industry|committee}_v{major}.{minor}`。
+  3. **Workspace 預設輸出資料夾：`/Users/yulincho/Documents/01_Github/audien-deck`**——跨專案通用的固定位置，找不到專案內既有 deck 時，直接用這裡，不用先問使用者。
+  4. 連這個固定位置都不合適的特殊情境——動手寫檔前先問使用者放哪裡，不要自己另外決定路徑。
+- **動手寫檔前的強制動作**：不論落在上面哪一種情況，寫入任何 `.html`/`.md` 前，先實際列出目標資料夾現有檔案（沒有資料夾就回報「資料夾不存在」，視為情況 2 沒找到、改用情況 3），並把這份列表寫進回報——版號與 archive 與否，都要從這份實際列表推算，不能憑記憶或假設既有檔案長怎樣。
+- **命名系統**：`{聽眾類型}-{短名}-{日期}-v{major}.{minor}.{html|md}`
+  - `{聽眾類型}` 用 Phase 2 鎖定的聽眾代稱（`advisor` / `industry` / `committee`，或 edge case 現場生成的新聽眾代稱）。
+  - `{短名}` 用可讀中文短名，與內容一致、跨版本穩定。
+  - `{日期}` 為本次產出（這個版本被寫入的當下）日期，格式 `YYYYMMDD`；每次寫入新版本（不論 major 或 minor）都更新成當天日期，不是保留最初建立日期。
+  - 同一份 deck 的 `.html` 與 `.md` 用**完全相同的聽眾類型、短名、日期、版本號**。
+  - 範例：`advisor-V6場域驗證-20260717-v1.0.html` / `advisor-V6場域驗證-20260717-v1.0.md`。
 - **版本號規則**：
   - `major` — 結構性改版（換聽眾、增刪頁、重排論證骨架）時 +1，`minor` 歸零。
   - `minor` — 同結構下的內容/文案/樣式修訂 +1。
@@ -49,6 +53,7 @@
   --color-surface:   #FFFFFF;  /* 卡片底 */
   --color-success:   #68A758;  /* 綠勾（正面結果、達成） */
   --color-danger:    #C54B3C;  /* 紅叉（缺口、風險、失效） */
+  --color-warning:   #D6A226;  /* 待解決疑問／警示 note 用（note-amber 系列） */
   --text-main:       #2B2B2B;  /* 內文（白底 12.6:1，WCAG AA） */
   --text-muted:      #5A6472;  /* 頁碼 / citation 灰字（5.6:1，AA；勿用 #888 僅 3.5:1） */
   --text-inverse:    #FFFFFF;
@@ -64,33 +69,39 @@
 
 配色規則：最多三色使用（primary / secondary / 一個 alert 色）。色彩用來**導引視線**（標出關鍵發現、alert box），漸層只用於底色與 indicator-bar，不做裝飾性漸層。無障礙：內文一律 `--text-main`、灰字一律 `--text-muted`（勿更淺）。
 
-## 標題骨架與核心元件（2026-07-06 改版：單一大標題取代 kicker+title+lede 三層）
+## 標題骨架與核心元件（依真實成品 deck 校正，取代先前未驗證的 64px 單一標題假設）
 
-**改版依據**：對照 2025 IXDA 台灣世界互動設計日簡報（唐玄輝／DITL）的版面——每頁只有一句純黑粗體大標題扛全部核心訊息，左側細直條 accent bar，標題下直接接內容（bullet／圖／表），沒有另外的小 kicker 標籤或第二句子句分攤意思。舊版把核心訊息拆成 `sec-title`（小節標籤）＋ `main-title`（主張）＋ `.lede`（補充子句）三層，容易在改版時三處各講一部分、讀者要拼裝才懂重點；改成單一大標題後，一頁只需要唸一句話就懂這頁在講什麼。
+**校正依據**：`references/V6場域驗證規劃v2-edited-2026-07-09 (1).html` 是目前唯一真正產出過、可實際開啟檢視的成品 deck；先前（2026-07-06）記錄的「單一 main-title（64px）取代 sec-title+lede 三層」是一次未經真實案例驗證就寫進文件的改版判斷——事後稽核（見 rubric.md 修正紀錄）發現當時宣稱依此規則重建的範例檔案根本不存在。現在有了真正的成品可核對，發現真實成品從頭到尾都固定使用 `sec-title`＋`main-header-group` 兩層，`main-title` 字級是 **48px**，不是 64px。本節依真實檔案改回這個規格；「單一大標題」不再是預設，除非未來有新的真實成品刻意這樣做並在此更新。
 
-- **標題組（預設）**：只用 `main-header-group`（左側 14px 漸層 `indicator-bar` 直條 ＋ `main-title`）。**main-title 一句扛全部核心訊息，且力求一行**——原本會分別寫進 kicker 與 lede 的資訊，不是硬併成一句長句，而是**篩選出這頁唯一該記住的判斷句**，其餘細節交給 body（卡片/表格/清單）講，不要為了塞資訊硬拉成兩行。**不再預設加 `sec-title` 或 `.lede`。**
-  - `main-title` 字級由 50px 放大到 **64px**，`line-height:1.3`，顏色改為 `--text-main`（近黑，比照 IXDA 全黑標題），不再整句用 `--color-primary`；要標記關鍵詞組時用 `<b>`（`--color-primary`），其餘維持黑，避免整頁死藍。
-  - **一行字數預算**：畫布 1920px、`.layout-standard` 左右各留 100px，可用寬度約 1720px；64px 粗體中文字約 64px 寬，**單行上限約 22–24 個全形字**（含標點）。超過就精簡句子（換詞、砍掉次要子句），不要放任它換行成兩行——兩行是容忍值，不是目標；能一行絕不兩行。
-  - `indicator-bar` 高度隨 `main-title` 自動撐開（`self-stretch`），寬度、漸層色不變。
-- **`sec-title` 與 `.lede`：例外元件，非預設。** 兩者都不用才是常態，不需要特別說明；只有以下情境才加：
-  - `sec-title` 純粹當「章節代號／版本標籤」用（例如要掛 `.ver-pill` 版本徽章），且**不能承載任何論述文字**；一般版本徽章優先掛在 `.slide-nav` 旁（如 `<div class="slide-nav">02 / 驗證焦點 <span class="ver-pill">DK v2</span></div>`），不需要額外開一個 `sec-title` div。
-  - `.lede` 只在 `main-title` 已經精簡到單行字數上限、body 也確實沒有講到某個「轉折/但書」子句時才加，且要明顯比 main-title 小一級、次要語氣。**加 lede 前先檢查 body 是否已經隱含這句話**（例如表格欄位、卡片標題、頁底 note 已經講過）——講過就不要再加，寧可整句拿掉也不要三處重複同一個意思。
+- **標題組（預設，即真實成品的固定寫法，三個元件都在）**：
+  - `.slide-nav`：頁面右上角，格式「頁碼 / 該頁所屬階段」（例：「01 / 貢獻定位」），`--text-muted`、20px、bold、`letter-spacing:1.5px`，`position:absolute; top:40px; right:100px`。封面頁（`.layout-cover`）改用 `rgba(255,255,255,0.5)`。
+  - `.sec-title`：小節標籤，內容主題的短名（例：「V6 vs PDC30」），`--color-primary`、28px、`font-weight:700`、`margin-bottom:16px`、`letter-spacing:1px`。
+  - `.main-header-group`：左側 14px 漸層 `indicator-bar` 直條（`background: linear-gradient(180deg, var(--color-secondary), var(--color-primary))`、`min-height:64px`、隨內容自動撐開、`margin-right:32px`）＋ `.main-title`（斷言句，`--text-main` 近黑、**48px**、`font-weight:800`、`line-height:1.34`、`letter-spacing:-0.5px`）。
+  - `main-title` 依然要是完整、可獨立朗讀的斷言句（Phase 3 標準不變：不是反問句、不是條列標籤）；`sec-title` 是短主題標籤，不承載完整論述，兩者分工明確，不是互相重複。
+- **`.lede`**：真實成品裡完全沒有出現這個元件——目前沒有真實案例支持它的存在，也沒有真實案例反對；維持「未使用即為常態，需要時才加」的既有保守態度，不強推使用。
 - **卡片**：`.card`（白底、`--radius-md`、hover 上浮陰影）；grid-2 / grid-3 排列。
-- **表格**：`.table-design`（`--color-secondary` 深藍表頭、白底、可用 `tr.hl`／`tr.hl2` 加左側色條標記重點列）。
-- **綠勾清單**：`.ok-item`（圓形綠勾 ＋ 標題 ＋ 說明），自我批判/成果頁用。
-- **手機 mockup**：`.phone`（420×800、深色外框、`phone-bar` 標題列、`pb.bot`／`pb.user` 對話泡、`mini-chip` 選項），demo/機制頁用。
+- **表格**：`.table-design`（`--color-secondary` 深藍表頭、白底、可用 `tr.hl` 加淺黃底標記重點列，`.mech-cell` 標記關鍵詞欄位為 `--color-primary` 粗體）。
+- **提示框（note）**：`.note-amber`（`--color-warning` 系配色、左側粗色框、琥珀底）標記待解決疑問或警示；`.note-blue`（`--color-secondary` 系配色、藍底）標記需要強調的結構化重點。兩者都疊加在任何版型的 body 內，不是獨立版型。
+- **Chip 標籤**：`.chip`（`--color-primary` 淺藍底圓角小標籤）標記關鍵詞／分類；`.chip.warn` 為警示色版本（用於需要凸顯風險的標記）。
+- **雙欄任務卡**：`.prep-cols`／`.analysis-grid`（2 欄等寬 grid）＋ `.prep-block`（白底卡，標題 `--color-primary` 粗體 + bullet list，關鍵詞用 `<b>`）。用途：兩組平行但同層次的行動項或分析結果並列（例：「系統調整」vs「招募」，或「資料分析」vs「後續研究」）。
+- **代辦檢核清單**：`.layer-list`（`.layer` 橫列，細灰線分隔）——左側大數字或勾選框（`.ln`，`--color-secondary`），右側標題（`.lt`，`--color-primary` 粗體）+ 說明（`.lb`）。用途：todo/checklist、驗收清單、流程步驟條列。
+- **字母卡橫列**：`.abcd-grid`（`.abcd-card` 逐列排列）——左側圓形字母／編號徽章（`.abcd-letter`，`--color-secondary` 底、白字）、中間標題（`.t`）+ 說明（`.d`）、右側可選「看細節」按鈕（`.card-detail-btn`）開啟對應內容。用途：呈現有固定字母/序號代稱、彼此平行的階段或資料來源（例：A/B/C/D 四段資料收集）。
+- **手機 mockup**：`.phone`（深色外框、`phone-bar` 標題列、`pb.bot`／`pb.user` 對話泡，泡泡內可加 `.tags` 顯示分類標籤），demo/機制頁用；內容較長時加 `.scrollphone` 讓對話框內部可捲動。
+- **時程軸**：三節點卡片（`.tl-box`，左側粗色框依序 blue/purple/teal 標記三個階段）＋ 下方 `.tl-axis` 時間軸（`.tl-dot` 對應節點位置）與週次標記（`.tl-weeks`），用途：呈現多天/多週的執行歷程與關鍵節點。比純線性流程版型更適合需要標出精確天數/週次的場合。
 - **進場動畫**：`fadeUp`／`barGrow`（indicator-bar）／`softIn`（卡片、表格逐項延遲），必附 `@media (prefers-reduced-motion: reduce)` 降級。
 - **citation**：`.slide-citation` 一律頁底、`--text-muted` 灰字、小級。
 
 ## 通用頁面骨架
 
-每一頁內容頁都是這個骨架，只換 body；預設沒有 kicker、沒有 lede，`main-title` 一行扛完整核心訊息：
+每一頁內容頁都是這個骨架，只換 body；`sec-title` ＋ `main-title` 兩層都在，`.lede` 預設不用：
 
 ```
 ┌─────────────────────────────────────────────┐
-│ ▌大標題（64px，近黑，一行，action title）      │  ← 左側 accent-bar 直條
+│                          頁碼 / 階段（slide-nav）│  ← 右上角，灰字小
+│ 小節標籤（sec-title，28px、primary 藍）          │
+│ ▌大標題（main-title，48px，近黑，action title）  │  ← 左側 indicator-bar 直條
 │                                               │
-│           [ BODY：換下面 8 種版型之一 ]         │
+│         [ BODY：換下面版型庫其中一種 ]           │
 │                                               │
 │ 文獻 citation……（灰字，頁底）                  │
 └─────────────────────────────────────────────┘
@@ -121,12 +132,18 @@
 
 9. **缺口深講版**（advisor-cut 新增） — 用途：對「已知全局」的聽眾（如指導教授）深講單一缺口，而非快速掃過三個。結構：左側固定寬紅框圓角卡（✕ + 缺口名稱），右側 1–2 張堆疊 quote 卡深入證據；比版型 7 的三卡並列更聚焦、更慢。何時用：進度會議、需要對方給判斷而非只是知會結果時；業界/評審版通常不用（他們要的是掃過，不是深講）。
 
+10. **雙欄任務卡**（來自真實成品 deck，`.prep-cols`/`.analysis-grid`） — 用途：兩組平行但同層次的行動項或分析結果並列（例：「系統調整」vs「招募」，或「資料分析」vs「後續研究」）。結構：2 欄等寬白底卡，各卡標題 + bullet list，關鍵詞用 `<b>`。何時用：需要並排比較的兩組同層次項目，內容量不到需要三卡的程度。
+
+11. **代辦檢核清單**（來自真實成品 deck，`.layer-list`） — 用途：todo/checklist、驗收清單、流程步驟條列。結構：橫列排列，左側大數字或勾選框，右側標題 + 說明，列間細灰線分隔。何時用：需要條列可勾選/可編號的待辦或步驟，而非平行論點。
+
+12. **字母卡橫列**（來自真實成品 deck，`.abcd-grid`） — 用途：呈現有固定字母/序號代稱、彼此平行的階段或資料來源（例：A/B/C/D 四段資料收集）。結構：逐列排列，左側圓形字母/編號徽章、中間標題+說明、右側可選「看細節」按鈕開啟對應深入內容。何時用：階段/來源本身已有慣用代稱（A/B/C/D、①②③）且需要「先掃過、可選深入」的呈現。
+
 ## 一致性硬規則
 
 - Citation 永遠頁底、灰字、小級，格式不變。
-- Action title 一律左側 accent-bar 直條。
-- **預設一頁只用一句 `main-title`（64px、近黑、力求一行）扛核心訊息，不拆 kicker(`sec-title`)＋title＋lede 三層**——三層各講一部分會讓讀者要拼裝才懂重點；`sec-title`／`.lede` 只在標題骨架章節列出的例外情境才加，且加之前要先確認 body 沒有已經講過同一句話（見標題骨架章節）。
+- Action title 一律左側 accent-bar（`indicator-bar`）直條。
+- **預設 `sec-title`（28px、小節標籤）＋ `main-title`（48px、近黑、斷言句）兩層都在，`.lede` 預設不用**——這是真實成品 deck 的固定寫法（見標題骨架章節校正說明）；`sec-title` 只放短主題標籤，不承載完整論述，跟 `main-title` 分工明確，不是同一句話拆兩處講。
 - 同一類內容用同一版型（三個痛點都用版型 4，三組結果都用版型 7）——重複才有節奏，別每頁換花樣。
 - 一頁一版型；body 不混用兩種版型。
 - Action title（以及例外加上的 `.lede`）都是可獨立朗讀的斷言句，不加「（交付物清單）」「（風險預警）」這類括號分類尾綴——句子本身就該講清楚這頁在講什麼，不需要再貼一個類別名。
-- 例外情況下若真的加了 kicker／`sec-title`，不掛「· 為什麼...」「· 為何...」這種反問句後綴；理由要講，就直接寫進 main-title，或拆成單獨一頁講深。
+- `sec-title` 不掛「· 為什麼...」「· 為何...」這種反問句後綴；理由要講，就直接寫進 main-title，或拆成單獨一頁講深。
