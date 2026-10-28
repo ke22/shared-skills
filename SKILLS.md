@@ -56,6 +56,8 @@ Per-repo: symlink or copy a skill subfolder into `.claude/skills/<name>/`
 | `project-bootstrap` | new project, before repo or Notion page exists | Bootstrap a new project from rough notes into scaffold files |
 | `fe-polish` | front-end final polish, before publish, WCAG | Seven-phase front-end polish — adaptive experience, WCAG, SEO, browser compat |
 | `audience-deck` | 做簡報, 換個對象再講一次, build a deck, present to [audience] | Reframe one research bank per audience — locks audience first, outputs action-title outline then HTML/pptx |
+| `demo-player-deck` | demo 簡報, 網頁簡報, 把 demo 影片放進簡報, HTML deck with video | Single-file HTML demo deck with a stage-indexed video player; template, timeline checker, online/offline packaging, decision record |
+| `product-download-page` | 產品頁, 下載頁, GitHub Pages, 發版後更新網站, download page | Static product/download page on GitHub Pages tied to releases/latest; real screenshots with provenance, web film encode, consent gate, live verification |
 
 ## Workspace
 

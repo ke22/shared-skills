@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>產品名稱 系統成果報告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Tokens: swap these for the product's palette before building pages. Roles use grey layers; colour only on small dots (--dR/--dA/--dP). */
+:root{--outer:#E8E6DC;--bg:#FAF9F5;--work:#F5F4ED;--raised:#FFFFFF;--sel:#F0EEE6;--hover:rgba(115,114,108,.1);--ink:#141413;--sec:#5E5D59;--border:rgba(31,30,29,.15);--strong:rgba(31,30,29,.3);--acc:#D97757;--dark:#141413;--inv:#FAF9F5;--dR:#D97757;--dA:#6A9BCC;--dP:#87867F;color-scheme:light}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--outer);color:var(--ink);font-family:"Noto Sans TC",-apple-system,BlinkMacSystemFont,"PingFang TC",sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+/* Engine: a fixed 1920x1080 stage scaled to the window. */
+.viewport{position:relative;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:1920px;height:1080px;flex:none;transform-origin:center center}
+.slide{position:absolute;inset:0;background:var(--bg);padding:136px 128px 140px;display:flex;flex-direction:column;overflow:hidden}
+.slide[hidden]{display:none}
+.body{flex:1;display:flex;flex-direction:column;gap:28px;min-height:0}
+.s-center .body{justify-content:center;gap:40px}
+.chrome-top{position:absolute;left:128px;right:128px;top:44px;display:flex;align-items:center;gap:16px;font-size:24px;font-weight:600;padding-bottom:20px;border-bottom:2px solid var(--border)}
+.chrome-top .r{margin-left:auto;font-weight:400;color:var(--sec)}
+.chrome-bot{position:absolute;left:128px;right:128px;bottom:56px;display:flex;justify-content:space-between;font-size:22px;color:var(--sec)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Sans TC",monospace}
+h1,h2,h3,p{margin:0}
+.hd{display:flex;flex-direction:column;gap:20px}
+.eyebrow{font-family:ui-monospace,SFMono-Regular,Menlo,"Noto Sans TC",monospace;font-size:22px;font-weight:600;letter-spacing:.12em;color:var(--sec)}
+.eyebrow::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--acc);margin-right:14px;vertical-align:1px}
+h1{font-size:64px;font-weight:700;line-height:1.25;letter-spacing:-.02em}
+h2{font-size:56px;font-weight:700;line-height:1.3;letter-spacing:-.02em}
+h3{font-size:34px;font-weight:700;line-height:1.35}
+p,li{font-size:26px;line-height:1.7}
+.lede{font-size:30px;line-height:1.6;color:var(--sec)}
+.row{display:flex;gap:28px}
+.card{flex:1;background:var(--raised);border:2px solid var(--border);border-radius:28px;padding:32px;display:flex;flex-direction:column;gap:14px}
+.callout{background:var(--dark);color:var(--inv);border-radius:24px;padding:24px 40px;font-size:30px;font-weight:700;line-height:1.5}
+/* Click builds: put class="step2" on what appears on the second click; set data-steps="2" on the slide. */
+.step2{opacity:0;transform:translateY(12px);transition:opacity .35s ease,transform .35s ease}
+.slide.st2 .step2{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.step2{transition:none}}
+a:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* Navigation bar */
+.bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:var(--raised);border:1px solid var(--border);color:var(--sec);z-index:5;font-size:14px;opacity:.5}
+.bar:hover,.bar:focus-within{opacity:1}
+.bar button{min-width:44px;min-height:44px;border-radius:999px;border:none;background:transparent;color:var(--ink);font:inherit;font-weight:600;cursor:pointer;padding:0 12px}
+.bar button:hover{background:var(--hover)}
+.bar button:disabled{opacity:.35;cursor:default}
+.count{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;min-width:64px;text-align:center}
+.hint{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap}
+@media (max-width:640px){.hint{display:none}}
+/* Stage player: stage list and caption on the left, video and scrubber on the right. Captions never sit over the video. */
+.player{flex:1;display:flex;gap:32px;min-height:0}
+.pl-side{width:440px;flex:none;display:flex;flex-direction:column;gap:14px;min-height:0}
+.pl-list{display:flex;flex-direction:column;gap:6px}
+.pl-item{display:flex;align-items:center;gap:10px;text-align:left;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--border);border-radius:14px;padding:0 16px;cursor:pointer;min-height:44px}
+.pl-item:hover{background:var(--hover)}
+.pl-item.on{background:var(--raised);border:2px solid var(--acc)}
+.pl-n{font-size:22px;font-weight:700}
+.pl-m{font-size:20px;color:var(--acc)}
+.pl-r{margin-left:auto;font-size:16px;color:var(--sec)}
+.pl-cap{flex:1;min-height:0;background:var(--raised);border:1px solid var(--border);border-radius:20px;padding:16px 20px;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.pl-role{font-size:19px;font-weight:600;color:var(--sec)}
+.pl-c{font-size:23px;font-weight:700;line-height:1.5}
+.pl-mk,.pl-note{font-size:18px;color:var(--sec)}
+.pl-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+.pl-video{position:relative;width:1024px;height:576px;flex:none;background:var(--outer);border:2px solid var(--border);border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pl-v{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.pl-ph{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--sec);text-align:center}
+.pl-ph-t{font-size:34px;font-weight:700}
+.pl-ph-s{font-size:20px}
+.pl-ctrl{width:1024px;display:flex;align-items:center;gap:12px}
+.pl-play{min-height:44px;padding:0 20px;border-radius:999px;border:none;background:var(--dark);color:var(--inv);font:inherit;font-size:19px;font-weight:700;cursor:pointer;white-space:nowrap}
+.pl-all{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--strong);background:var(--raised);color:var(--ink);font:inherit;font-size:19px;font-weight:600;cursor:pointer;white-space:nowrap}
+.pl-bar{flex:1;position:relative;height:48px;display:flex;align-items:flex-end}
+.pl-ticks{position:absolute;left:0;right:0;top:0;height:20px}
+.pl-tick{position:absolute;top:2px;width:2px;height:14px;background:var(--strong)}
+.pl-mark{position:absolute;top:-4px;transform:translateX(-50%);font-size:20px;line-height:1;color:var(--acc)}
+.pl-range{width:100%;accent-color:var(--acc);margin:0 0 6px}
+.pl-time{font-size:19px;color:var(--sec);white-space:nowrap}
+.pl-frozen{font-size:18px;font-weight:700;border:2px solid var(--acc);border-radius:999px;padding:0 12px;white-space:nowrap}
+.pl-pending{font-size:22px;color:var(--sec)}
+</style>
+</head>
+<body>
+<main class="viewport" aria-label="簡報"><div class="stage">
+
+<section class="slide s-center" id="s1" role="group" aria-roledescription="slide" aria-label="1 / 4：封面" hidden>
+<div class="chrome-top"><span>產品名稱</span><span class="mono r">YYYY.MM</span></div>
+<div class="body"><h1>產品名稱：一句話說清楚它幫誰做什麼</h1><p class="lede">副標：適用對象與這次報告的範圍。</p></div>
+<div class="chrome-bot"><span class="mono">產品名稱 · 系統成果報告</span><span class="mono">01 / 4</span></div>
+</section>
+
+<section class="slide" id="s2" data-steps="2" role="group" aria-roledescription="slide" aria-label="2 / 4：產品價值" hidden>
+<div class="chrome-top"><span>產品名稱</span><span class="mono r">YYYY.MM</span></div>
+<div class="body">
+<header class="hd"><p class="eyebrow">01 / 產品價值</p><h2>主題：標題寫成一個完整句子</h2></header>
+<div class="row"><div class="card"><h3>價值一</h3><p>對應現行問題一。</p></div><div class="card"><h3>價值二</h3><p>對應現行問題二。</p></div><div class="card"><h3>價值三</h3><p>對應現行問題三。</p></div></div>
+<p class="callout step2">第二次按下才出現：尚未完成的最終目標，和現有價值分開。</p>
+</div>
+<div class="chrome-bot"><span class="mono">產品名稱 · 系統成果報告</span><span class="mono">02 / 4</span></div>
+</section>
+
+<section class="slide" id="s3" role="group" aria-roledescription="slide" aria-label="3 / 4：機制與實機" hidden>
+<div class="chrome-top"><span>產品名稱</span><span class="mono r">YYYY.MM</span></div>
+<div class="body">
+<header class="hd"><p class="eyebrow">02 / Demo</p><h2>機制與實機：AI 每完成一步，使用者接著檢視與決定</h2></header>
+<!-- data-video: relative path to the film; empty = placeholder mode with a simulated clock.
+     data-stages: see references/player-stages.md. data-roles: label and dot colour per caption kind. -->
+<div class="player" data-video="demo.mp4"
+ data-roles='{"mech":{"label":"AI 機制","color":"var(--dA)"},"ui":{"label":"使用者操作","color":"var(--dR)"},"mix":{"label":"AI 提出，使用者決定","color":"var(--dR)"},"brand":{"label":"片頭","color":"var(--dP)"},"outro":{"label":"片尾","color":"var(--dP)"}}'
+ data-stages='[{"name":"片頭","start":0,"end":5,"subs":[{"s":0,"e":5,"k":"brand","c":"品牌片頭。"}],"marks":[]},{"name":"階段一","start":5,"end":20,"subs":[{"s":5,"e":12,"k":"ui","c":"使用者打開專案，查看研究資料。"},{"s":12,"e":20,"k":"mech","c":"AI 整理資料，產生候選。","n":"畫面經剪輯，不是即時生成。"}],"marks":[{"t":15,"sym":"★","label":"使用者在這裡做選擇"}]},{"name":"階段二","start":null,"end":null,"subs":[],"marks":[]}]'>
+<div class="pl-side">
+<nav class="pl-list" aria-label="研究歷程"></nav>
+<div class="pl-cap" aria-live="polite"><p class="pl-role"><span class="pl-dot">●</span> <span class="pl-rl"></span></p><p class="pl-c"></p><p class="pl-mk" hidden></p><p class="pl-note" hidden></p></div>
+</div>
+<div class="pl-main">
+<div class="pl-video"><video class="pl-v" muted playsinline preload="metadata" hidden></video><div class="pl-ph"><p class="pl-ph-t">影片畫面</p><p class="pl-ph-s mono"><span class="pl-now">0:00.0</span></p><p class="pl-ph-s">沒有設定影片，使用模擬時鐘</p></div></div>
+<div class="pl-ctrl"><button type="button" class="pl-play">播放本階段</button><button type="button" class="pl-all">從頭播放全片</button><div class="pl-bar"><div class="pl-ticks" aria-hidden="true"></div><label class="sr" for="pl-range">播放位置</label><input id="pl-range" class="pl-range" type="range" min="0" max="1" step="0.1" value="0"></div><p class="pl-time mono">0:00.0 / 0:00.0</p><p class="pl-frozen" hidden>定格</p></div>
+<p class="pl-pending" hidden>[這個階段的時間碼，待補齊]</p>
+</div>
+</div>
+</div>
+<div class="chrome-bot"><span class="mono">產品名稱 · 系統成果報告</span><span class="mono">03 / 4</span></div>
+</section>
+
+<section class="slide s-center" id="s4" role="group" aria-roledescription="slide" aria-label="4 / 4：結語" hidden>
+<div class="chrome-top"><span>產品名稱</span><span class="mono r">YYYY.MM</span></div>
+<div class="body"><h2>Thank You</h2><p class="lede">下載與連結。</p></div>
+<div class="chrome-bot"><span class="mono">產品名稱 · 系統成果報告</span><span class="mono">04 / 4</span></div>
+</section>
+
+</div></main>
+<nav class="bar" aria-label="簡報導覽">
+<button id="prev" type="button" aria-label="上一頁">←</button>
+<span class="count" aria-live="polite">1 / 1</span>
+<button id="next" type="button" aria-label="下一頁">→</button>
+<span class="hint">← → 翻頁</span>
+<button id="fs" type="button" aria-label="全螢幕" hidden>F 全螢幕</button>
+</nav>
+<script>
+(function(){
+/* Deck engine: arrows / PageUp / PageDown / Space, Home / End, F fullscreen, swipe, #sN deep link. */
+var slides=[].slice.call(document.querySelectorAll('.slide'));var n=slides.length;var cur=0;var step=1;
+var stage=document.querySelector('.stage');var vp=document.querySelector('.viewport');
+var cnt=document.querySelector('.count');var fs=document.getElementById('fs');
+var prev=document.getElementById('prev');var next=document.getElementById('next');
+function steps(i){return parseInt(slides[i].getAttribute('data-steps')||'1',10);}
+function fit(){var s=Math.min(vp.clientWidth/1920,vp.clientHeight/1080);stage.style.transform='scale('+s+')';}
+function paint(){slides.forEach(function(s,k){s.hidden=k!==cur;s.classList.toggle('st2',k===cur&&step>=2);});
+cnt.textContent=(cur+1)+' / '+n;prev.disabled=cur===0&&step===1;next.disabled=cur===n-1&&step>=steps(cur);
+document.dispatchEvent(new CustomEvent('slidechange',{detail:{index:cur}}));}
+function go(i,st){cur=Math.max(0,Math.min(n-1,i));step=st||1;paint();}
+function fwd(){if(step<steps(cur)){step++;paint();}else if(cur<n-1){go(cur+1,1);}}
+function back(){if(step>1){step--;paint();}else if(cur>0){go(cur-1,steps(cur-1));}}
+prev.addEventListener('click',back);next.addEventListener('click',fwd);
+document.addEventListener('keydown',function(e){var t=e.target;if(t&&t.closest&&t.closest('input,textarea,select'))return;
+if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();fwd();}
+else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();back();}
+else if(e.key==='f'||e.key==='F'){tfs();}else if(e.key==='Home'){go(0);}else if(e.key==='End'){go(n-1);}});
+var sx=null;vp.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
+vp.addEventListener('touchend',function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50){dx<0?fwd():back();}sx=null;});
+function tfs(){try{if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(function(){});}else{document.exitFullscreen();}}catch(err){}}
+if(document.fullscreenEnabled){fs.hidden=false;fs.addEventListener('click',tfs);}
+window.addEventListener('resize',fit);document.addEventListener('fullscreenchange',fit);
+function fromHash(){var m=/^#s(\d+)$/.exec(location.hash||'');return m?parseInt(m[1],10)-1:0;}
+document.addEventListener('slidechange',function(e){var h='#s'+(e.detail.index+1);if(location.hash!==h){try{history.replaceState(null,'',h);}catch(err){}}});
+window.addEventListener('hashchange',function(){go(fromHash());});
+fit();go(fromHash());
+
+/* Stage player */
+var P=document.querySelector('.player');if(!P)return;
+var ST=JSON.parse(P.getAttribute('data-stages'));
+var ROLES=JSON.parse(P.getAttribute('data-roles')||'{}');
+var src=P.getAttribute('data-video')||'';
+var v=P.querySelector('.pl-v');var useV=!!src;
+if(useV){v.src=src;v.hidden=false;P.querySelector('.pl-ph').hidden=true;}
+var list=P.querySelector('.pl-list');var range=P.querySelector('.pl-range');var ticks=P.querySelector('.pl-ticks');
+var playB=P.querySelector('.pl-play');var allB=P.querySelector('.pl-all');
+function f(x){var mm=Math.floor(x/60);var ss=(x-mm*60).toFixed(1);if(ss.length<4)ss='0'+ss;return mm+':'+ss;}
+var items=ST.map(function(s,k){var b=document.createElement('button');b.type='button';b.className='pl-item';
+var ms=s.marks.map(function(m){return m.sym;}).join(' ');
+b.innerHTML='<span class="pl-n"></span><span class="pl-m"></span><span class="pl-r mono"></span>';
+b.querySelector('.pl-n').textContent=s.name;b.querySelector('.pl-m').textContent=ms;
+b.querySelector('.pl-r').textContent=s.start===null?'待補':f(s.start)+'–'+f(s.end);list.appendChild(b);return b;});
+var si=0,t=ST[0].start||0,playing=false,full=false;
+function S(){return ST[si];}
+function setT(x){t=x;if(useV&&Math.abs(v.currentTime-x)>0.25){try{v.currentTime=x;}catch(e){}}}
+function render(){var s=S();var has=s.start!==null;
+items.forEach(function(b,k){b.classList.toggle('on',k===si);b.setAttribute('aria-pressed',k===si?'true':'false');});
+P.querySelector('.pl-ctrl').hidden=!has;P.querySelector('.pl-pending').hidden=has;
+if(!has){P.querySelector('.pl-c').textContent='[這個階段的說明，待依時間碼補齊]';P.querySelector('.pl-rl').textContent='待補';P.querySelector('.pl-dot').style.color='var(--dP)';P.querySelector('.pl-mk').hidden=true;P.querySelector('.pl-note').hidden=true;P.querySelector('.pl-frozen').hidden=true;return;}
+var tt=Math.min(Math.max(t,s.start),s.end);
+range.min=s.start;range.max=s.end;range.value=tt;
+P.querySelector('.pl-time').textContent=f(tt)+' / '+f(s.end);P.querySelector('.pl-now').textContent=f(tt);
+var sub=null;for(var i=0;i<s.subs.length;i++){if(tt>=s.subs[i].s&&tt<s.subs[i].e){sub=s.subs[i];}}if(!sub)sub=s.subs[s.subs.length-1];
+P.querySelector('.pl-c').textContent=sub.c;
+var role=ROLES[sub.k]||{label:'',color:'var(--dP)'};
+P.querySelector('.pl-rl').textContent=role.label;P.querySelector('.pl-dot').style.color=role.color;
+var nel=P.querySelector('.pl-note');if(sub.n){nel.hidden=false;nel.textContent='註：'+sub.n;}else{nel.hidden=true;}
+var mk=null;s.marks.forEach(function(m){if(Math.abs(m.t-tt)<=1.2)mk=m;});var mel=P.querySelector('.pl-mk');
+if(mk){mel.hidden=false;mel.textContent=mk.sym+' '+mk.label;}else{mel.hidden=true;}
+P.querySelector('.pl-frozen').hidden=!(!playing&&tt>s.start);
+playB.textContent=playing?'暫停':'播放本階段';}
+function build(){var s=S();ticks.innerHTML='';if(s.start===null)return;var span=s.end-s.start;
+s.subs.slice(1).forEach(function(x){var e=document.createElement('span');e.className='pl-tick';e.style.left=((x.s-s.start)/span*100)+'%';ticks.appendChild(e);});
+s.marks.forEach(function(m){var e=document.createElement('span');e.className='pl-mark';e.textContent=m.sym;e.style.left=((m.t-s.start)/span*100)+'%';ticks.appendChild(e);});}
+function stop(){playing=false;if(useV)v.pause();}
+function tick(){if(!playing)return;var s=S();var nt=useV?v.currentTime:Math.round((t+0.1)*10)/10;
+if(nt<s.end){t=nt;render();return;}
+var nx=ST[si+1];if(full&&nx&&nx.start!==null){si++;build();setT(nx.start);render();return;}
+t=s.end;stop();full=false;render();}
+function play(){var s=S();if(s.start===null)return;if(t>=s.end)setT(s.start);playing=true;if(useV){v.play().catch(function(){});}render();}
+items.forEach(function(b,k){b.addEventListener('click',function(){si=k;full=false;build();var s=S();if(s.start===null){stop();render();return;}setT(s.start);play();});});
+playB.addEventListener('click',function(){if(playing){stop();render();}else{full=false;play();}});
+allB.addEventListener('click',function(){si=0;full=true;build();setT(ST[0].start||0);play();});
+range.addEventListener('input',function(){stop();setT(parseFloat(range.value));render();});
+document.addEventListener('slidechange',function(){stop();render();});
+setInterval(tick,100);build();setT(t);render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "capture_date": "YYYY-MM-DD",
+  "source": "Installed <product> <version> from the public release (how it was started) on http://127.0.0.1:<port>/",
+  "screen": "Which screen, e.g. empty project homepage",
+  "data_root": "throwaway HOME, fresh empty data folder",
+  "loaded_research_cases": 0,
+  "live_model_calls": 0,
+  "image_edits": "none",
+  "width": 0,
+  "height": 0,
+  "viewport": "1440x820 at device scale 1.4",
+  "sha256": "sha256 of the image file as published",
+  "ui_source_sha256": "sha256 of the UI file that rendered it, so a later UI change is detectable",
+  "version_note": "Release this capture belongs to"
+}
