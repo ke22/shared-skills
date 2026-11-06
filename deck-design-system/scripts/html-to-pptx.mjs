@@ -191,7 +191,11 @@ function measure({ lang }) {
       const textLeft = Math.min(...lines.map(l => l.left)), textRight = Math.max(...lines.map(l => l.right));
       const align = { start: 'left', left: 'left', center: 'center', right: 'right', end: 'right', justify: 'left' }[cs.textAlign] || 'left';
       // left-aligned text starts where its first glyph is (an inline-block before it, e.g. an avatar, is drawn on its own)
-      const left = align === 'left' ? textLeft : Math.min(content.left, textLeft), right = align === 'right' ? textRight : Math.max(content.right, textRight);
+      let left = align === 'left' ? textLeft : Math.min(content.left, textLeft), right = align === 'right' ? textRight : Math.max(content.right, textRight);
+      // centred text whose axis is not the element's centre (an icon beside it in a flex row, e.g. a role chip):
+      // centre the box on the text's own axis, or PowerPoint centres it across the icon too
+      const axis = (textLeft + textRight) / 2;
+      if (align === 'center' && Math.abs(axis - (left + right) / 2) > 2) { const half = Math.min(axis - left, right - axis); left = axis - half; right = axis + half; }
       items.push({ kind: 'text', box: rel({ left, top: lines[0].mid - lh / 2, width: right - left, height: lh * lines.length }),
         textBox: rel({ left: textLeft, top: 0, width: textRight - textLeft, height: 0 }),
         lines: lines.length, lineHeight: lh, fontSize: fs, align, paras, cls: label(el) });

@@ -95,7 +95,7 @@ for (const file of files) {
       for (const el of [s, ...s.querySelectorAll('[class]')]) for (const c of (el.getAttribute('class') || '').split(/\s+/).filter(Boolean))
         if (!defined.includes(c) && !chrome.includes(c)) push('R05', id, `.${c}`, el);
       // R21 bounds + bottom margin
-      for (const el of s.querySelectorAll('*')) { const e = el.getBoundingClientRect(); if (!e.width || !e.height || el.closest('.photo-slot')) continue;
+      for (const el of s.querySelectorAll('*')) { const e = el.getBoundingClientRect(); if (!e.width || !e.height || el.closest('.photo-slot,.mosaic')) continue;  /* background imagery */
         if (e.right > sb.right + 1 || e.bottom > sb.bottom + 1 || e.left < sb.left - 1 || e.top < sb.top - 1) push('R21', id, `outside slide: ${el.tagName.toLowerCase()}.${el.getAttribute('class') || ''}`, el); }
       const kids = [...s.querySelectorAll('.body *')].map(k => k.getBoundingClientRect().bottom); if (kids.length) { const mx = Math.max(...kids); if (mx > sb.bottom - 80 + 1) push('R21', id, `content ${Math.round(mx - (sb.bottom - 80))}px into bottom margin`); }
       // text leaves
@@ -109,12 +109,12 @@ for (const file of files) {
         const fam = cs.fontFamily.split(',')[0].replace(/"/g, '').trim(); if (!OK_FONTS.includes(fam)) push('R19', id, `${fam} ${q}`, el);
         if (zh) { if (/[一-鿿][A-Za-z0-9]|[A-Za-z0-9][一-鿿]/.test(txt)) push('R17', id, `CJK–Latin without space ${q}`, el);
           if (/[一-鿿][,.;:!?](?!\d)/.test(txt)) push('R17', id, `half-width punctuation ${q}`, el); if (/[“”]/.test(txt)) push('R17', id, `curly quotes ${q}`, el); }
-        const e = el.getBoundingClientRect(); if (e.width && !el.closest('.pnum,.secmark,.sample-note,.src,.legend,.contact,.inst') && (e.left < sb.left + 111 || e.right > sb.right - 111)) push('R16', id, `x ${Math.round(e.left - sb.left)}–${Math.round(e.right - sb.left)} ${q}`, el);
+        const e = el.getBoundingClientRect(); if (e.width && !el.closest('.pnum,.secmark,.sample-note,.src,.legend,.contact,.inst,.mosaic') && (e.left < sb.left + 111 || e.right > sb.right - 111)) push('R16', id, `x ${Math.round(e.left - sb.left)}–${Math.round(e.right - sb.left)} ${q}`, el);
         if (cs.color === 'rgb(38, 137, 86)' || cs.backgroundColor === 'rgb(38, 137, 86)') push('R23', id, q, el);
         if (cs.fontStyle === 'italic' && /[一-鿿]/.test(txt)) push('R26', id, `Chinese text set in italics ${q} (use bold: <i> inside a Chinese reference)`, el);
       }
       // R28 title highlight (components.md C01): the coloured phrase is the page's one emphasis
-      s.querySelectorAll('.hl').forEach(h => { if (!h.closest('h1.title')) push('R28', id, `highlight outside a content-page title "${h.textContent.trim().slice(0, 20)}"`, h); });
+      s.querySelectorAll('.hl:not(tr)').forEach(h => { if (!h.closest('h1.title'))  /* tr.hl is the table's highlighted row (C33) */ push('R28', id, `highlight outside a content-page title "${h.textContent.trim().slice(0, 20)}"`, h); });
       s.querySelectorAll('h1.title').forEach(t => { const hs = t.querySelectorAll('.hl'); if (hs.length > 1) push('R28', id, `${hs.length} highlighted phrases in one title`, t);
         hs.forEach(h => { const tx = h.textContent.trim(), cjk = [...tx].filter(c => /[一-鿿]/.test(c)).length; if ((zh && cjk > 12) || (!zh && tx.length > 36)) push('R28', id, `highlight too long "${tx}"`, h); }); });
       // R29 status hues only inside status components (or elements declared data-sem="status")

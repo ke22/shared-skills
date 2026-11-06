@@ -134,4 +134,4 @@ node scripts/html-to-pptx.mjs deck.html --out deck.pptx --compare out/          
 
 **字型**：開啟 PPTX 的電腦要安裝 `templates/fonts/` 的三套字型（Manrope、Inter、Noto Sans TC），否則 PowerPoint 會換成其他字型，行寬和斷行都會跑掉。
 
-**驗證狀態**：`iasdr-deck.html` 中英各 10 頁、`iasdr-layouts.html` 中文 47 頁，已用 artifact-tool 渲染並排比對。**還沒在 PowerPoint 實機開過**：行高小於字身的大字（例如封面大標）的垂直位置，以及 SVG 內文字的粗細，要以 PowerPoint 實際畫面為準。
+**驗證狀態**（2026-11-07）：`iasdr-layouts.html` 中英共 184 頁轉成 PPTX 後，在 Microsoft PowerPoint（macOS）實機開啟並輸出 PDF，逐頁對照 HTML。PDF 嵌入的字型只有 Manrope、Inter、Noto Sans TC，沒有被替換；版面、斷行、色塊與圖示與 HTML 一致。實機檢查抓到並已修正一個問題：置中文字旁邊有圖示時（例如角色標記），文字框原本涵蓋整個元素，PowerPoint 置中後文字會壓到圖示；現在文字框以文字本身的中線為準。Keynote 與 Windows 版 PowerPoint 尚未實測。

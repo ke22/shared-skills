@@ -132,7 +132,7 @@ h1,h2,h3,p{margin:0}
   background:linear-gradient(180deg,var(--bar-top),var(--bar-bottom))}
 .eyebrow{font:var(--eyebrow-w) var(--eyebrow)/var(--eyebrow-lh) var(--f-head);color:var(--struct-mark);margin-bottom:16px}
 .eyebrow .en{font-weight:600;font-size:.72em;color:var(--text-2);margin-left:.6em}
-.dark .eyebrow{color:#fff}
+.dark .eyebrow{color:#fff} .dark .eyebrow .en{color:var(--on-dark-2)}
 h1.title{font:var(--h1-w) var(--h1)/var(--h1-lh) var(--f-head);letter-spacing:var(--h1-tr);color:var(--ink);text-wrap:balance}
 .dark h1.title{color:#fff}
 .body{flex:1;min-height:0;display:flex;flex-direction:column}
@@ -317,7 +317,7 @@ table.tbl{width:100%;border-collapse:separate;border-spacing:0;background:var(--
 .tbl td.k{font-weight:700;color:var(--struct-line);font-family:var(--f-head)}
 .tbl td.n,.tbl th.n{text-align:right;font-variant-numeric:tabular-nums}
 .tbl td.c,.tbl th.c{text-align:center}
-.tbl tr.hl td{background:var(--tint);font-weight:600}
+.tbl tr.hl td{background:var(--tint);font-weight:600} .tbl tr.hl td.k{color:var(--ink)}  /* struct-line on tint is 4.46:1 */
 .tbl td.grp{background:var(--surface-2);font-weight:700;color:var(--text);border-right:1px solid var(--line)}
 .tbl tr.sev td{background:var(--status-gap-soft)} .tbl tr.sev td.k{color:var(--status-gap)}
 /* C36 arrow · C37 number rail · C38 chevron rail · C39 diamond · C41 duration bar · C42 timeline · C43 group timeline */
@@ -481,3 +481,21 @@ h1.title .hl{color:var(--emph)}
 .refs li{padding-left:2em;text-indent:-2em}
 .refs.cols li{break-inside:avoid;margin-bottom:20px}
 .refs i:lang(zh-Hant){font-style:normal;font-weight:700}
+
+/* C46 parallel channels: two lanes of nodes run side by side and meet at one filled end node */
+.channels{display:grid;grid-template-columns:200px 1fr 176px;grid-template-rows:auto auto;column-gap:24px;row-gap:40px;align-items:center}
+.channels .cn{font:700 var(--body-l)/1.3 var(--f-head);color:var(--struct-line)}
+.channels .lane{display:flex;align-items:center}
+.channels .nd{width:144px;height:144px;border-radius:50%;background:var(--card);box-shadow:inset 0 0 0 4px var(--struct-mark);display:grid;place-items:center;text-align:center;padding:16px;font:700 var(--caption)/1.3 var(--f-body);color:var(--text);flex:none}
+.channels .ln{flex:1;min-width:24px;border-top:3px solid var(--struct-line)}
+.channels .end{grid-column:3;grid-row:1 / 3;width:176px;height:176px;border-radius:50%;background:var(--struct-mark);color:#fff;display:grid;place-items:center;text-align:center;padding:20px;font:700 var(--body)/1.3 var(--f-head)}
+
+/* C56 photo mosaic: 2–4 field photos behind the whole slide under a 70% white veil; content in front stays readable */
+.mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:8px;z-index:-1}
+.mosaic .photo{height:100%;border-radius:0}
+.mosaic::after{content:"";position:absolute;inset:0;background:var(--card);opacity:.7}
+
+/* C57 artifact: the old physical object and its new digital version, each captioned as old or new */
+.artifact{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.artifact figure{margin:0;display:flex;flex-direction:column;gap:16px}
+.artifact figcaption{display:flex;align-items:center;gap:16px;font:400 var(--body)/1.4 var(--f-body);color:var(--text)}

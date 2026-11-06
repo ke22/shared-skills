@@ -44,8 +44,8 @@
   },
   "relationshipsSource": "presentation-studio/app/presentation-workbench/src/lib/semantic-layout.js",
   "sources": {
-    "references/narrative-layouts.md": "0ec27b52d7a671fc",
-    "manifest.json": "44d1f91fc1b596fb"
+    "references/narrative-layouts.md": "474ca4e1e93c5a41",
+    "manifest.json": "766f3a61376d90f3"
   },
   "families": [
     {
@@ -227,7 +227,14 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C09",
+            "C14",
+            "C52",
+            "C61"
+          ]
         },
         {
           "id": "c",
@@ -247,7 +254,13 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C21",
+            "C36"
+          ]
         }
       ],
       "components": [
@@ -274,7 +287,7 @@
         "IA p2–p3",
         "OD p8"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": null,
       "family": {
@@ -293,7 +306,9 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c"
       ]
     },
     {
@@ -423,7 +438,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C15"
+          ]
         },
         {
           "id": "c",
@@ -444,7 +464,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C48",
+            "C49"
+          ]
         }
       ],
       "components": [
@@ -468,7 +493,7 @@
         "OD p7",
         "OD p13"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": null,
       "family": {
@@ -488,7 +513,9 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c"
       ]
     },
     {
@@ -548,7 +575,14 @@
               "project"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C06",
+            "C21",
+            "C29",
+            "C53",
+            "C59"
+          ]
         },
         {
           "id": "c",
@@ -569,7 +603,13 @@
               "defense"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C06",
+            "C21",
+            "C58",
+            "C59"
+          ]
         }
       ],
       "components": [
@@ -601,7 +641,7 @@
         "iT p1",
         "OD 封面"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 1,
       "family": {
@@ -620,7 +660,9 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c"
       ]
     },
     {
@@ -678,7 +720,14 @@
             ],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C02",
+            "C03",
+            "C04",
+            "C14"
+          ]
         },
         {
           "id": "c",
@@ -699,7 +748,13 @@
               "defense"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C22",
+            "C27"
+          ]
         }
       ],
       "components": [
@@ -717,7 +772,7 @@
         "iT p2",
         "OD p4–p8"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 1,
       "family": {
@@ -736,7 +791,9 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c"
       ]
     },
     {
@@ -890,7 +947,13 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C05",
+            "C11",
+            "C14"
+          ]
         }
       ],
       "components": [
@@ -914,7 +977,7 @@
         "OD p1",
         "IA p2"
       ],
-      "docStatus": "部分（a、b 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 2,
       "family": {
@@ -934,7 +997,8 @@
       },
       "implemented": [
         "a",
-        "b"
+        "b",
+        "c"
       ]
     },
     {
@@ -1065,7 +1129,14 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C09",
+            "C14",
+            "C22",
+            "C52"
+          ]
         },
         {
           "id": "c",
@@ -1088,7 +1159,14 @@
               "defense"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C24",
+            "C25",
+            "C33",
+            "C34"
+          ]
         },
         {
           "id": "d",
@@ -1111,7 +1189,13 @@
               "defense"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C22",
+            "C33"
+          ]
         }
       ],
       "components": [
@@ -1135,7 +1219,7 @@
         "IA p3",
         "OD p5–p6"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 2,
       "family": {
@@ -1153,7 +1237,10 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c",
+        "d"
       ]
     },
     {
@@ -1212,7 +1299,12 @@
             ],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C06",
+            "C07",
+            "C08"
+          ]
         },
         {
           "id": "c",
@@ -1267,7 +1359,7 @@
         "OD p18",
         "OD p21"
       ],
-      "docStatus": "部分（a、c 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 2,
       "family": {
@@ -1287,6 +1379,7 @@
       },
       "implemented": [
         "a",
+        "b",
         "c"
       ]
     },
@@ -1319,7 +1412,14 @@
               "project"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C21",
+            "C22",
+            "C52"
+          ]
         },
         {
           "id": "b",
@@ -1365,7 +1465,7 @@
         "iT p7",
         "OD p3"
       ],
-      "docStatus": "部分（b 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 2,
       "family": {
@@ -1384,6 +1484,7 @@
         ]
       },
       "implemented": [
+        "a",
         "b"
       ]
     },
@@ -1514,7 +1615,16 @@
               "project"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C29",
+            "C39",
+            "C55",
+            "C56",
+            "C61"
+          ]
         },
         {
           "id": "c",
@@ -1534,7 +1644,13 @@
               "defense"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C39",
+            "C41"
+          ]
         },
         {
           "id": "d",
@@ -1549,7 +1665,11 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C37"
+          ]
         }
       ],
       "components": [
@@ -1573,7 +1693,7 @@
         "iT p8",
         "OD p12"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 3,
       "family": {
@@ -1591,7 +1711,10 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c",
+        "d"
       ]
     },
     {
@@ -1720,7 +1843,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C21",
+            "C33"
+          ]
         }
       ],
       "components": [
@@ -1742,7 +1870,7 @@
         "iT p9",
         "OD p11"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 3,
       "family": {
@@ -1761,7 +1889,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -1810,7 +1939,13 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C21",
+            "C39"
+          ]
         }
       ],
       "components": [
@@ -1830,7 +1965,7 @@
         "L5",
         "IA p6–p8"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 3,
       "family": {
@@ -1848,7 +1983,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -2196,7 +2332,16 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C24",
+            "C48",
+            "C49",
+            "C50",
+            "C51",
+            "C61"
+          ]
         }
       ],
       "components": [
@@ -2217,7 +2362,7 @@
       "sources": [
         "OD p14–p15"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 4,
       "family": {
@@ -2235,7 +2380,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -2286,7 +2432,11 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C33"
+          ]
         }
       ],
       "components": [
@@ -2307,7 +2457,7 @@
         "iT p13",
         "OD p17"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 4,
       "family": {
@@ -2325,7 +2475,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -2380,7 +2531,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C38"
+          ]
         },
         {
           "id": "c",
@@ -2400,7 +2556,13 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C22",
+            "C48",
+            "C49"
+          ]
         }
       ],
       "components": [
@@ -2423,7 +2585,7 @@
         "IA p7",
         "OD p13"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 4,
       "family": {
@@ -2443,7 +2605,9 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c"
       ]
     },
     {
@@ -2501,7 +2665,13 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C12",
+            "C14",
+            "C48"
+          ]
         }
       ],
       "components": [
@@ -2521,7 +2691,7 @@
         "TP p8",
         "IC p7"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 4,
       "family": {
@@ -2540,7 +2710,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -2666,7 +2837,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C51",
+            "C55"
+          ]
         },
         {
           "id": "c",
@@ -2687,7 +2863,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C12",
+            "C46"
+          ]
         },
         {
           "id": "d",
@@ -2707,7 +2888,14 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C10",
+            "C21",
+            "C55",
+            "C57"
+          ]
         }
       ],
       "components": [
@@ -2730,7 +2918,7 @@
       "sources": [
         "OD p19–p23"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 5,
       "family": {
@@ -2749,7 +2937,10 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c",
+        "d"
       ]
     },
     {
@@ -2806,7 +2997,13 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C53",
+            "C61"
+          ]
         },
         {
           "id": "c",
@@ -2824,7 +3021,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C53",
+            "C55"
+          ]
         },
         {
           "id": "d",
@@ -2843,7 +3045,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C18",
+            "C54"
+          ]
         }
       ],
       "components": [
@@ -2867,7 +3074,7 @@
         "IA p9",
         "L9"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 5,
       "family": {
@@ -2886,7 +3093,10 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c",
+        "d"
       ]
     },
     {
@@ -3017,7 +3227,14 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C36",
+            "C48",
+            "C55"
+          ]
         },
         {
           "id": "c",
@@ -3071,7 +3288,7 @@
         "IA p9",
         "TP p13"
       ],
-      "docStatus": "部分（a、c 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 5,
       "family": {
@@ -3090,6 +3307,7 @@
       },
       "implemented": [
         "a",
+        "b",
         "c"
       ]
     },
@@ -3145,7 +3363,15 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C23",
+            "C44",
+            "C45",
+            "C61"
+          ]
         }
       ],
       "components": [
@@ -3167,7 +3393,7 @@
       "sources": [
         "iT p20–p23"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 5,
       "family": {
@@ -3186,7 +3412,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -3242,7 +3469,11 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14"
+          ]
         }
       ],
       "components": [
@@ -3263,7 +3494,7 @@
         "IA p8",
         "IA p11"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P2",
       "order": 5,
       "family": {
@@ -3283,7 +3514,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -3491,7 +3723,14 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C19",
+            "C21",
+            "C36"
+          ]
         }
       ],
       "components": [
@@ -3512,7 +3751,7 @@
         "WB",
         "OD p24–p25"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 6,
       "family": {
@@ -3531,7 +3770,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -3795,7 +4035,12 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C65"
+          ]
         }
       ],
       "components": [
@@ -3812,7 +4057,7 @@
       "sources": [
         "TP p17–p20"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 6,
       "family": {
@@ -3831,7 +4076,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -3932,7 +4178,11 @@
               "defense"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C48"
+          ]
         }
       ],
       "components": [
@@ -3960,7 +4210,7 @@
         "OD p30",
         "L7"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 7,
       "family": {
@@ -3980,7 +4230,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -4034,7 +4285,15 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C21",
+            "C23",
+            "C36",
+            "C61"
+          ]
         }
       ],
       "components": [
@@ -4056,7 +4315,7 @@
         "OD p29",
         "L8"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 7,
       "family": {
@@ -4072,7 +4331,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -4547,7 +4807,12 @@
               "project"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C06",
+            "C07",
+            "C53"
+          ]
         },
         {
           "id": "c",
@@ -4568,7 +4833,12 @@
               "defense"
             ]
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C06",
+            "C07",
+            "C58"
+          ]
         }
       ],
       "components": [
@@ -4598,7 +4868,7 @@
         "OD 結束頁",
         "L10"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "有",
       "priority": "P1",
       "order": 7,
       "family": {
@@ -4617,7 +4887,9 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b",
+        "c"
       ]
     },
     {
@@ -5182,7 +5454,7 @@
   "summary": {
     "layouts": 51,
     "variants": 89,
-    "implementedVariants": 50,
+    "implementedVariants": 89,
     "layoutsWithAnyImplementation": 50,
     "noWorkbenchComponent": [
       "N02",
