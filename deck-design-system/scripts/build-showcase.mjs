@@ -144,6 +144,31 @@ function grid() {
   </svg></div>`;
 }
 
+// icons: the full set from templates/icons.js, grouped by the concept tables in components.md §H
+const ICONS = JSON.parse(read('templates/icons.js').replace(/^[\s\S]*?window\.ICONS\s*=\s*/, '').replace(/;\s*$/, ''));
+function iconGroups() {
+  const h = read('references/components.md').split(/^## H\./m)[1]?.split(/^## [^H]/m)[0] ?? '';
+  const groups = []; let cur = null;
+  for (const line of h.split('\n')) {
+    const g = line.match(/^\*\*([^*]+)\*\*/); if (g) { cur = { name: g[1], items: [] }; groups.push(cur); continue; }
+    if (!cur || !line.startsWith('|') || /^\|\s*(概念|---)/.test(line)) continue;
+    const cells = line.split('|').slice(1, -1).map(c => c.trim());
+    for (let i = 0; i + 1 < cells.length; i += 2) { const name = (cells[i + 1].match(/`([\w-]+)`/) || [])[1]; if (name && cells[i]) cur.items.push({ concept: cells[i], name }); }
+  }
+  const listed = new Set(groups.flatMap(g => g.items.map(i => i.name)));
+  const rest = Object.keys(ICONS).filter(n => !listed.has(n));
+  if (rest.length) groups.push({ name: '其他', items: rest.map(name => ({ concept: '', name })) });
+  return groups.filter(g => g.items.length);
+}
+const iconSvg = (name, px, line) => `<svg class="ico" width="${px}" height="${px}" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:${(line * 24 / px).toFixed(3)}">${ICONS[name] || ''}</svg>`;
+function icons() {
+  const groups = iconGroups(), missing = groups.flatMap(g => g.items).filter(i => !ICONS[i.name]).map(i => i.name);
+  const sizes = [[128, 6, '卡片'], [64, 4, '列表'], [40, 3, '角色標記'], [32, 2.5, '圖例']];
+  return `<div class="isizes">${sizes.map(([px, line, use]) => `<figure>${iconSvg('book-open', px, line)}<figcaption><b>${px}px</b> 線寬 ${line}<span class="muted">${use}</span></figcaption></figure>`).join('')}</div>
+  <p class="note">Lucide 1.70.0（ISC 授權），24 格線條 icon；<code>stroke-width = 目標線寬 × 24 ÷ 顯示尺寸</code>。淺底用 <code>--icon-a</code> → <code>--icon-b</code> 漸層，色塊與深色頁用白色。icon 一定要配文字標籤；同一個概念全篇用同一個 icon。共 ${Object.keys(ICONS).length} 個${missing.length ? `；表上有但 icons.js 沒有：${missing.join('、')}` : ''}。</p>
+  ${groups.map(g => `<div class="igroup"><h4>${esc(g.name.replace(/（.*$/, ''))} <span class="muted">${g.items.length}</span></h4><ul class="igrid">${g.items.map(i => `<li>${iconSvg(i.name, 48, 3)}<span class="iname"><code>${esc(i.name)}</code>${i.concept ? `<span>${esc(i.concept)}</span>` : ''}</span></li>`).join('')}</ul></div>`).join('')}`;
+}
+
 function img(rec, alt, cls = '') { return rec ? `<img class="${cls}" src="${rec.url}" width="${rec.w}" height="${rec.h}" alt="${esc(alt)}" loading="lazy" decoding="async">` : `<div class="noimg ${cls}">尚無範例</div>`; }
 function langPair(slides, id, alt, cls) { return `<span class="lp" data-l="zh">${img(slides[`${id}|zh-Hant`], alt + '（中文）', cls)}</span><span class="lp" data-l="en">${img(slides[`${id}|en`], alt + '（英文）', cls)}</span>`; }
 
@@ -281,6 +306,15 @@ tbody tr:last-child>*{border-bottom:0}
 .g-t{fill:var(--muted);font:600 30px var(--f-body)} .g-t.big{fill:var(--ink);font:700 56px var(--f-head)}
 .g-dash{stroke:var(--accent);stroke-width:2;stroke-dasharray:10 10}
 .g-dim{stroke:var(--muted);stroke-width:2}
+.ico{flex:none;fill:none;stroke:url(#sc-ig);stroke-linecap:round;stroke-linejoin:round;display:block}
+.ico *{fill:none;stroke:url(#sc-ig)}
+.isizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.isizes figure{margin:0;display:grid;justify-items:start;gap:8px}
+.isizes figcaption{font-size:13px;display:grid} .isizes figcaption b{font:700 14px var(--f-head);color:var(--ink)}
+.igroup{display:grid;gap:4px}
+.igrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:8px}
+.igrid li{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.iname{display:grid;min-width:0} .iname code{color:var(--ink);font-weight:600;overflow-wrap:anywhere} .iname span{font-size:12.5px;color:var(--muted)}
 .filters{display:flex;flex-wrap:wrap;gap:6px}
 .f{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 12px;font:600 13px var(--f-body);cursor:pointer}
 .f span{color:var(--muted);font-weight:500;margin-left:2px}
@@ -349,7 +383,7 @@ html{scroll-behavior:smooth}
 </style>
 
 <div class="top"><div class="wrap"><a class="brand" href="#top"><i></i>IASDR 簡報設計系統</a>
-<nav aria-label="區塊"><a href="#tokens">Token</a><a href="#grid">格線</a><a href="#imagery">圖像</a><a href="#components">元件</a><a href="#layouts">版型</a><a href="#rules">規則</a></nav>
+<nav aria-label="區塊"><a href="#tokens">Token</a><a href="#grid">格線</a><a href="#imagery">圖像</a><a href="#icons">Icon</a><a href="#components">元件</a><a href="#layouts">版型</a><a href="#rules">規則</a></nav>
 <div class="seg" role="group" aria-label="範例語言"><button type="button" id="lang-zh" data-lang="zh" aria-pressed="true">中文</button><button type="button" id="lang-en" data-lang="en" aria-pressed="false">English</button></div></div></div>
 
 <main class="wrap" id="top">
@@ -375,6 +409,10 @@ ${swatches()}<h3 style="font-size:18px">字級</h3>${typeScale()}${spacing()}</s
 <li><b>頭像</b><span>圓形、無外框；封面 84px，團隊頁 120–160px；用本人同意的照片。</span></li>
 <li><b>標誌</b><span>封面左上研討會標誌（白色，高 48–64），右上校系章（寬 120–140）；只用正式檔案，沒有就留空。</span></li>
 <li><b>佔位</b><span>範本不印出佔位文字；空的 <code>.illus</code> 由 lint R27 提醒。</span></li></ul></div></div></section>
+
+<section class="block" id="icons"><header><h2>Icon</h2><p>依 <code>components.md</code> 的概念對照表分組；每個概念固定用同一個 icon。需要「人」或「情境」時改用插畫（見上一節）。</p></header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="sc-ig" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="24"><stop offset="0" stop-color="${theme.colors.iconA}"/><stop offset="1" stop-color="${theme.colors.iconB}"/></linearGradient></defs></svg>
+${icons()}</section>
 
 <section class="block" id="components"><header><h2>元件</h2><p>每張圖都是從範本實際渲染截下來的。「只有 CSS」表示樣式已寫好、範本還沒用到；「尚未實作」表示規格已定、還沒有樣式。</p></header>${components(comps)}</section>
 
