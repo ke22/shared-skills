@@ -259,34 +259,53 @@ export function drawSlide(slide, scene, { scale }) {
       slide.images.add({ dataUrl: it.dataUrl, alt: it.alt, fit: 'cover', position: pos(it.box) });
     } else if (it.kind === 'text') {
       const single = it.lines === 1, b = it.box;
-      const width = single ? Math.max(b.width, it.textBox.width * LINE_SLACK) : b.width * WRAP_SLACK, extra = width - b.width;
+      // slack grows only into room left on the slide (a no-wrap box narrower than its text just overflows it)
+      const room = { left: Math.max(0, b.left), right: Math.max(0, scene.width - b.left - b.width) };
+      const wanted = (single ? Math.max(b.width, it.textBox.width * LINE_SLACK) : b.width * WRAP_SLACK) - b.width;
+      const extra = Math.max(0, Math.min(wanted, it.align === 'center' ? 2 * Math.min(room.left, room.right) : it.align === 'right' ? room.left : room.right));
+      const width = b.width + extra;
       const left = it.align === 'center' ? b.left - extra / 2 : it.align === 'right' ? b.left - extra : b.left;
       const box = slide.shapes.add({ geometry: 'textbox', position: pos({ left, top: b.top, width, height: b.height }) });
       box.name = `text:${it.cls}`;
-      const first = it.paras[0][0];
-      box.text.style = { fontSize: k(first.size), typeface: first.font, color: first.color, bold: first.bold,
-        alignment: it.align, verticalAlignment: 'top', autoFit: 'none', wrap: single ? 'none' : 'square', insets: 0, lineSpacing: k(it.lineHeight) / 100 };
+      // Order matters: assigning text replaces the paragraphs, so the paragraph-level style (alignment,
+      // exact line height) is applied after it. Run-level style (font, size, colour, weight) is carried
+      // by each run and is not part of this style, so it survives.
       box.text = it.paras.map(p => ({ runs: p.map(r => ({ run: r.text, style: { bold: r.bold, italic: r.italic, fontSize: `${k(r.size)}px`, typeface: r.font, color: r.color } })) }));
+      box.text.style = { alignment: it.align, verticalAlignment: 'top', autoFit: 'none', wrap: single ? 'none' : 'square', insets: 0, lineSpacing: k(it.lineHeight) / 100 };
     }
   }
 }
 
-export async function htmlToPptx(file, { lang = null, compare = null, fonts = { heading: 'Manrope', body: 'Inter', eastAsian: 'Noto Sans TC' } } = {}) {
+// notes:   optional speaker notes per slide (array of strings, same order as the slides)
+// renders: also return a PNG of every PPTX slide (artifact-tool renderer), e.g. as QA evidence
+export async function htmlToPptx(file, { lang = null, compare = null, notes = null, renders = false, fonts = { heading: 'Manrope', body: 'Inter', eastAsian: 'Noto Sans TC' } } = {}) {
   const { browser, page, errors } = await openPage(file, { width: 2016, height: 1200 });
   try {
     if (compare) await shootHtml(page, compare, lang);  // before measure() mutates the page
     const scenes = await page.evaluate(measure, { lang });
     if (errors.length) throw new Error('page errors: ' + errors.join(' | '));
+    if (!scenes.length) throw new Error(`no .deck${lang ? `[lang="${lang}"]` : ''} .slide found in ${file}`);
     for (const scene of scenes) for (const it of scene.items) if (it.kind === 'raster') it.png = await rasterize(page, it);
     const { Presentation, PresentationFile } = await loadArtifactTool();
     const pres = Presentation.create({ slideSize: PPTX_SIZE });
     pres.theme.defaultFont = fonts.body;
-    for (const scene of scenes) drawSlide(pres.slides.add(), scene, { scale: PPTX_SIZE.width / scene.width });
+    scenes.forEach((scene, i) => {
+      const slide = pres.slides.add();
+      drawSlide(slide, scene, { scale: PPTX_SIZE.width / scene.width });
+      if (notes?.[i]) slide.speakerNotes.text = String(notes[i]);
+    });
     const exported = Buffer.from((await PresentationFile.exportPptx(pres)).data);
     const pptx = await postProcess(exported, { fonts, exactLines: true });
     if (compare) await writeComparison(browser, pptx, scenes, compare, { PresentationFile });
-    return { pptx, scenes };
+    const pngs = renders ? await renderSlides(pptx, PresentationFile) : null;
+    return { pptx, scenes, pngs };
   } finally { await browser.close(); }
+}
+
+async function renderSlides(pptx, PresentationFile) {
+  const reread = await PresentationFile.importPptx(pptx), out = [];
+  for (const slide of reread.slides.items ?? [...reread.slides]) out.push(Buffer.from(await (await reread.export({ slide, format: 'png', scale: 1 })).arrayBuffer()));
+  return out;
 }
 
 async function shootHtml(page, dir, lang) {

@@ -62,7 +62,8 @@ function stripTokenBlocks(s) {
   return s;
 }
 function staticChecks(file, src) {
-  const body = file.endsWith('.css') ? stripTokenBlocks(src) : src;
+  // token definitions and comments are not usage; an HTML deck may inline the whole stylesheet
+  const body = stripTokenBlocks(src.replace(/\/\*[\s\S]*?\*\//g, ''));
   for (const h of new Set((body.match(/#[0-9A-Fa-f]{6}\b/g) || []).map(x => x.toUpperCase()))) if (!tokenHex.has(h)) add('R01', file, 'source', h);
   for (const [, prop, val] of body.matchAll(/((?:margin|padding)[\w-]*|(?:row-|column-)?gap)\s*:\s*([^;}"]+)/g))
     for (const [, n] of val.matchAll(/(?<![\w.-])(\d+)px/g)) if (+n % 4) add('R02', file, 'source', `${prop}: ${n}px`);

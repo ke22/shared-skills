@@ -21,7 +21,7 @@ description: >
 | `demo` | 帶影片播放器的 demo 簡報（`demo-player-deck`） | 暖 `#D97757` | 1920×1080 |
 | `iasdr` | **新簡報的視覺標準**：研討會、論文口試、研究與專案簡報；中英兩套排版。樣式 `templates/iasdr.css`、版型庫 `templates/iasdr-layouts.html`（47 個敘事版型）、icon `templates/icons.js`；規格見 `references/`（`iasdr-typesetting.md`、`narrative-layouts.md`、`components.md`、`zh-typesetting.md`） | 亮藍 `#3A77ED` | 1920×1080 |
 
-選主題的原則：新的研究簡報、研討會簡報用 `iasdr`，要 PPTX 就用 `scripts/html-to-pptx.mjs` 從 HTML 轉（見下方「HTML 轉 PPTX」）；工作台目前仍用 `research` 產 PPTX（工作台還沒接上 iasdr）；產品或系統 demo 用 `demo`。同一場報告不混用。
+選主題的原則：新的研究簡報、研討會簡報用 `iasdr`，要 PPTX 就用 `scripts/html-to-pptx.mjs` 從 HTML 轉（見下方「HTML 轉 PPTX」）；工作台兩個主題都能選（預設 `research`；選 `iasdr` 時 HTML 用 iasdr 版型、PPTX 由 HTML 轉出）；產品或系統 demo 用 `demo`。同一場報告不混用。
 
 ## 檔案
 
@@ -39,6 +39,7 @@ description: >
 | `presentation-studio/skills/research-deck-production/assets/tokens.json` | `themes.research` 去掉 `label` 與 `css`，格式與 studio 驗證器相同 | `sync-tokens.mjs --write` |
 | `shared-skills/audience-deck/references/house-style.md` | 兩個 `deck-tokens:research` 標記之間的 CSS 區塊 | `sync-tokens.mjs --write` |
 | `shared-skills/demo-player-deck/assets/deck-template.html` | 第一個 `:root` 區塊 | `sync-tokens.mjs --write` |
+| `presentation-studio/skills/research-deck-production/iasdr/` | iasdr 執行檔的複本：`html-to-pptx`、`pptx-post`、`browser-lib`、`lint-deck`、`iasdr.css`、`manifest.json`、`tokens.json`、字型（字型不進 Git） | `node scripts/sync-runtime.mjs`；`--check` 已列入 `test-design-system.mjs` |
 | `deck-design-system/templates/iasdr-deck.html` | `:root` 與 `[lang="zh-Hant"]` 區塊 | 由範本反向產生 tokens；改範本後要同步 `themes.iasdr.css`／`cssZh`（check 會擋） |
 
 已知舊拷貝（只警告，不改）：`訪談LLMwiki/skill/` 已於 2026-11-06 封存到 `訪談LLMwiki/_archive/20261106-ppt-migration/`，檢查時若不存在就略過。

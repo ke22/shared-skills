@@ -49,14 +49,21 @@ for (const lang of ['zh-Hant', 'en']) {
     for (const [c, n] of count(chars(expected[i] || '').map(c => c.toUpperCase()))) if ((have.get(c) || 0) < n) missing.push(`slide ${i + 1} '${c}'×${n - (have.get(c) || 0)}`);
     for (const m of xml.matchAll(/<a:latin typeface="([^"]*)"/g)) if (!['Manrope', 'Inter'].includes(m[1])) fontsBad.add('latin:' + m[1]);
     for (const m of xml.matchAll(/<a:ea typeface="([^"]*)"/g)) if (m[1] !== 'Noto Sans TC') fontsBad.add('ea:' + m[1]);
-    if (/<a:lnSpc>\s*<a:spcPct/.test(xml)) pct.push(i + 1);
+    // every paragraph that carries text must have exact spacing (absence would fall back to PowerPoint's single spacing)
+    const paras = [...xml.matchAll(/<a:p\b[^>]*>([\s\S]*?)<\/a:p>/g)].map(m => m[1]).filter(p => /<a:r>/.test(p));
+    const inexact = paras.filter(p => !/<a:lnSpc>\s*<a:spcPts val="\d+"\s*\/>/.test(p)).length;
+    if (inexact || /<a:lnSpc>\s*<a:spcPct/.test(xml)) pct.push(`${i + 1} (${inexact}/${paras.length} paragraphs)`);
+    if (!paras.length) pct.push(`${i + 1} (no text paragraphs found)`);
     const emu = v => Number(v) / 9525;  // px at 96 dpi
+    let boxes = 0;
     for (const m of xml.matchAll(/<p:sp>[\s\S]*?<\/p:sp>/g)) {
-      if (!/txBox="1"/.test(m[0])) continue;
+      if (!/<p:cNvPr[^>]*name="text:/.test(m[0])) continue;  // converter names its text boxes text:<class>
+      boxes++;
       const off = /<a:off x="(-?\d+)" y="(-?\d+)"/.exec(m[0]), ext = /<a:ext cx="(\d+)" cy="(\d+)"/.exec(m[0]); if (!off || !ext) continue;
       const [x, y, w, h] = [emu(off[1]), emu(off[2]), emu(ext[1]), emu(ext[2])];
       if (x < -1 || y < -1 || x + w > PPTX_SIZE.width + 1 || y + h > PPTX_SIZE.height + 1) outside.push(`slide ${i + 1} ${/name="([^"]*)"/.exec(m[0])?.[1]}`);
     }
+    if (!boxes) outside.push(`slide ${i + 1}: no text boxes found (check is not running)`);
   }
   step(`${lang}: no text lost`, missing.length === 0, missing.slice(0, 6).join(', ') || `${expected.join('').replace(/\s+/g, '').length} characters`);
   step(`${lang}: fonts are Manrope/Inter + Noto Sans TC`, fontsBad.size === 0, [...fontsBad].join(', '));
