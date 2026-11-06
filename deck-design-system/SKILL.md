@@ -19,9 +19,9 @@ description: >
 |---|---|---|---|
 | `research`（工作台 PPTX 預設） | 工作台產出的研究 PPTX、`audience-deck` 舊 HTML | 藍 `#2551CC` | 1280×720（studio）／1920×1080（HTML） |
 | `demo` | 帶影片播放器的 demo 簡報（`demo-player-deck`） | 暖 `#D97757` | 1920×1080 |
-| `iasdr` | **新簡報的視覺標準**：研討會、論文口試、研究與專案簡報；中英兩套排版。樣式 `templates/iasdr.css`、版型庫 `templates/iasdr-layouts.html`（46 個敘事版型）、icon `templates/icons.js`；規格見 `references/`（`iasdr-typesetting.md`、`narrative-layouts.md`、`components.md`、`zh-typesetting.md`） | 亮藍 `#3A77ED` | 1920×1080 |
+| `iasdr` | **新簡報的視覺標準**：研討會、論文口試、研究與專案簡報；中英兩套排版。樣式 `templates/iasdr.css`、版型庫 `templates/iasdr-layouts.html`（47 個敘事版型）、icon `templates/icons.js`；規格見 `references/`（`iasdr-typesetting.md`、`narrative-layouts.md`、`components.md`、`zh-typesetting.md`） | 亮藍 `#3A77ED` | 1920×1080 |
 
-選主題的原則：新的 HTML 研究簡報、研討會簡報用 `iasdr`；工作台產出的 PPTX 目前仍用 `research`（helper 尚未改成 iasdr）；產品或系統 demo 用 `demo`。同一場報告不混用。
+選主題的原則：新的研究簡報、研討會簡報用 `iasdr`，要 PPTX 就用 `scripts/html-to-pptx.mjs` 從 HTML 轉（見下方「HTML 轉 PPTX」）；工作台目前仍用 `research` 產 PPTX（工作台還沒接上 iasdr）；產品或系統 demo 用 `demo`。同一場報告不混用。
 
 ## 檔案
 
@@ -71,11 +71,14 @@ description: >
 
 | 檔案 | 用途 |
 |---|---|
-| `manifest.json` | **元件清單**，由程式產生，不要手改。記錄 61 個元件的用途、選擇器、用到的 token、文字欄位與字數規則、在 HTML／PPTX 的實作狀態、實際出現在哪些版型，以及每個版型由哪些元件組成 |
+| `manifest.json` | **元件清單**，由程式產生，不要手改。記錄 62 個元件的用途、選擇器、用到的 token、文字欄位與字數規則、在 HTML／PPTX 的實作狀態、實際出現在哪些版型，以及每個版型由哪些元件組成 |
 | `scripts/build-manifest.mjs` | 從 `components.md`、`iasdr.css`、`tokens.json` 與兩份範本的渲染結果產生清單；`--check` 檢查清單是否過期 |
 | `scripts/lint-deck.mjs` | 用清單與排版規則檢查任何 iasdr HTML 簡報：R01–R05 靜態檢查（色碼、間距、字級、襯線字、未定義 class），R10–R23 渲染檢查（對比、藍底字、最小字級、標題行數、置中行數、行長、邊界、中文混排與標點、字型、元件文字、越界、腳本錯誤、綠色語意）；有錯就 exit 1 |
 | `layouts.json` | **敘事版型清單**，由 `scripts/build-layouts.mjs` 從 `narrative-layouts.md` 與 `manifest.json` 產生：47 個版型各自回答的問題、82 個變體與「什麼時候用」、組成元件、對應的工作台元件與敘事關係（讀自工作台註冊表）、實作狀態，以及 5 條簡報主線。選法：**先依問題選版型，再依條件選變體** |
-| `scripts/test-design-system.mjs` | 一個指令跑完：tokens 一致、清單沒過期、兩份範本 lint 全過、`tests/fixtures/bad-deck.html` 會觸發每一條規則（確認沒有失效的規則） |
+| `scripts/test-design-system.mjs` | 一個指令跑完：tokens 一致、清單沒過期、兩份範本 lint 全過、`tests/fixtures/bad-deck.html` 會觸發每一條規則（確認沒有失效的規則）、範本轉 PPTX 不掉字 |
+| `scripts/html-to-pptx.mjs` | **HTML 轉可編輯 PPTX**（見下節） |
+| `scripts/pptx-post.mjs` | PPTX 匯出後處理：中英字型分開、行高改為固定點數 |
+| `scripts/test-html-to-pptx.mjs` | 轉換檢查：頁數、文字不遺失（對照頁面 innerText）、字型、行高、文字框不出界、檔案可重新讀入 |
 
 **規則分層**（`lint-deck.mjs` 每條規則標出層級）：
 
@@ -102,3 +105,31 @@ node scripts/test-design-system.mjs    # 全部要 PASS
 **檢查自己的簡報**：`node scripts/lint-deck.mjs path/to/deck.html --json report.json`
 
 需要 Chrome 與 Playwright（預設用 Codex runtime；可用 `WORKBENCH_RUNTIME_MODULES`、`CHROME_PATH` 指定），以及本機字型（`scripts/fetch-fonts.sh`）。
+
+## HTML 轉 PPTX（iasdr）
+
+**HTML 是唯一的設計來源，PPTX 由它轉出**，不另外寫一套 PowerPoint 版的元件。這樣 lint 檢查過的 HTML 就是 PPTX 的樣子，新增版型也不用另外移植。
+
+```bash
+node scripts/html-to-pptx.mjs deck.html --out deck.pptx --lang zh-Hant          # 或 --lang en；省略則全部
+node scripts/html-to-pptx.mjs deck.html --out deck.pptx --compare out/          # 另存每頁 HTML／PPTX 並排比對圖
+```
+
+做法：在 Chrome 渲染後，量出每個元素實際的位置與樣式，換算成 1280×720（13.33 吋標準 16:9）。
+
+| HTML | PPTX |
+|---|---|
+| 底色、框線、圓角、內框線（inset box-shadow）、陰影 | 原生形狀，可編輯 |
+| 文字 | 原生文字框，可編輯；保留每段的顏色、粗細、字級、字型。**斷行位置照瀏覽器**，所以中文標點禁則以瀏覽器（`line-break: strict`）為準，不交給 PowerPoint |
+| 行高 | 固定點數，和 CSS 一樣（PowerPoint 的「倍數」是乘字型自身行高，會比 CSS 鬆） |
+| 中英混排 | 英文 Manrope／Inter，中文 Noto Sans TC（分別寫進拉丁與東亞字型欄） |
+| icon、SVG 圖 | 內嵌 SVG（向量，保留漸層） |
+| 漸層背景、clip-path 形狀（漏斗、箭頭） | 元素本身的底色存成透明 PNG；裡面的文字仍是文字框 |
+| 偽元素 `::before`／`::after` | 先轉成真的元素再量 |
+| 疊放順序 | 依 z-index 與定位排序 |
+
+**已知損失**：字距（letter-spacing）、regular／bold 以外的字重（500 會變一般、800 會變粗體）、模糊陰影統一成一種柔和陰影。
+
+**字型**：開啟 PPTX 的電腦要安裝 `templates/fonts/` 的三套字型（Manrope、Inter、Noto Sans TC），否則 PowerPoint 會換成其他字型，行寬和斷行都會跑掉。
+
+**驗證狀態**：`iasdr-deck.html` 中英各 10 頁、`iasdr-layouts.html` 中文 47 頁，已用 artifact-tool 渲染並排比對。**還沒在 PowerPoint 實機開過**：行高小於字身的大字（例如封面大標）的垂直位置，以及 SVG 內文字的粗細，要以 PowerPoint 實際畫面為準。

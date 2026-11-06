@@ -408,7 +408,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L3-stacked-cards",
@@ -486,7 +486,7 @@
       "status": {
         "css": "defined",
         "html": "css-only",
-        "pptx": "not-ported"
+        "pptx": "n/a"
       },
       "usedIn": []
     },
@@ -513,7 +513,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N02a"
@@ -539,7 +539,7 @@
       "status": {
         "css": "defined",
         "html": "css-only",
-        "pptx": "not-ported"
+        "pptx": "n/a"
       },
       "usedIn": []
     },
@@ -568,7 +568,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L3-stacked-cards",
@@ -600,7 +600,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L1-cover",
@@ -647,7 +647,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L1-cover",
@@ -684,7 +684,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L2-statement",
@@ -719,7 +719,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L4-lead-columns",
@@ -758,7 +758,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N05a",
@@ -796,7 +796,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L3-stacked-cards",
@@ -833,7 +833,7 @@
       "status": {
         "css": "defined",
         "html": "css-only",
-        "pptx": "not-ported"
+        "pptx": "n/a"
       },
       "usedIn": []
     },
@@ -862,7 +862,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N07b"
@@ -891,7 +891,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L3-stacked-cards",
@@ -957,7 +957,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N05a",
@@ -993,7 +993,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L3-stacked-cards",
@@ -1032,7 +1032,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N03a"
@@ -1064,7 +1064,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L9-dark-showcase"
@@ -1094,7 +1094,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N25a"
@@ -1132,7 +1132,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N02a"
@@ -1166,7 +1166,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L5-navigator-detail",
@@ -1214,7 +1214,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N07b",
@@ -1256,7 +1256,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N14a",
@@ -1297,7 +1297,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N22a",
@@ -1331,7 +1331,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N27a"
@@ -1358,7 +1358,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N28a"
@@ -1386,7 +1386,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N08a",
@@ -1419,7 +1419,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L7-summary",
@@ -1460,7 +1460,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N01a",
@@ -1487,7 +1487,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N04a"
@@ -1522,7 +1522,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N42a"
@@ -1549,7 +1549,7 @@
       "status": {
         "css": "defined",
         "html": "css-only",
-        "pptx": "not-ported"
+        "pptx": "n/a"
       },
       "usedIn": []
     },
@@ -1593,7 +1593,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N10a",
@@ -1628,7 +1628,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N27a"
@@ -1655,7 +1655,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N28a"
@@ -1679,7 +1679,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N05a",
@@ -1717,7 +1717,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N10a",
@@ -1748,7 +1748,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N15a"
@@ -1782,7 +1782,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N09a"
@@ -1809,7 +1809,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L5-navigator-detail",
@@ -1840,7 +1840,7 @@
       "status": {
         "css": "defined",
         "html": "css-only",
-        "pptx": "not-ported"
+        "pptx": "n/a"
       },
       "usedIn": []
     },
@@ -1872,7 +1872,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N24a"
@@ -1913,7 +1913,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N12a"
@@ -1956,7 +1956,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N15a",
@@ -1986,7 +1986,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N22a"
@@ -2010,7 +2010,7 @@
       "status": {
         "css": "missing",
         "html": "missing",
-        "pptx": "not-ported"
+        "pptx": "n/a"
       },
       "usedIn": []
     },
@@ -2036,7 +2036,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N21a"
@@ -2076,7 +2076,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L8-discussion",
@@ -2111,7 +2111,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N41a"
@@ -2140,7 +2140,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N41a"
@@ -2174,7 +2174,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N14a",
@@ -2205,7 +2205,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L4-lead-columns",
@@ -2246,7 +2246,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N19a",
@@ -2280,7 +2280,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L9-dark-showcase"
@@ -2316,7 +2316,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N40a",
@@ -2341,7 +2341,7 @@
       "status": {
         "css": "missing",
         "html": "missing",
-        "pptx": "not-ported"
+        "pptx": "n/a"
       },
       "usedIn": []
     },
@@ -2363,7 +2363,7 @@
       "status": {
         "css": "missing",
         "html": "missing",
-        "pptx": "not-ported"
+        "pptx": "n/a"
       },
       "usedIn": []
     },
@@ -2392,7 +2392,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L1-cover",
@@ -2424,7 +2424,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L1-cover",
@@ -2453,7 +2453,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L10-thanks",
@@ -2479,7 +2479,7 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "L3-stacked-cards",
@@ -2531,13 +2531,24 @@
       "status": {
         "css": "defined",
         "html": "rendered",
-        "pptx": "not-ported"
+        "pptx": "converted"
       },
       "usedIn": [
         "N47a"
       ]
     }
   ],
+  "pptx": {
+    "method": "scripts/html-to-pptx.mjs: measure the rendered HTML, redraw as native shapes and text boxes at 1280×720",
+    "editable": "text boxes (runs, weight, colour), shapes; icons as embedded SVG",
+    "asImage": "backgrounds with gradients, and clip-path shapes with their subtree backgrounds (text inside stays editable)",
+    "knownLosses": [
+      "letter-spacing",
+      "font weights other than regular/bold",
+      "blur shadows become one soft shadow"
+    ],
+    "fonts": "install templates/fonts/*.ttf (Manrope, Inter, Noto Sans TC) on the machine that opens the PPTX"
+  },
   "layouts": {
     "N38a": {
       "components": [
@@ -3084,6 +3095,61 @@
       "C56",
       "C57"
     ],
-    "pptxPorted": []
+    "pptxConverted": [
+      "C01",
+      "C03",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C13",
+      "C14",
+      "C15",
+      "C16",
+      "C17",
+      "C18",
+      "C19",
+      "C20",
+      "C21",
+      "C22",
+      "C23",
+      "C24",
+      "C25",
+      "C26",
+      "C27",
+      "C28",
+      "C29",
+      "C30",
+      "C31",
+      "C33",
+      "C34",
+      "C35",
+      "C36",
+      "C37",
+      "C38",
+      "C39",
+      "C40",
+      "C42",
+      "C43",
+      "C44",
+      "C45",
+      "C47",
+      "C48",
+      "C49",
+      "C50",
+      "C51",
+      "C52",
+      "C53",
+      "C54",
+      "C55",
+      "C58",
+      "C59",
+      "C60",
+      "C61",
+      "C62"
+    ]
   }
 }

@@ -4,6 +4,7 @@
 //   2. manifest.json and layouts.json are not stale          (build-*.mjs --check)
 //   3. both templates pass every lint rule                   (lint-deck.mjs)
 //   4. the bad fixture trips every rule, so no rule is dead  (lint-deck.mjs on tests/fixtures/bad-deck.html)
+//   5. the deck template converts to PPTX without losing text (test-html-to-pptx.mjs)
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -33,4 +34,7 @@ const over = report.findings.filter(f => f.level === 'overridden');
 step('style rule override with a reason is accepted', over.some(f => f.rule === 'R13' && /quoted title/.test(f.reason)), `${over.length} override(s)`);
 step('floor rule override is ignored', report.findings.some(f => f.rule === 'R10' && f.level === 'error' && /override ignored: floor/.test(f.detail)));
 step('only style rules can be overridden', over.every(f => f.tier === 'style'));
+r = run('scripts/test-html-to-pptx.mjs');
+const pptxLines = r.stdout.trim().split('\n').filter(l => /^(PASS|FAIL)/.test(l));
+step('HTML → PPTX conversion (text, fonts, spacing, bounds)', r.status === 0, r.status ? pptxLines.filter(l => l.startsWith('FAIL')).join('; ') : `${pptxLines.length} checks`);
 process.exit(results.every(Boolean) ? 0 : 1);

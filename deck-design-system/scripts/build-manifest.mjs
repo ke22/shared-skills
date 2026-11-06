@@ -116,7 +116,8 @@ async function build() {
     return {
       ...(doc[id] || { id, name: '(not in components.md)', group: '' }),
       selectors: sels, tokens: defined ? tokensFor(sels) : [], textSlots: SLOTS[id] || {},
-      status: { css: defined ? 'defined' : 'missing', html: usedIn.length ? 'rendered' : defined ? 'css-only' : 'missing', pptx: 'not-ported' },
+      // PPTX is derived from the rendered HTML (scripts/html-to-pptx.mjs), so any rendered component converts
+      status: { css: defined ? 'defined' : 'missing', html: usedIn.length ? 'rendered' : defined ? 'css-only' : 'missing', pptx: usedIn.length ? 'converted' : 'n/a' },
       usedIn,
     };
   });
@@ -129,13 +130,20 @@ async function build() {
     sources: Object.fromEntries(['references/components.md', 'templates/iasdr.css', 'templates/iasdr-layouts.html', 'templates/iasdr-deck.html', 'tokens.json'].map(f => [f, hash(read(f))])),
     definedClasses: [...classes].sort(),
     textRoles, components,
+    pptx: {
+      method: 'scripts/html-to-pptx.mjs: measure the rendered HTML, redraw as native shapes and text boxes at 1280×720',
+      editable: 'text boxes (runs, weight, colour), shapes; icons as embedded SVG',
+      asImage: 'backgrounds with gradients, and clip-path shapes with their subtree backgrounds (text inside stays editable)',
+      knownLosses: ['letter-spacing', 'font weights other than regular/bold', 'blur shadows become one soft shadow'],
+      fonts: 'install templates/fonts/*.ttf (Manrope, Inter, Noto Sans TC) on the machine that opens the PPTX',
+    },
     layouts: Object.fromEntries(Object.entries(layouts).map(([k, v]) => [k, { components: v }])),
     summary: {
       components: components.length,
       rendered: components.filter(c => c.status.html === 'rendered').map(c => c.id),
       cssOnly: components.filter(c => c.status.html === 'css-only').map(c => c.id),
       missing: components.filter(c => c.status.html === 'missing').map(c => c.id),
-      pptxPorted: [],
+      pptxConverted: components.filter(c => c.status.pptx === 'converted').map(c => c.id),
     },
   };
 }
