@@ -44,6 +44,7 @@ const RULES = {
   R23: ['warn', 'Success colour used: confirm the item is completed AND verified', 'advisory'],
   R24: ['warn', 'Custom figure used (counts toward promotion: same kind in 3 decks -> new component)', 'advisory'],
   R25: ['warn', 'Custom figure without data-figure-kind or figcaption', 'advisory'],
+  R26: ['error', 'Source line / APA reference (max 2 lines, clear of page number, journal+volume in <i>: italic for English, bold for Chinese)', 'style'],
 };
 const findings = [];
 // Tiers: floor (readability, never overridable) · system (design-system integrity, never overridable)
@@ -116,7 +117,22 @@ for (const file of files) {
           if (/[一-鿿][,.;:!?](?!\d)/.test(txt)) push('R17', id, `half-width punctuation ${q}`, el); if (/[“”]/.test(txt)) push('R17', id, `curly quotes ${q}`, el); }
         const e = el.getBoundingClientRect(); if (e.width && !el.closest('.pnum,.secmark,.sample-note,.src,.legend,.contact,.inst') && (e.left < sb.left + 111 || e.right > sb.right - 111)) push('R16', id, `x ${Math.round(e.left - sb.left)}–${Math.round(e.right - sb.left)} ${q}`, el);
         if (cs.color === 'rgb(38, 137, 86)' || cs.backgroundColor === 'rgb(38, 137, 86)') push('R23', id, q, el);
+        if (cs.fontStyle === 'italic' && /[一-鿿]/.test(txt)) push('R26', id, `Chinese text set in italics ${q} (use bold: <i> inside a Chinese reference)`, el);
       }
+      // R26 source line / APA 7 references (zh-typesetting.md §11)
+      s.querySelectorAll('.src').forEach(src => {
+        const L = lines(src); if (L.length > 2) push('R26', id, `source line has ${L.length} lines (max 2; put full references on a reference slide)`, src);
+        const pn = s.querySelector('.pnum'); if (pn) { const a = src.getBoundingClientRect(), b = pn.getBoundingClientRect(); if (b.width && a.right > b.left - 16 && a.bottom > b.top && a.top < b.bottom) push('R26', id, 'source line runs into the page number', src); }
+        const units = [[]]; for (const n of src.childNodes) { if (n.nodeName === 'BR') units.push([]); else units.at(-1).push(n); }
+        for (const u of units) {
+          const text = u.map(n => n.textContent).join('').replace(/\s+/g, ' ').trim();
+          if (!/\(\d{4}[a-z]?\)\.|（\d{4}[a-z]?）。/.test(text)) continue;  // not an APA reference
+          const marks = u.filter(n => n.nodeType === 1).flatMap(n => [n, ...n.querySelectorAll('*')]).filter(e => e.tagName === 'I');
+          if (!marks.length) { push('R26', id, `APA reference without journal/volume in <i>: "${text.slice(0, 32)}"`, src); continue; }
+          for (const m of marks) { const st = getComputedStyle(m), latin = !/[一-鿿]/.test(m.textContent);
+            if (latin && st.fontStyle !== 'italic') push('R26', id, `English journal/volume not italic "${m.textContent.slice(0, 24)}" (mark the English reference lang="en")`, src); }
+        }
+      });
       // R13 titles
       s.querySelectorAll('h1.title,.display,.big,.cover h1').forEach(t => { const L = lines(t); const isH1 = t.matches('h1.title');
         const lim = isH1 ? 2 : t.matches('.big') ? 4 : (zh ? 2 : 3); const maxc = Math.max(0, ...L.map(l => [...l].filter(ch => /[一-鿿]/.test(ch)).length));
@@ -124,7 +140,7 @@ for (const file of files) {
       // R14, R15, R18 paragraphs
       s.querySelectorAll('p,li,td,h1,h2,h3').forEach(el => { if (el.closest('.photo-slot')) return; const cs = getComputedStyle(el); const L = lines(el);
         if (cs.textAlign === 'center' && L.length > 2 && !el.matches('h1,.display,.big')) push('R14', id, `${L.length} lines "${(L[0] || '').slice(0, 18)}"`, el);
-        if (L.length && !el.matches('h1,.display,.big')) { const width = l => [...l].reduce((n, ch) => n + (/[\u3000-\u9fff\uff00-\uffef]/.test(ch) ? 1 : 0.5), 0); /* zh-typesetting: count full-width characters; half-width = 0.5 */
+        if (L.length && !el.matches('h1,.display,.big,.src')) { /* .src: a reference string, governed by R26 */ const width = l => [...l].reduce((n, ch) => n + (/[\u3000-\u9fff\uff00-\uffef]/.test(ch) ? 1 : 0.5), 0); /* zh-typesetting: count full-width characters; half-width = 0.5 */
           const mx = Math.max(...L.map(l => zh ? Math.round(width(l)) : l.length)); if ((zh && mx > 32) || (!zh && mx > 75)) push('R15', id, `${mx} ${zh ? '字' : 'chars'}/line "${L[0].slice(0, 18)}"`, el); }
         if (zh) L.forEach((l, i) => { if (i && BADSTART.includes(l[0])) push('R18', id, `"${l[0]}" starts line ${i + 1}: ${l.slice(0, 16)}`, el); }); });
       // R20 component text rules from the manifest

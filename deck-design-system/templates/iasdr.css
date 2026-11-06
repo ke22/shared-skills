@@ -115,7 +115,13 @@ h1,h2,h3,p{margin:0}
 h1.title{font:var(--h1-w) var(--h1)/var(--h1-lh) var(--f-head);letter-spacing:var(--h1-tr);color:var(--ink);text-wrap:balance}
 .dark h1.title{color:#fff}
 .body{flex:1;min-height:0;display:flex;flex-direction:column}
-.src{position:absolute;left:var(--mx);bottom:32px;font:400 var(--micro)/1.3 var(--f-body);color:var(--text-2)}
+.src{position:absolute;left:var(--mx);right:160px;bottom:32px;font:400 var(--micro)/1.3 var(--f-body);color:var(--text-2)}
+/* APA 7 reference in the source line (zh-typesetting.md §11): journal + volume in <i>.
+   English reference: italic. Chinese reference: bold instead (Chinese is never italic).
+   The style follows the reference's language, so an English reference in a Chinese deck
+   carries lang="en" on its line or span. Max 2 lines; right:160px keeps clear of .pnum. */
+.src i{font-style:italic}
+.src i:lang(zh-Hant){font-style:normal;font-weight:700}
 
 /* type roles */
 .h2{font:var(--h2-w) var(--h2)/var(--h2-lh) var(--f-head);color:var(--accent)}
