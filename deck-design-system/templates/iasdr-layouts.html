@@ -27,6 +27,8 @@ const NOTE=()=>`<p class="sample-note">${T('Sample content · slot guidance','�
 const SRC=(e,z)=>`<p class="src">${T(e,z)}</p>`;
 const ROLE=(k,icon,e,z)=>`<span class="role r${k}"><i>${I(icon,40,'white')}</i>${T(e,z)}</span>`;
 const STAT=(v,u,e,z)=>`<div class="stat"><p class="v">${v}<small>${u}</small></p><p class="l">${T(e,z)}</p></div>`;
+const VMARK={met:'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',partly:'<svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>',gap:'<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>'};
+const QUOTE=(e,z,be,bz)=>`<div class="quote"><div><p>${T(e,z)}</p><p class="by">${T(be,bz)}</p></div></div>`;
 const PHONE=(e,z)=>`<div class="phone"><div class="scr">${T(e,z)}</div></div>`;
 const DESK=(e,z,w=640)=>`<div class="desk" style="width:${w}px"><div class="bez" style="height:${Math.round(w*.59)}px"><div class="scr">${T(e,z)}</div></div><div class="stand"></div><div class="foot"></div></div>`;
 const PHOTO=(h,e,z)=>`<div class="photo" style="height:${h}px">${T(e,z)}</div>`;
@@ -252,6 +254,17 @@ ${TB('Breakpoints','四大服務斷點','Learning happens in the field, after se
  ${[1,2,3,4].map(i=>`<div class="card md col gap24"><span class="idtag" style="align-self:flex-start;font-size:32px;height:56px">P${i}</span>${ROLE(i===4?2:1,i===4?'user-check':'hand-heart',i===4?'Supervisor':'Worker',i===4?'督導':'居服員')}<p class="h3">${T('The finding in one line','一句話的發現')}</p><hr class="rule"><p class="b muted">${T('Two supporting details from the data.','兩項來自資料的支持細節。')}</p></div>`).join('')}
 </div>${NOTE()}`);
 
+add('N48a','Finding with participant quotes','發現與受訪者引言',()=>`
+${TB('Finding 1','痛點 1','State the finding in one line, <span class="hl">key phrase in accent</span>','一句話寫出發現，<span class="hl">關鍵詞改成強調色</span>')}
+<div class="body" style="display:grid;grid-template-columns:320px 64px 1fr;gap:40px;align-items:center">
+ <div class="circ solid" style="--d:320px;font-size:var(--h3)">${T('The finding<br>in a few words','用幾個字<br>寫出痛點')}</div>
+ ${A(64)}
+ <div class="col gap24">
+  ${QUOTE('“The participant’s own words, with <b>the one line that matters in bold</b>.”','「受訪者的原話放在這裡，<b>粗體標出最關鍵的一句</b>，其餘照原話保留。」','P01 · Role','P01 角色')}
+  ${QUOTE('“A second, independent voice saying the same thing <b>in different words</b>.”','「第二位受訪者，<b>用不同的話說出同一件事</b>。」','P02 · Role','P02 角色')}
+ </div>
+</div>${NOTE()}`);
+
 /* ---------------- E. design ---------------- */
 add('N18a','Problem → principle → solution','問題 → 原則 → 方案',()=>`
 ${TB('Design principles','設計原則','Each design answers one breakpoint','每個設計方案都回應一個斷點')}
@@ -293,6 +306,17 @@ ${TB('How it works','系統運作邏輯','The assistant clarifies first, then re
   <div class="card md" style="width:300px"><p class="h3" style="font-size:var(--body-l)">${T('Logged to the platform','回流追蹤平台')}</p></div>
  </div>
  <div class="g4">${[1,2,3,4].map(i=>`<div class="card md"><p class="num" style="font-size:var(--body-l)">${T('Step','步驟')} ${i}</p><p class="b">${T('What the model does at this step.','模型在這一步做什麼。')}</p></div>`).join('')}</div>
+</div>${NOTE()}`);
+
+add('N21c','Mechanism logic · annotated screen','機制邏輯・標註截圖',()=>`
+${TB('Mechanism 1','設計機制 1','A few questions lead carers to notice what matters','用少量追問，引導照顧者觀察與思考')}
+<div class="body" style="display:grid;grid-template-columns:520px 1fr;gap:80px;align-items:center">
+ <div class="card md col gap24"><span class="chip" style="align-self:flex-start">${T('Guide the question','引導照顧者提問')}</span><p class="b">${T('Three cues the system asks about:','系統追問三個線索：')}</p>
+  ${[['What happened before?','行為前發生了什麼？'],['What did the person do?','患者做了什麼？'],['How did the carer respond?','照顧者怎麼回應？']].map(([e,z],i)=>`<div class="row gap16" style="align-items:center"><span class="idtag">0${i+1}</span><p class="b">${T(e,z)}</p></div>`).join('')}
+ </div>
+ <div class="annot" style="--note-w:420px">${PHONE('Real screenshot','真實截圖')}
+  ${[[22,72,'Antecedent','行為前因'],[48,74,'Behaviour','患者行為'],[74,68,'Carer response','照顧者反應']].map(([y,x,e,z])=>`<span class="mark" style="--x:${x}%;--y:${y}%"></span><div class="note" style="--y:${y}%"><p class="nt">${T(e,z)}</p><p class="cap">${T('What the screen shows here.','畫面這一處在做什麼。')}</p></div>`).join('')}
+ </div>
 </div>${NOTE()}`);
 
 add('N22a','Future service blueprint','新服務藍圖',()=>`
@@ -370,6 +394,12 @@ ${TB('Conditions','條件','What the system does in each situation','系統在�
 <div class="body col center">
  <table class="tbl"><tr><th style="width:520px">${T('Situation','情況')}</th><th>${T('Expected behaviour','預期行為')}</th></tr>
  ${[0,0,0,1].map((s,i)=>`<tr class="${s?'sev':''}"><td class="k">${T(s?'Emergency':'Situation '+(i+1),s?'緊急狀況':'情況 '+(i+1))}</td><td>${T(s?'Stop advising; tell the worker to call for help.':'One line on the expected behaviour.',s?'停止給建議，提醒居服員立即求助。':'一行預期行為。')}</td></tr>`).join('')}</table>
+</div>${NOTE()}`);
+
+add('N49a','Evaluation verdicts','評估判定',()=>`
+${TB('Prototype evaluation','原型評估結果','The prototype reads the situation, <span class="hl">but cannot yet hold context</span>','原型已能判斷情境，<span class="hl">但還不能延續脈絡</span>')}
+<div class="body g3">
+ ${[['met','Met','達成','Adapts to the case record','能依個案資料調整'],['partly','Partly met','部分達成','Knows when to call for help','知道何時找專業支援'],['gap','Not yet','尚未達成','Keeps context across turns','延續對話脈絡']].map(([k,we,wz,te,tz])=>`<div class="card md col gap24"><div class="verdict${k==='met'?'':' '+k}"><span class="vmark">${VMARK[k]}</span><div><span class="vword">${T(we,wz)}</span><p class="vtext">${T(te,tz)}</p></div></div><hr class="rule"><p class="b">${T('The evidence: a number, or what the test showed.','證據：數據，或測試中看到的情形。')}</p>${QUOTE('“A participant quote, <b>key line in bold</b>.”','「受訪者的原話，<b>粗體標出最關鍵的一句</b>。」','P01 · Role','P01 角色')}</div>`).join('')}
 </div>${NOTE()}`);
 
 /* ---------------- G. discussion and close ---------------- */

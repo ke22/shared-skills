@@ -16,8 +16,8 @@
   },
   "relationshipsSource": "presentation-studio/app/presentation-workbench/src/lib/semantic-layout.js",
   "sources": {
-    "references/narrative-layouts.md": "d6106416975c196f",
-    "manifest.json": "864dcdaa8fc360e7"
+    "references/narrative-layouts.md": "acf4aedaa8ae6bc5",
+    "manifest.json": "1899c55bd9751522"
   },
   "layouts": [
     {
@@ -1420,6 +1420,66 @@
       ]
     },
     {
+      "id": "N48",
+      "name": "發現與受訪者引言",
+      "section": {
+        "id": "D",
+        "name": "發現：看到了什麼"
+      },
+      "question": "這個發現，受訪者實際怎麼說？",
+      "variants": [
+        {
+          "id": "a",
+          "name": "痛點圓＋引言卡",
+          "when": "一個發現配 2 則受訪者引言；每則粗體標一句關鍵話，後面附受訪者代號",
+          "sources": [
+            "TP p8–p10",
+            "IC p7–p9"
+          ],
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C12",
+            "C36",
+            "C48"
+          ]
+        },
+        {
+          "id": "b",
+          "name": "多發現並列",
+          "when": "3 個發現各配 1 則最有代表性的引言",
+          "sources": [
+            "TP p17",
+            "p19"
+          ],
+          "implemented": false
+        }
+      ],
+      "components": [
+        "C48",
+        "C36",
+        "C12"
+      ],
+      "workbench": {
+        "components": [
+          "assertion-evidence"
+        ],
+        "relationships": [
+          "evidence",
+          "hierarchy"
+        ]
+      },
+      "sources": [
+        "TP p8",
+        "IC p7"
+      ],
+      "docStatus": "新",
+      "priority": "P1",
+      "implemented": [
+        "a"
+      ]
+    },
+    {
       "id": "N18",
       "name": "問題 → 原則 → 方案",
       "section": {
@@ -1709,13 +1769,33 @@
             "IA p9"
           ],
           "implemented": false
+        },
+        {
+          "id": "c",
+          "name": "標註截圖",
+          "when": "用一張真實畫面說明一個機制，引線指出畫面上對應的位置；左側說明卡列出機制步驟",
+          "sources": [
+            "TP p13–p15",
+            "IC p10–p12"
+          ],
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C14",
+            "C21",
+            "C22",
+            "C53",
+            "C66"
+          ]
         }
       ],
       "components": [
         "C47",
         "C36",
         "C14",
-        "C18"
+        "C18",
+        "C66",
+        "C53"
       ],
       "workbench": {
         "components": [
@@ -1727,12 +1807,14 @@
       },
       "sources": [
         "iT p19",
-        "IA p9"
+        "IA p9",
+        "TP p13"
       ],
       "docStatus": "新",
       "priority": "P1",
       "implemented": [
-        "a"
+        "a",
+        "c"
       ]
     },
     {
@@ -2147,6 +2229,61 @@
       ],
       "docStatus": "新",
       "priority": "P2",
+      "implemented": [
+        "a"
+      ]
+    },
+    {
+      "id": "N49",
+      "name": "評估判定",
+      "section": {
+        "id": "F",
+        "name": "證據與狀態：做到哪、可信到哪"
+      },
+      "question": "評估結果裡，哪些達成、哪些還沒？",
+      "variants": [
+        {
+          "id": "a",
+          "name": "判定卡",
+          "when": "3 個評估面向，每張卡頂端是判定徽章（達成／部分／缺口）與一句判定，下面放證據：數據或受訪者引言",
+          "sources": [
+            "TP p17–p20"
+          ],
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C12",
+            "C14",
+            "C52",
+            "C65"
+          ]
+        },
+        {
+          "id": "b",
+          "name": "達成與缺口兩排",
+          "when": "同一組面向，上排達成、下排缺口，方便對照",
+          "sources": [
+            "TP p17＋p18"
+          ],
+          "implemented": false
+        }
+      ],
+      "components": [
+        "C65",
+        "C14",
+        "C12",
+        "C52"
+      ],
+      "workbench": {
+        "components": [],
+        "relationships": [],
+        "note": "—"
+      },
+      "sources": [
+        "TP p17–p20"
+      ],
+      "docStatus": "新",
+      "priority": "P1",
       "implemented": [
         "a"
       ]
@@ -3066,13 +3203,14 @@
     }
   ],
   "summary": {
-    "layouts": 47,
-    "variants": 82,
-    "implementedVariants": 44,
-    "layoutsWithAnyImplementation": 46,
+    "layouts": 49,
+    "variants": 87,
+    "implementedVariants": 47,
+    "layoutsWithAnyImplementation": 48,
     "noWorkbenchComponent": [
       "N02",
       "N12",
+      "N49",
       "N29"
     ]
   }

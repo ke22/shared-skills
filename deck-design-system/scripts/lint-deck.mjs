@@ -44,6 +44,7 @@ const RULES = {
   R23: ['warn', 'Success colour used: confirm the item is completed AND verified', 'advisory'],
   R24: ['warn', 'Custom figure used (counts toward promotion: same kind in 3 decks -> new component)', 'advisory'],
   R25: ['warn', 'Custom figure without data-figure-kind or figcaption', 'advisory'],
+  R28: ['error', 'Title highlight (.hl only in a content-page h1, one phrase, zh <= 12 CJK / en <= 36 chars)', 'style'],
   R27: ['warn', 'Empty illustration slot (.illus with no image): a finished deck should not keep placeholders', 'advisory'],
   R26: ['error', 'Source line / APA reference (max 2 lines, clear of page number, journal+volume in <i>: italic for English, bold for Chinese)', 'style'],
 };
@@ -121,6 +122,10 @@ for (const file of files) {
         if (cs.color === 'rgb(38, 137, 86)' || cs.backgroundColor === 'rgb(38, 137, 86)') push('R23', id, q, el);
         if (cs.fontStyle === 'italic' && /[一-鿿]/.test(txt)) push('R26', id, `Chinese text set in italics ${q} (use bold: <i> inside a Chinese reference)`, el);
       }
+      // R28 title highlight (components.md C01): the coloured phrase is the page's one emphasis
+      s.querySelectorAll('.hl').forEach(h => { if (!h.closest('h1.title')) push('R28', id, `highlight outside a content-page title "${h.textContent.trim().slice(0, 20)}"`, h); });
+      s.querySelectorAll('h1.title').forEach(t => { const hs = t.querySelectorAll('.hl'); if (hs.length > 1) push('R28', id, `${hs.length} highlighted phrases in one title`, t);
+        hs.forEach(h => { const tx = h.textContent.trim(), cjk = [...tx].filter(c => /[一-鿿]/.test(c)).length; if ((zh && cjk > 12) || (!zh && tx.length > 36)) push('R28', id, `highlight too long "${tx}"`, h); }); });
       // R27 imagery placeholders (iasdr-imagery.md §5)
       s.querySelectorAll('.illus').forEach(f => { if (!f.querySelector('img,svg')) push('R27', id, 'empty .illus slot', f); });
       // R26 source line / APA 7 references (zh-typesetting.md §11)

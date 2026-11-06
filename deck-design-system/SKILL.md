@@ -19,7 +19,7 @@ description: >
 |---|---|---|---|
 | `research`（工作台 PPTX 預設） | 工作台產出的研究 PPTX、`audience-deck` 舊 HTML | 藍 `#2551CC` | 1280×720（studio）／1920×1080（HTML） |
 | `demo` | 帶影片播放器的 demo 簡報（`demo-player-deck`） | 暖 `#D97757` | 1920×1080 |
-| `iasdr` | **新簡報的視覺標準**：研討會、論文口試、研究與專案簡報；中英兩套排版。樣式 `templates/iasdr.css`、版型庫 `templates/iasdr-layouts.html`（47 個敘事版型）、icon `templates/icons.js`；規格見 `references/`（`iasdr-typesetting.md`、`iasdr-imagery.md`、`narrative-layouts.md`、`components.md`、`zh-typesetting.md`） | 亮藍 `#3A77ED` | 1920×1080 |
+| `iasdr` | **新簡報的視覺標準**：研討會、論文口試、研究與專案簡報；中英兩套排版。樣式 `templates/iasdr.css`、版型庫 `templates/iasdr-layouts.html`（49 個敘事版型）、icon `templates/icons.js`；規格見 `references/`（`iasdr-typesetting.md`、`iasdr-imagery.md`、`narrative-layouts.md`、`components.md`、`zh-typesetting.md`） | 亮藍 `#3A77ED` | 1920×1080 |
 
 選主題的原則：新的研究簡報、研討會簡報用 `iasdr`，要 PPTX 就用 `scripts/html-to-pptx.mjs` 從 HTML 轉（見下方「HTML 轉 PPTX」）；工作台兩個主題都能選（預設 `research`；選 `iasdr` 時 HTML 用 iasdr 版型、PPTX 由 HTML 轉出）；產品或系統 demo 用 `demo`。同一場報告不混用。
 
@@ -72,10 +72,10 @@ description: >
 
 | 檔案 | 用途 |
 |---|---|
-| `manifest.json` | **元件清單**，由程式產生，不要手改。記錄 62 個元件的用途、選擇器、用到的 token、文字欄位與字數規則、在 HTML／PPTX 的實作狀態、實際出現在哪些版型，以及每個版型由哪些元件組成 |
+| `manifest.json` | **元件清單**，由程式產生，不要手改。記錄 66 個元件的用途、選擇器、用到的 token、文字欄位與字數規則、在 HTML／PPTX 的實作狀態、實際出現在哪些版型，以及每個版型由哪些元件組成 |
 | `scripts/build-manifest.mjs` | 從 `components.md`、`iasdr.css`、`tokens.json` 與兩份範本的渲染結果產生清單；`--check` 檢查清單是否過期 |
-| `scripts/lint-deck.mjs` | 用清單與排版規則檢查任何 iasdr HTML 簡報：R01–R05 靜態檢查（色碼、間距、字級、襯線字、未定義 class），R10–R26 渲染檢查（對比、藍底字、最小字級、標題行數、置中行數、行長、邊界、中文混排與標點、字型、元件文字、越界、腳本錯誤、綠色語意、自訂圖解、頁尾 APA 文獻）；有錯就 exit 1 |
-| `layouts.json` | **敘事版型清單**，由 `scripts/build-layouts.mjs` 從 `narrative-layouts.md` 與 `manifest.json` 產生：47 個版型各自回答的問題、82 個變體與「什麼時候用」、組成元件、對應的工作台元件與敘事關係（讀自工作台註冊表）、實作狀態，以及 5 條簡報主線。選法：**先依問題選版型，再依條件選變體** |
+| `scripts/lint-deck.mjs` | 用清單與排版規則檢查任何 iasdr HTML 簡報：R01–R05 靜態檢查（色碼、間距、字級、襯線字、未定義 class），R10–R28 渲染檢查（對比、藍底字、最小字級、標題行數、置中行數、行長、邊界、中文混排與標點、字型、元件文字、越界、腳本錯誤、綠色語意、自訂圖解、頁尾 APA 文獻、空的插畫位置、標題上色）；有錯就 exit 1 |
+| `layouts.json` | **敘事版型清單**，由 `scripts/build-layouts.mjs` 從 `narrative-layouts.md` 與 `manifest.json` 產生：49 個版型各自回答的問題、87 個變體與「什麼時候用」、組成元件、對應的工作台元件與敘事關係（讀自工作台註冊表）、實作狀態，以及 5 條簡報主線。選法：**先依問題選版型，再依條件選變體** |
 | `scripts/test-design-system.mjs` | 一個指令跑完：tokens 一致、清單沒過期、兩份範本 lint 全過、`tests/fixtures/bad-deck.html` 會觸發每一條規則（確認沒有失效的規則）、範本轉 PPTX 不掉字 |
 | `scripts/html-to-pptx.mjs` | **HTML 轉可編輯 PPTX**（見下節） |
 | `scripts/pptx-post.mjs` | PPTX 匯出後處理：中英字型分開、行高改為固定點數 |
@@ -87,8 +87,8 @@ description: >
 |---|---|---|
 | 可讀性底線 floor | R03、R10、R11、R12、R16、R18、R21、R22 | 不能；寫了覆寫也會被忽略並標註 |
 | 系統完整性 system | R01、R02、R04、R05 | 不能 |
-| 風格 style | R13、R14、R15、R17、R20、R26 | 可以：在元素或其上層加 `data-lint-allow="R13: 理由"`，理由至少 4 個字；報告會列出所有覆寫 |
-| 提醒 advisory | R19、R23、R24、R25 | 不擋產出 |
+| 風格 style | R13、R14、R15、R17、R20、R26、R28 | 可以：在元素或其上層加 `data-lint-allow="R13: 理由"`，理由至少 4 個字；報告會列出所有覆寫 |
+| 提醒 advisory | R19、R23、R24、R25、R27 | 不擋產出 |
 
 **表達力的出口與指標**：
 - 沒有版型能不變形地表達時，用 **N47 自訂圖解**（元件 C62，`<figure class="figure" data-figure-kind="類型">`）。內容形式不限，但要通過底線規則。不要把內容硬塞進 N38、N39。
