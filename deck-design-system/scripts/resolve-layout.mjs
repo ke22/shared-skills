@@ -15,6 +15,8 @@
 //      or { fit: false, reason, fallback: 'N47', alternatives } — never a silent generic layout
 //      (layouts.json fallbackPolicy.neverSilentlyGeneric).
 const MAX_ITEMS = 6;  // a variant with no count limit still holds at most this many items
+// a pick needs real evidence (a matching count, data kind or position), not just an implemented template
+const MIN_SCORE = 1;
 const AUTO_EXCLUDED = new Set(['N29', 'N47']);  // handed to another skill / the explicit no-fit fallback
 
 export function resolveLayout(need, doc) {
@@ -58,7 +60,7 @@ export function resolveLayout(need, doc) {
   }
   const ok = options.filter(o => !o.reject).sort((a, b) => b.score - a.score || a.order - b.order);
   const alternatives = ok.slice(1, 4).map(({ key, name, score }) => ({ key, name, score }));
-  if (!ok.length || ok[0].score < 0) {
+  if (!ok.length || ok[0].score < MIN_SCORE) {
     const reason = !pool.length ? 'no layout accepts this component or relationship' : !ok.length ? `every candidate rejected: ${[...new Set(options.map(o => o.reject))].slice(0, 3).join('; ')}` : 'best candidate does not match the content';
     return { fit: false, reason, fallback: doc.fallbackPolicy.customFigureLayout, alternatives: ok.slice(0, 3).map(({ key, name, score }) => ({ key, name, score })) };
   }

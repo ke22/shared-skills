@@ -47,3 +47,8 @@ test('N29 and N47 are never picked automatically', () => {
     assert.ok(!['N29', 'N47'].includes(r.layout));
   }
 });
+
+test('a count match alone is not enough: two plain-text points do not become participant quotes', () => {
+  const r = resolveLayout({ component: 'assertion-evidence', count: 1, data: ['text'], position: 'opening' }, doc);
+  assert.ok(!r.fit || r.layout !== 'N48', JSON.stringify(r));
+});
