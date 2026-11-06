@@ -24,14 +24,15 @@ export const RULES = {
   R23: { level: 'warn', tier: 'advisory', desc: 'Success colour used: confirm the item is completed AND verified', zh: '用了成功綠', fix: '確認該項已完成而且已驗證；只是完成就用 --status-met。' },
   R24: { level: 'warn', tier: 'advisory', desc: 'Custom figure used (counts toward promotion: same kind in 3 decks -> new component)', zh: '用了自訂圖解', fix: '同一種圖解在 3 份簡報出現，就提案成新元件。' },
   R25: { level: 'warn', tier: 'advisory', desc: 'Custom figure without data-figure-kind or figcaption', zh: '自訂圖解缺少種類或圖說', fix: '在 .figure 加 data-figure-kind，並寫 figcaption。' },
-  R26: { level: 'error', tier: 'style', desc: 'Source line / APA reference (max 2 lines, clear of page number, journal+volume in <i>: italic for English, bold for Chinese)', zh: '來源列與 APA 文獻', fix: '最多 2 行、避開頁碼；期刊名與卷數放進 <i>，中文文獻會自動改粗體；完整書目放參考文獻頁。' },
+  R26: { level: 'error', tier: 'style', desc: 'Source line / APA references (source line max 2 lines, clear of page number; journal+volume in <i>: italic for English, bold for Chinese; reference list: Chinese first, English A–Z)', zh: '來源列與 APA 文獻', fix: '來源列最多 2 行、避開頁碼；期刊名與卷數放進 <i>，中文文獻會自動改粗體；完整書目放參考文獻頁（N51），中文在前、英文依字母排序。' },
   R27: { level: 'warn', tier: 'advisory', desc: 'Empty illustration slot (.illus with no image): a finished deck should not keep placeholders', zh: '插畫位置是空的', fix: '放入插畫，或拿掉 .illus。' },
   R28: { level: 'error', tier: 'style', desc: 'Title highlight (.hl only in a content-page h1, one phrase, zh <= 12 CJK / en <= 36 chars)', zh: '標題上色用法', fix: '.hl 只放在內容頁標題，一頁一處，中文 12 字內。' },
   R29: { level: 'error', tier: 'system', desc: 'Status colour outside a status component (warning / danger / success hues mean status only)', zh: '狀態色用在狀態元件以外', fix: '琥珀、紅、綠只表示狀態。裝飾或分類改用結構色、類別色；確實是狀態標記時，加 data-sem="status"。' },
   R30: { level: 'error', tier: 'style', desc: 'Title highlight plus another blue text emphasis on the same slide', zh: '標題上色與內文藍字強調並存', fix: '一頁只留一種強調：保留標題上色，內文改用粗體深色；或拿掉 .hl。' },
   R31: { level: 'error', tier: 'style', desc: 'Arrow between a claim and its evidence (arrows mean sequence or cause)', zh: '主張與佐證之間畫了箭頭', fix: '箭頭只表示順序或因果。主張與佐證用上下堆疊或並列表示支持關係，拿掉箭頭。' },
-  R32: { level: 'error', tier: 'system', desc: 'Verdict badge: mark shape and verdict word must match the verdict (met = check, partly = half circle, gap = cross)', zh: '判定徽章的符號或判定詞與判定不一致', fix: '達成用勾、部分用半圓、缺口用叉，並配上對應的判定詞；不要只靠顏色。' },
+  R32: { level: 'error', tier: 'system', desc: 'Status mark shape and word must match its state (verdict: check / half / cross; evidence strength: filled / half / hollow)', zh: '判定徽章或證據強度標記的符號、用詞與狀態不一致', fix: '判定：達成用勾、部分用半圓、缺口用叉；證據強度：已確認實心、初步觀察半實心、尚未驗證空心。符號一定配上對應的詞，不要只靠顏色。' },
   R33: { level: 'error', tier: 'system', desc: 'Numbered pins on the figure and in the list do not match one to one', zh: '圖上的編號與說明列表不一致', fix: '圖上每個編號在列表都要有一項，反之亦然。' },
+  R35: { level: 'error', tier: 'style', desc: 'Chart (C32): one highlighted series, a takeaway under the chart, and the data source in the source line', zh: '圖表規則', fix: '只凸顯標題講的那一組，其餘用 --struct-muted；圖下寫一句結論（.take）；來源列寫資料出處。' },
   R34: { level: 'warn', tier: 'advisory', desc: 'Base colour token in an inline style (use the semantic token: structure / emphasis / status / category)', zh: 'inline style 直接用基礎色', fix: '改用提示中的語意 token。' },
 };
 export const TIERS = { floor: ['可讀性底線', '不能覆寫'], system: ['系統完整性', '不能覆寫'], style: ['風格', '可附理由覆寫'], advisory: ['提醒', '不擋產出'] };

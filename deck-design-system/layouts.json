@@ -44,8 +44,8 @@
   },
   "relationshipsSource": "presentation-studio/app/presentation-workbench/src/lib/semantic-layout.js",
   "sources": {
-    "references/narrative-layouts.md": "957c1b1511cc6cc6",
-    "manifest.json": "bb653d2056790902"
+    "references/narrative-layouts.md": "0ec27b52d7a671fc",
+    "manifest.json": "bf450b4d0eb42d21"
   },
   "families": [
     {
@@ -57,7 +57,8 @@
         "N02",
         "N06",
         "N37",
-        "N34"
+        "N34",
+        "N51"
       ]
     },
     {
@@ -144,7 +145,8 @@
       "layouts": [
         "N26",
         "N27",
-        "N28"
+        "N28",
+        "N50"
       ]
     },
     {
@@ -613,7 +615,8 @@
           "N02",
           "N06",
           "N37",
-          "N34"
+          "N34",
+          "N51"
         ]
       },
       "implemented": [
@@ -728,7 +731,8 @@
           "N01",
           "N06",
           "N37",
-          "N34"
+          "N34",
+          "N51"
         ]
       },
       "implemented": [
@@ -862,7 +866,14 @@
             "position": [],
             "occasion": []
           },
-          "implemented": false
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C05",
+            "C14",
+            "C29",
+            "C32"
+          ]
         },
         {
           "id": "c",
@@ -903,7 +914,7 @@
         "OD p1",
         "IA p2"
       ],
-      "docStatus": "部分（a 有）",
+      "docStatus": "部分（a、b 有）",
       "priority": "P1",
       "order": 2,
       "family": {
@@ -922,7 +933,8 @@
         ]
       },
       "implemented": [
-        "a"
+        "a",
+        "b"
       ]
     },
     {
@@ -1269,7 +1281,8 @@
           "N01",
           "N02",
           "N37",
-          "N34"
+          "N34",
+          "N51"
         ]
       },
       "implemented": [
@@ -2465,7 +2478,8 @@
           "renderedComponents": [
             "C01",
             "C12",
-            "C48"
+            "C48",
+            "C67"
           ]
         },
         {
@@ -3031,7 +3045,8 @@
             "C21",
             "C22",
             "C53",
-            "C66"
+            "C66",
+            "C67"
           ]
         }
       ],
@@ -3308,7 +3323,8 @@
             "C29",
             "C31",
             "C52",
-            "C61"
+            "C61",
+            "C67"
           ]
         }
       ],
@@ -3576,7 +3592,8 @@
         "why": "每件事做到哪一步",
         "neighbours": [
           "N27",
-          "N28"
+          "N28",
+          "N50"
         ]
       },
       "implemented": [
@@ -3644,7 +3661,8 @@
         "why": "哪些資料能證明哪個檢查點",
         "neighbours": [
           "N26",
-          "N28"
+          "N28",
+          "N50"
         ]
       },
       "implemented": [
@@ -3713,7 +3731,8 @@
         "why": "不同條件下怎麼處理",
         "neighbours": [
           "N26",
-          "N27"
+          "N27",
+          "N50"
         ]
       },
       "implemented": [
@@ -4341,6 +4360,139 @@
       ]
     },
     {
+      "id": "N50",
+      "name": "研究限制",
+      "section": {
+        "id": "G",
+        "name": "討論與收尾：所以呢、接下來呢"
+      },
+      "question": "結論在哪些條件下不成立？",
+      "variants": [
+        {
+          "id": "a",
+          "name": "限制表",
+          "when": "2–4 項限制，各自寫出對結論的影響與因應方式",
+          "sources": [
+            "WB"
+          ],
+          "select": {
+            "count": {
+              "min": 2,
+              "max": 4
+            },
+            "data": [
+              "table"
+            ],
+            "position": [
+              "closing"
+            ],
+            "occasion": []
+          },
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C10",
+            "C33"
+          ]
+        }
+      ],
+      "components": [
+        "C33",
+        "C10"
+      ],
+      "workbench": {
+        "components": [],
+        "relationships": [],
+        "note": "—"
+      },
+      "sources": [
+        "WB"
+      ],
+      "docStatus": "有",
+      "priority": "P1",
+      "order": 7,
+      "family": {
+        "id": "F8",
+        "name": "狀態",
+        "question": "做到哪、可信到哪？"
+      },
+      "pickOver": {
+        "why": "結論在哪些條件下不成立、怎麼因應",
+        "neighbours": [
+          "N26",
+          "N27",
+          "N28"
+        ]
+      },
+      "implemented": [
+        "a"
+      ]
+    },
+    {
+      "id": "N51",
+      "name": "參考文獻",
+      "section": {
+        "id": "G",
+        "name": "討論與收尾：所以呢、接下來呢"
+      },
+      "question": "引用了哪些文獻？",
+      "variants": [
+        {
+          "id": "a",
+          "name": "完整書目",
+          "when": "頁尾來源列放不下，或口試、投稿要求列出全部文獻",
+          "sources": [],
+          "select": {
+            "count": null,
+            "data": [
+              "literature"
+            ],
+            "position": [
+              "closing"
+            ],
+            "occasion": []
+          },
+          "implemented": true,
+          "renderedComponents": [
+            "C01",
+            "C68"
+          ]
+        }
+      ],
+      "components": [
+        "C68"
+      ],
+      "workbench": {
+        "components": [],
+        "relationships": [],
+        "note": "—"
+      },
+      "sources": [
+        "—"
+      ],
+      "docStatus": "有",
+      "priority": "P1",
+      "order": 7,
+      "family": {
+        "id": "F1",
+        "name": "框架與過場",
+        "question": "現在在哪裡、接下來是什麼？"
+      },
+      "pickOver": {
+        "why": "列出完整書目，頁內只放簡短引用",
+        "neighbours": [
+          "N01",
+          "N02",
+          "N06",
+          "N37",
+          "N34"
+        ]
+      },
+      "implemented": [
+        "a"
+      ]
+    },
+    {
       "id": "N34",
       "name": "感謝與行動呼籲",
       "section": {
@@ -4460,7 +4612,8 @@
           "N01",
           "N02",
           "N06",
-          "N37"
+          "N37",
+          "N51"
         ]
       },
       "implemented": [
@@ -4589,7 +4742,8 @@
           "N01",
           "N02",
           "N06",
-          "N34"
+          "N34",
+          "N51"
         ]
       },
       "implemented": [
@@ -4723,10 +4877,22 @@
           "optional": false
         },
         {
+          "layout": "N50",
+          "variant": null,
+          "alternative": null,
+          "optional": false
+        },
+        {
           "layout": "N30",
           "variant": "b",
           "alternative": null,
           "optional": false
+        },
+        {
+          "layout": "N51",
+          "variant": null,
+          "alternative": null,
+          "optional": true
         },
         {
           "layout": "N34",
@@ -5014,15 +5180,17 @@
     }
   ],
   "summary": {
-    "layouts": 49,
-    "variants": 87,
-    "implementedVariants": 47,
-    "layoutsWithAnyImplementation": 48,
+    "layouts": 51,
+    "variants": 89,
+    "implementedVariants": 50,
+    "layoutsWithAnyImplementation": 50,
     "noWorkbenchComponent": [
       "N02",
       "N12",
       "N49",
-      "N29"
+      "N29",
+      "N50",
+      "N51"
     ],
     "families": 10
   }

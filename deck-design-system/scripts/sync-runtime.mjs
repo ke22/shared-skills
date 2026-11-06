@@ -12,8 +12,8 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const args = process.argv.slice(2), opt = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
 const TARGET = path.resolve(opt('--target') || path.join(ROOT, '../../presentation-studio/skills/research-deck-production/iasdr'));
 export const RUNTIME_FILES = [
-  'scripts/html-to-pptx.mjs', 'scripts/pptx-post.mjs', 'scripts/browser-lib.mjs', 'scripts/lint-deck.mjs', 'scripts/lint-rules.mjs',
-  'manifest.json', 'tokens.json', 'templates/iasdr.css',
+  'scripts/html-to-pptx.mjs', 'scripts/pptx-post.mjs', 'scripts/browser-lib.mjs', 'scripts/lint-deck.mjs', 'scripts/lint-rules.mjs', 'scripts/resolve-layout.mjs',
+  'manifest.json', 'layouts.json', 'tokens.json', 'templates/iasdr.css',
   'templates/fonts/OFL-Manrope.txt', 'templates/fonts/OFL-Inter.txt', 'templates/fonts/OFL-NotoSansTC.txt',
 ];
 const FONTS = ['templates/fonts/Manrope-wght.ttf', 'templates/fonts/Inter-opsz-wght.ttf', 'templates/fonts/NotoSansTC-wght.ttf'];  // gitignored on both sides

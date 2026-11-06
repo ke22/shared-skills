@@ -22,12 +22,14 @@ let L='en';
 const T=(en,zh)=>L==='en'?en:zh;
 const I=(n,s=64,c='')=>{const w=(s>=96?6:s>=56?4:s>=36?3:2.5)*24/s;return `<svg class="ic ${c}" width="${s}" height="${s}" viewBox="0 0 24 24" style="stroke-width:${w}">${ICONS[n]||''}</svg>`;};
 const A=(w=64,dir='r')=>{const r={r:0,l:180,d:90,u:-90}[dir];return `<svg class="arr" width="${w}" height="${w}" viewBox="0 0 64 64" style="transform:rotate(${r}deg)"><path d="M8 32H54M40 18l14 14-14 14"/></svg>`;};
-const TB=(ee,ez,te,tz)=>`<header class="tb"><p class="eyebrow">${T(ee,ez+`<span class="en">${ee}</span>`)}</p><h1 class="title">${T(te,tz)}</h1></header>`;
+const TB=(ee,ez,te,tz,c)=>`<header class="tb"><p class="eyebrow">${T(ee,ez+`<span class="en">${ee}</span>`)}</p>${c?CLAIM(c):''}<h1 class="title">${T(te,tz)}</h1></header>`;
 const NOTE=()=>`<p class="sample-note">${T('Sample content · slot guidance','示意內容・欄位說明')}</p>`;
 const SRC=(e,z)=>`<p class="src">${T(e,z)}</p>`;
 const ROLE=(k,icon,e,z)=>`<span class="role r${k}"><i>${I(icon,40,'white')}</i>${T(e,z)}</span>`;
 const STAT=(v,u,e,z)=>`<div class="stat"><p class="v">${v}<small>${u}</small></p><p class="l">${T(e,z)}</p></div>`;
 const VMARK={met:'<svg data-mark="met" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',partly:'<svg data-mark="partly" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 5a7 7 0 0 1 0 14z" fill="currentColor"/></svg>',gap:'<svg data-mark="gap" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>'};
+const CMARK={confirmed:'<svg data-mark="confirmed" viewBox="0 0 24 24"><circle class="fill" cx="12" cy="12" r="9"/></svg>',prelim:'<svg data-mark="prelim" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path class="fill" d="M12 4a8 8 0 0 1 0 16z"/></svg>',unverified:'<svg data-mark="unverified" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>'};
+const CLAIM=k=>`<span class="claim ${k}">${CMARK[k]}${T({confirmed:'Confirmed',prelim:'Preliminary',unverified:'Not yet verified'}[k],{confirmed:'已確認',prelim:'初步觀察',unverified:'尚未驗證'}[k])}</span>`;
 const QUOTE=(e,z,be,bz)=>`<div class="quote"><div><p>${T(e,z)}</p><p class="by">${T(be,bz)}</p></div></div>`;
 const PHONE=(e,z)=>`<div class="phone"><div class="scr">${T(e,z)}</div></div>`;
 const DESK=(e,z,w=640)=>`<div class="desk" style="width:${w}px"><div class="bez" style="height:${Math.round(w*.59)}px"><div class="scr">${T(e,z)}</div></div><div class="stand"></div><div class="foot"></div></div>`;
@@ -93,6 +95,16 @@ ${TB('Background','研究背景','Say how big the problem is, then show the numb
 <div class="body g3">
  ${[['Demand','需求面'],['Workforce','人力面'],['Daily load','日常負擔']].map(([e,z],i)=>`<div class="card" data-sem="evidence"><p class="h2">${T(e,z)}</p><div class="cluster">${STAT(['35','90','35'][i],T(['k','k','h'][i],['萬','萬','小時'][i]),'Label for this number','這個數字的說明')}${STAT(['1.6','70','4'][i],T(['k','%','×'][i],['萬','%','倍'][i]),'Label for this number','這個數字的說明')}</div></div>`).join('')}
 </div>${SRC('Sources: agency (year); agency (year).','資料來源：機構（年份）；機構（年份）。')}${NOTE()}`);
+
+add('N04b','Problem scale · chart and reading','問題規模・圖表＋解讀',()=>`
+${TB('Background','研究背景','Online registration has doubled in five years','五年來，線上報名的比例成長一倍')}
+<div class="body s75">
+ <figure class="card chart" style="margin:0;align-self:center"><svg width="840" height="344" viewBox="0 0 840 344" role="img" aria-label="${T('Online share of registrations, 2020 to 2024','線上報名比例，2020 至 2024 年')}">
+  <line class="ax" x1="0" y1="300" x2="840" y2="300"/>
+  ${[18,22,27,31,36].map((v,i)=>{const h=Math.round(v*7.2),x=32+i*168,on=i===4?' on':'';return `<rect class="mk${on}" x="${x}" y="${300-h}" width="104" height="${h}" rx="8"/><text class="v${on}" x="${x+52}" y="${300-h-14}" text-anchor="middle">${v}%</text><text x="${x+52}" y="340" text-anchor="middle">${2020+i}</text>`;}).join('')}
+ </svg><p class="take">${T('Since 2024, over a third of registrations are made online.','2024 年起，超過三分之一的報名在線上完成。')}</p></figure>
+ <div class="col gap40" style="justify-content:center">${STAT('36','%','online share in 2024','2024 年線上比例')}${STAT('2','×','growth since 2020','相較 2020 年')}<p class="bl">${T('Say what the audience should see in the chart; one highlighted bar carries it.','說明聽眾該從圖上看到什麼；只凸顯一根長條。')}</p></div>
+</div>${SRC('Source: agency registration records, 2020–2024 (sample data).','資料來源：機構報名紀錄，2020–2024（示意資料）。')}${NOTE()}`);
 
 add('N46a','Root cause · push and constraint','問題成因・推力與限制',()=>`
 ${TB('Background','研究背景','Two forces meet and make the problem hard','兩股力量交會，讓問題變得困難')}
@@ -255,7 +267,7 @@ ${TB('Breakpoints','四大服務斷點','Learning happens in the field, after se
 </div>${NOTE()}`);
 
 add('N48a','Finding with participant quotes','發現與受訪者引言',()=>`
-${TB('Finding 1','痛點 1','State the finding in one line, <span class="hl">key phrase in accent</span>','一句話寫出發現，<span class="hl">關鍵詞改成強調色</span>')}
+${TB('Finding 1','痛點 1','State the finding in one line, <span class="hl">key phrase in accent</span>','一句話寫出發現，<span class="hl">關鍵詞改成強調色</span>','prelim')}
 <div class="body" style="display:grid;grid-template-columns:320px 1fr;gap:64px;align-items:center">
  <div class="circ dark" data-sem="claim" style="--d:320px;font-size:var(--h3)">${T('The finding<br>in a few words','用幾個字<br>寫出痛點')}</div>
  <div class="col gap24" data-sem="evidence"><p class="cap">${T('In their words','受訪者怎麼說')}</p>
@@ -308,7 +320,7 @@ ${TB('How it works','系統運作邏輯','The assistant clarifies first, then re
 </div>${NOTE()}`);
 
 add('N21c','Mechanism logic · annotated screen','機制邏輯・標註截圖',()=>`
-${TB('Mechanism 1','設計機制 1','A few questions lead carers to notice what matters','用少量追問，引導照顧者觀察與思考')}
+${TB('Mechanism 1','設計機制 1','A few questions lead carers to notice what matters','用少量追問，引導照顧者觀察與思考','unverified')}
 <div class="body" style="display:grid;grid-template-columns:520px 1fr;gap:80px;align-items:center">
  <div class="card md col gap24"><span class="chip" style="align-self:flex-start">${T('Guide the question','引導照顧者提問')}</span><p class="b">${T('Three cues the system asks about:','系統追問三個線索：')}</p>
   ${[['What happened before?','行為前發生了什麼？'],['What did the person do?','患者做了什麼？'],['How did the carer respond?','照顧者怎麼回應？']].map(([e,z],i)=>`<div class="row gap16" style="align-items:center"><span class="idtag">0${i+1}</span><p class="b">${T(e,z)}</p></div>`).join('')}
@@ -347,7 +359,7 @@ ${TB('Prototype design','原型設計','The framework links user stages to syste
 
 /* ---------------- F. evidence ---------------- */
 add('N42a','Outcomes and impact','成效與影響',()=>`
-${TB('Field validation','場域驗證','Over half of the services now run online','超過一半的服務已轉由線上完成')}
+${TB('Field validation','場域驗證','Over half of the services now run online','超過一半的服務已轉由線上完成','confirmed')}
 <div class="body s57">
  <div class="card col center tc gap24"><span class="chip">${T('Digital substitution rate','數位服務替代率')}</span><p class="hero"><span class="v">56.4<small style="font-size:.5em">%</small></span></p><p class="cap">${T('Share of registrations completed online','線上完成報名的比例')}</p><hr class="rule" style="width:100%"><div class="row gap56 center">${STAT('4,800','+','LINE followers','LINE 好友數')}${STAT('2,700','+','paid registrations','完成報名與付款')}</div></div>
  <div class="col gap32" style="justify-content:center">
@@ -437,6 +449,15 @@ ${TB('Discussion 5.2','討論 5.2','The study adds Presence to the People, Proce
  </div>
 </div>${NOTE()}`);
 
+add('N50a','Limitations','研究限制',()=>`
+${TB('Limitations','研究限制','The findings hold for one case and a short trial','結論只適用於單一個案與短期試用')}
+<div class="body col gap40">
+ <table class="tbl"><tr><th>${T('Limitation','限制')}</th><th>${T('What it means for the findings','對結論的影響')}</th><th>${T('How we address it','因應方式')}</th></tr>
+ ${[['One case','單一個案','Results may not transfer to other organisations.','結果不一定適用於其他組織。','Compare with a second case in the next study.','下一階段加入第二個個案比較。'],['Four-week trial','試用期 4 週','Long-term use is unknown.','長期使用情形未知。','Follow-up interviews after six months.','半年後追蹤訪談。'],['Self-reported use','自陳的使用情形','Participants may overstate how often they use it.','參與者可能高估使用頻率。','Cross-check with system logs.','以系統紀錄交叉比對。']].map(([a,b,c,d,e,f])=>`<tr><td class="k">${T(a,b)}</td><td>${T(c,d)}</td><td>${T(e,f)}</td></tr>`).join('')}
+ </table>
+ <p class="band soft">${T('Each limitation names what the findings cannot claim yet.','每一項限制都寫出：結論目前還不能主張什麼。')}</p>
+</div>${NOTE()}`);
+
 add('N32a','Value and impact','價值與影響',()=>`
 ${TB('Project value','專案價值','Four kinds of value for the field and for research','對場域與研究的四種價值')}
 <div class="body g2" style="grid-auto-rows:1fr">
@@ -449,6 +470,17 @@ ${TB('Next steps','下一步','Three steps, each with an owner and a checkpoint'
  <div class="rail">${['Pilot','Review','Expand'].map((e,i)=>`<div class="st ${i?'todo':''}"><span class="o">${i+1}</span><p class="h3" style="font-size:var(--body-l)">${T(e,['試行','檢討','擴大'][i])}</p>${ROLE([1,2,4][i],['user-round','user-check','building-2'][i],['Researcher','Supervisor','Partner'][i],['研究者','督導','合作單位'][i])}<p class="cap">${T('Checkpoint and date','檢查點與時間')}</p></div>`).join('')}</div>
  <div class="g2">${[['Localise','在地化'],['Ecosystem','跨機構生態']].map(([e,z])=>`<div class="card md"><p class="h2">${T(e,z)}</p><p class="b mt16">${T('Where the work can extend, and what it depends on.','可以延伸到哪裡，以及依賴什麼條件。')}</p></div>`).join('')}</div>
 </div>${NOTE()}`);
+
+add('N51a','References','參考文獻',()=>`
+${TB('Appendix','附錄','References','參考文獻')}
+<div class="body"><ul class="refs cols">
+ <li lang="zh-Hant">王小明（2020）。文章篇名。<i>期刊名稱，12</i>（3），45–67。</li>
+ <li lang="zh-Hant">李大華、陳美玲（2022）。文章篇名。<i>期刊名稱，8</i>（1），1–24。</li>
+ <li lang="zh-Hant">張志明（2023）。<i>書名</i>。出版社名稱。</li>
+ <li lang="en">Brown, T. (2008). Design thinking. <i>Harvard Business Review, 86</i>(6), 84–92.</li>
+ <li lang="en">Cross, N. (1999). Natural intelligence in design. <i>Design Studies, 20</i>(1), 25–39.</li>
+ <li lang="en">Sanders, E. B.-N., &amp; Stappers, P. J. (2008). Co-creation and the new landscapes of design. <i>CoDesign, 4</i>(1), 5–18.</li>
+</ul></div>${NOTE()}`);
 
 add('N34a','Thanks and call to action','感謝與行動呼籲',()=>`
 <div class="photo-slot" data-label="${T('PHOTO SLOT','照片位置')}"></div>

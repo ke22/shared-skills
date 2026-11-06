@@ -310,7 +310,6 @@ h1.title{font:var(--h1-w) var(--h1)/var(--h1-lh) var(--f-head);letter-spacing:va
 .cluster{display:grid;grid-template-columns:1fr 1fr;gap:32px 40px;margin-top:32px}
 .hero .v{font:var(--display-w) var(--display)/1 var(--f-head);color:var(--struct-mark);letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
 .hero .def{font:400 var(--caption)/1.35 var(--f-body);color:var(--text-2);margin-top:12px}
-.chart text{font:500 20px var(--f-body);fill:var(--text-2)}
 /* C33 table · C34 coverage · C35 conditional */
 table.tbl{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border-radius:var(--r-sm);overflow:hidden;box-shadow:var(--shadow);font:400 var(--body)/1.4 var(--f-body)}
 .tbl th{background:var(--struct-fill);color:#fff;font:600 var(--body)/1.3 var(--f-head);text-align:left;padding:20px 24px;white-space:nowrap}
@@ -452,3 +451,33 @@ h1.title .hl{color:var(--emph)}
 .annot .note{position:absolute;left:calc(100% + var(--reach));top:var(--y);transform:translateY(-50%);width:var(--note-w);background:var(--card);border-radius:var(--r-sm);box-shadow:var(--shadow);padding:16px 24px}
 .annot .note .nt{font:700 var(--body)/1.3 var(--f-head);color:var(--ink)}
 .annot .note .cap{margin-top:4px}
+
+/* C67 evidence strength: how sure the slide's claim is, shown to the audience. One ink colour; the shape carries
+   the meaning (filled = confirmed, half = preliminary, hollow = implemented but not yet verified; lint R32).
+   Sits at the right end of the eyebrow row; without an eyebrow the title keeps 320 clear on the right. */
+.tb .claim{position:absolute;right:0;top:8px}
+.tb:has(> .claim):not(:has(> .eyebrow)) h1.title{max-width:calc(100% - 320px)}  /* no eyebrow: the mark shares the title's first line */
+.claim{display:inline-flex;align-items:center;gap:12px;font:600 var(--caption)/1 var(--f-body);color:var(--status-met);white-space:nowrap}
+.claim svg{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:2.5}
+.claim svg .fill{fill:currentColor;stroke:none}
+.claim.confirmed,.claim.prelim,.claim.unverified{display:inline-flex}  /* state classes: the mark shape carries the meaning */
+.dark .claim{color:var(--on-dark-2)}
+
+/* C32 chart + reading: one highlight (--struct-mark) for the series the title talks about, the rest muted;
+   values labelled on the marks instead of a legend; bars start at zero; the takeaway sits under the chart and the
+   data source in the source line (lint R35) */
+.chart{display:flex;flex-direction:column;gap:24px;min-height:0}
+.chart svg{display:block;flex:none;overflow:visible}
+.chart .mk{fill:var(--struct-muted)} .chart .mk.on{fill:var(--struct-mark)}
+.chart .ax{stroke:var(--rule);stroke-width:2}
+.chart text{font:500 var(--caption) var(--f-body);fill:var(--text-2)}
+.chart text.v{font-weight:700;fill:var(--ink)} .chart text.v.on{fill:var(--struct-mark)}
+.chart .take{font:var(--h3-w) calc(var(--h3) * .8)/1.3 var(--f-head);color:var(--ink)}
+
+/* C68 reference list (N51): APA 7, hanging indent, caption size; Chinese entries first, then English A–Z;
+   journal + volume in <i>: italic for English, bold for Chinese (lint R26) */
+.refs{list-style:none;margin:0;padding:0;display:grid;gap:20px;align-content:start;font:400 var(--caption)/var(--caption-lh) var(--f-body);color:var(--text)}
+.refs.cols{display:block;columns:2;column-gap:64px}
+.refs li{padding-left:2em;text-indent:-2em}
+.refs.cols li{break-inside:avoid;margin-bottom:20px}
+.refs i:lang(zh-Hant){font-style:normal;font-weight:700}

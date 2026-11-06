@@ -30,7 +30,7 @@ const SELECTORS = {
   C44: ['.bp'], C45: ['.bp .line'], C46: ['.channels'], C47: ['.decision'], C48: ['.circ', '.node'], C49: ['.net-node', '.sysbar', '.net-svg'],
   C50: ['.zone'], C51: ['.pin'], C52: ['.rule'], C53: ['.phone', '.desk'], C54: ['.screen'], C55: ['.photo'], C56: ['.mosaic'],
   C57: ['.artifact'], C58: ['.avatar'], C59: ['.logo', '.logo-slot'], C60: ['.qr'], C61: ['.ic', '.icon'], C62: ['.figure'],
-  C63: ['.illus'], C64: ['.photo-wash'], C65: ['.verdict'], C66: ['.annot'],
+  C63: ['.illus'], C64: ['.photo-wash'], C65: ['.verdict'], C66: ['.annot'], C67: ['.claim'], C68: ['.refs'],
 };
 // --- which text roles a component's slots use (limits come from TEXT_RULES) ---
 const SLOTS = {
@@ -42,7 +42,8 @@ const SLOTS = {
   C31: { value: 'display', definition: 'caption' }, C33: { header: 'body', cell: 'body' }, C37: { label: 'body-l' }, C38: { label: 'body' },
   C42: { version: 'h3', note: 'body' }, C43: { group: 'h3', cell: 'body' }, C44: { role: 'body', cell: 'caption' }, C48: { label: 'body|h3' },
   C51: { number: 'chip', heading: 'h3', body: 'body' },
-  C62: { caption: 'caption' }, C65: { word: 'caption', judgement: 'h3' }, C66: { title: 'body', note: 'caption' },
+  C32: { value: 'caption', takeaway: 'h3' }, C62: { caption: 'caption' }, C65: { word: 'caption', judgement: 'h3' }, C66: { title: 'body', note: 'caption' },
+  C67: { word: 'caption' }, C68: { entry: 'caption' },
 };
 // --- limits that the typesetting docs state as rules (checked by lint-deck.mjs) ---
 const TEXT_RULES = {
@@ -79,9 +80,10 @@ function parseGrammar() {
     return { id, mark, meaning, notFor, components, selectors: [...new Set(components.flatMap(c => SELECTORS[c]))], rules: list(rules, /R\d\d/g) };
   });
   const verdictWords = Object.fromEntries(rows(/^\| (met|partly|gap) \|/).map(([k, mark, en, zh]) => [k, { mark, en: en.split('／'), zh: zh.split('／') }]));
+  const claimWords = Object.fromEntries(rows(/^\| (confirmed|prelim|unverified) \|/).map(([k, mark, en, zh]) => [k, { mark, en: en.split('／'), zh: zh.split('／') }]));
   const semAttributes = rows(/^\| (claim|evidence|status) \|/).map(([value, where, readBy]) => ({ value, where, readBy: list(readBy, /R\d\d/g) }));
-  if (!marks.length || Object.keys(verdictWords).length !== 3 || !semAttributes.length) throw new Error('components.md 視覺語法 tables not found or incomplete');
-  return { marks, verdictWords, semAttributes };
+  if (!marks.length || Object.keys(verdictWords).length !== 3 || Object.keys(claimWords).length !== 3 || !semAttributes.length) throw new Error('components.md 視覺語法 tables not found or incomplete');
+  return { marks, verdictWords, claimWords, semAttributes };
 }
 
 function cssFacts(css) {

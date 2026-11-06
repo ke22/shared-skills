@@ -6,6 +6,7 @@
 //   4. the bad fixture trips every rule, so no rule is dead  (lint-deck.mjs on tests/fixtures/bad-deck.html)
 //   5. the deck template converts to PPTX without losing text (test-html-to-pptx.mjs)
 //   6. presentation-studio's copy of the runtime matches this source (sync-runtime.mjs --check)
+//   7. the layout selection rule picks the expected layouts (tests/resolve-layout.test.mjs)
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -35,6 +36,8 @@ const over = report.findings.filter(f => f.level === 'overridden');
 step('style rule override with a reason is accepted', over.some(f => f.rule === 'R13' && /quoted title/.test(f.reason)), `${over.length} override(s)`);
 step('floor rule override is ignored', report.findings.some(f => f.rule === 'R10' && f.level === 'error' && /override ignored: floor/.test(f.detail)));
 step('only style rules can be overridden', over.every(f => f.tier === 'style'));
+r = run('--test', 'tests/resolve-layout.test.mjs');
+step('layout selection rule (resolve-layout.mjs) against layouts.json', r.status === 0, ((r.stdout.match(/ℹ pass \d+/) || [''])[0] + ' ' + (r.stdout.match(/ℹ fail \d+/) || [''])[0]).trim());
 r = run('scripts/sync-runtime.mjs', '--check');
 step('presentation-studio copy of the iasdr runtime is current', r.status === 0, r.stdout.trim());
 r = run('scripts/test-html-to-pptx.mjs');

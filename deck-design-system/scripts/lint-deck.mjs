@@ -32,7 +32,9 @@ const STATUS_RGB = ['--warning', '--danger', '--success', '--warning-soft', '--d
 const EMPH_RGB = rgb(theme.css['--accent']);
 const grammarSel = rule => (manifest.grammar?.marks ?? []).filter(g => g.rules.includes(rule)).flatMap(g => g.selectors);
 const STATUS_SEL = [...grammarSel('R29'), '[data-sem~="status"]'].join(',');
-const VERDICT_WORDS = manifest.grammar?.verdictWords ?? {};
+const VERDICT_WORDS = manifest.grammar?.verdictWords ?? {}, CLAIM_WORDS = manifest.grammar?.claimWords ?? {};
+// chart marks that count as muted (not a highlight): neutrals and the muted structure colour
+const CHART_NEUTRAL = ['--line', '--rule', '--text', '--text-2', '--ink', '--card', '--accent-soft', '--tint', '--surface-2'].filter(k => theme.css[k]).map(k => rgb(theme.css[k])).concat(['rgb(255, 255, 255)']);
 
 const findings = [];
 // Tiers: floor (readability, never overridable) · system (design-system integrity, never overridable)
@@ -134,6 +136,18 @@ for (const file of files) {
         const mark = v.querySelector('.vmark svg')?.dataset.mark, word = (v.querySelector('.vword')?.textContent || '').trim();
         if (!mark) push('R32', id, `verdict "${word}" has no shape mark (colour alone)`, v); else if (mark !== state) push('R32', id, `verdict ${state} drawn with the ${mark} mark`, v);
         const words = G.words[state]?.[zh ? 'zh' : 'en'] || []; if (words.length && !words.includes(word)) push('R32', id, `verdict ${state} labelled "${word}" (expected ${words.join(' / ')})`, v); });
+      s.querySelectorAll('.claim').forEach(c => { const state = ['confirmed', 'prelim', 'unverified'].find(k => c.classList.contains(k));
+        const mark = c.querySelector('svg')?.dataset.mark, word = c.textContent.trim();
+        if (!state) { push('R32', id, `evidence strength "${word}" has no state class (confirmed / prelim / unverified)`, c); return; }
+        if (!mark) push('R32', id, `evidence strength "${word}" has no shape mark`, c); else if (mark !== state) push('R32', id, `evidence strength ${state} drawn with the ${mark} mark`, c);
+        const words = G.claimWords[state]?.[zh ? 'zh' : 'en'] || []; if (words.length && !words.includes(word)) push('R32', id, `evidence strength ${state} labelled "${word}" (expected ${words.join(' / ')})`, c); });
+      // R35 charts (C32): one highlight, a takeaway, a data source
+      s.querySelectorAll('.chart').forEach(ch => {
+        if (!ch.querySelector('.take')?.textContent.trim()) push('R35', id, 'chart without a takeaway (.take)', ch);
+        if (!s.querySelector('.src')?.textContent.trim()) push('R35', id, 'chart without a data source in the source line (.src)', ch);
+        const hues = new Set(); ch.querySelectorAll('svg rect,svg path,svg circle,svg line,svg polyline,svg polygon,svg ellipse').forEach(m => { const cs = getComputedStyle(m);
+          for (const c of /^(line|polyline)$/.test(m.tagName) ? [cs.stroke] : [cs.fill, cs.stroke]) if (c && c !== 'none' && !/rgba\(.*, 0\)$/.test(c) && !G.neutral.includes(c)) hues.add(c); });
+        if (hues.size > 1) push('R35', id, `${hues.size} highlight colours (${[...hues].join(' ')}); highlight one series only`, ch); });
       // R33 numbered pins: the figure and the list carry the same numbers
       { const onFig = [...s.querySelectorAll('.pin')].filter(p => !p.closest('.pinlist')).map(p => p.textContent.trim()).sort(), inList = [...s.querySelectorAll('.pinlist .pin')].map(p => p.textContent.trim()).sort();
         if (onFig.length && inList.length && onFig.join() !== inList.join()) push('R33', id, `figure [${onFig}] vs list [${inList}]`); }
@@ -153,6 +167,13 @@ for (const file of files) {
             if (latin && st.fontStyle !== 'italic') push('R26', id, `English journal/volume not italic "${m.textContent.slice(0, 24)}" (mark the English reference lang="en")`, src); }
         }
       });
+      // R26 reference list (C68): every entry APA with <i>; Chinese entries first, English entries A–Z
+      s.querySelectorAll('.refs').forEach(list => { const items = [...list.children]; let seenEn = false, prevEn = '';
+        for (const li of items) { const text = li.textContent.replace(/\s+/g, ' ').trim(), isZh = /^[一-鿿]/.test(text);
+          if (!li.querySelector('i')) push('R26', id, `reference without journal/book title in <i>: "${text.slice(0, 32)}"`, li);
+          for (const m of li.querySelectorAll('i')) if (!/[一-鿿]/.test(m.textContent) && getComputedStyle(m).fontStyle !== 'italic') push('R26', id, `English title not italic "${m.textContent.slice(0, 24)}" (mark the entry lang="en")`, li);
+          if (isZh && seenEn) push('R26', id, `Chinese reference after English ones: "${text.slice(0, 20)}"`, li);
+          if (!isZh) { const key = text.toLowerCase(); if (seenEn && key.localeCompare(prevEn) < 0) push('R26', id, `English references not in A–Z order at "${text.slice(0, 24)}"`, li); seenEn = true; prevEn = key; } } });
       // R13 titles
       s.querySelectorAll('h1.title,.display,.big,.cover h1').forEach(t => { const L = lines(t); const isH1 = t.matches('h1.title');
         const lim = isH1 ? 2 : t.matches('.big') ? 4 : (zh ? 2 : 3); const maxc = Math.max(0, ...L.map(l => [...l].filter(ch => /[一-鿿]/.test(ch)).length));
@@ -160,7 +181,7 @@ for (const file of files) {
       // R14, R15, R18 paragraphs
       s.querySelectorAll('p,li,td,h1,h2,h3').forEach(el => { if (el.closest('.photo-slot')) return; const cs = getComputedStyle(el); const L = lines(el);
         if (cs.textAlign === 'center' && L.length > 2 && !el.matches('h1,.display,.big')) push('R14', id, `${L.length} lines "${(L[0] || '').slice(0, 18)}"`, el);
-        if (L.length && !el.matches('h1,.display,.big,.src')) { /* .src: a reference string, governed by R26 */ const width = l => [...l].reduce((n, ch) => n + (/[\u3000-\u9fff\uff00-\uffef]/.test(ch) ? 1 : 0.5), 0); /* zh-typesetting: count full-width characters; half-width = 0.5 */
+        if (L.length && !el.matches('h1,.display,.big,.src,.refs li')) { /* .src and .refs: reference strings, governed by R26 */ const width = l => [...l].reduce((n, ch) => n + (/[\u3000-\u9fff\uff00-\uffef]/.test(ch) ? 1 : 0.5), 0); /* zh-typesetting: count full-width characters; half-width = 0.5 */
           const mx = Math.max(...L.map(l => zh ? Math.round(width(l)) : l.length)); if ((zh && mx > 32) || (!zh && mx > 75)) push('R15', id, `${mx} ${zh ? '字' : 'chars'}/line "${L[0].slice(0, 18)}"`, el); }
         if (zh) L.forEach((l, i) => { if (i && BADSTART.includes(l[0])) push('R18', id, `"${l[0]}" starts line ${i + 1}: ${l.slice(0, 16)}`, el); }); });
       // R20 component text rules from the manifest
@@ -171,7 +192,7 @@ for (const file of files) {
     });
     const loaded = [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family);
     return { out, loaded: [...new Set(loaded)] };
-  }, { rules: Object.keys(RULES), defined: [...definedClasses], chrome: [...PAGE_CHROME], G: { status: STATUS_RGB, emph: EMPH_RGB, statusSel: STATUS_SEL, words: VERDICT_WORDS } });
+  }, { rules: Object.keys(RULES), defined: [...definedClasses], chrome: [...PAGE_CHROME], G: { status: STATUS_RGB, emph: EMPH_RGB, statusSel: STATUS_SEL, words: VERDICT_WORDS, claimWords: CLAIM_WORDS, neutral: CHART_NEUTRAL } });
   await browser.close();
   res.out.forEach(f => add(f.rule, file, f.where, f.detail, f.allow));
   if (!res.loaded.some(f => f.startsWith('IASDR '))) add('R19', file, 'page', `local fonts not loaded (loaded: ${res.loaded.join(', ') || 'none'}); run scripts/fetch-fonts.sh`);
