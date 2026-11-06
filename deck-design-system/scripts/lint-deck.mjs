@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { openPage } from './browser-lib.mjs';
+import { RULES } from './lint-rules.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const args = process.argv.slice(2);
@@ -25,39 +26,19 @@ const SEMANTIC_FOR = {};
 for (const t of theme.semantic?.tokens ?? []) (SEMANTIC_FOR[t.ref] ??= []).push(t.name);
 for (const k of Object.keys(SEMANTIC_FOR)) if (['--ink'].includes(k)) delete SEMANTIC_FOR[k]; else SEMANTIC_FOR[k] = SEMANTIC_FOR[k].join(' / ');
 const PAGE_CHROME = new Set(['deck', 'deck-label', 'lib-label']); // gallery chrome outside slides
+// visual grammar (components.md 視覺語法 -> manifest.grammar): status hues, the emphasis colour, where status may appear
+const rgb = h => `rgb(${parseInt(h.slice(1, 3), 16)}, ${parseInt(h.slice(3, 5), 16)}, ${parseInt(h.slice(5, 7), 16)})`;
+const STATUS_RGB = ['--warning', '--danger', '--success', '--warning-soft', '--danger-soft', '--success-soft'].map(k => rgb(theme.css[k]));
+const EMPH_RGB = rgb(theme.css['--accent']);
+const grammarSel = rule => (manifest.grammar?.marks ?? []).filter(g => g.rules.includes(rule)).flatMap(g => g.selectors);
+const STATUS_SEL = [...grammarSel('R29'), '[data-sem~="status"]'].join(',');
+const VERDICT_WORDS = manifest.grammar?.verdictWords ?? {};
 
-const RULES = {
-  R01: ['error', 'Hard-coded colour (use a token)', 'system'],
-  R02: ['error', 'Spacing not on the 4px sub-grid (layout spacing should be 8px)', 'system'],
-  R03: ['error', 'Literal font size below the 18px minimum', 'floor'],
-  R04: ['error', 'Serif typeface', 'system'],
-  R05: ['error', 'Class not defined by the design system (typo or ad-hoc style)', 'system'],
-  R10: ['error', 'Text contrast below WCAG AA (4.5:1, or 3:1 for >=24px bold / >=32px)', 'floor'],
-  R11: ['error', 'Text on the blue field below 24px bold / 32px', 'floor'],
-  R12: ['error', 'Rendered text below 18px', 'floor'],
-  R13: ['error', 'Title over its line limit (h1: 2 lines, zh <= 20 CJK per line; display 3/2; statement 4)', 'style'],
-  R14: ['error', 'Centred paragraph longer than 2 lines', 'style'],
-  R15: ['error', 'Line too long (en > 75 chars, zh > 32 chars)', 'style'],
-  R16: ['error', 'Content outside the 112px side margins', 'floor'],
-  R17: ['error', 'Chinese source text: missing CJK–Latin space, half-width punctuation, or curly quotes', 'style'],
-  R18: ['error', 'Chinese punctuation at the start of a line', 'floor'],
-  R19: ['warn', 'Text not rendered with the local design-system fonts', 'advisory'],
-  R20: ['error', 'Component text rule (chip on one line; id tag <= 4 chars)', 'style'],
-  R21: ['error', 'Element outside the slide or content in the bottom margin', 'floor'],
-  R22: ['error', 'Page script error', 'floor'],
-  R23: ['warn', 'Success colour used: confirm the item is completed AND verified', 'advisory'],
-  R24: ['warn', 'Custom figure used (counts toward promotion: same kind in 3 decks -> new component)', 'advisory'],
-  R25: ['warn', 'Custom figure without data-figure-kind or figcaption', 'advisory'],
-  R34: ['warn', 'Base colour token in an inline style (use the semantic token: structure / emphasis / status / category)', 'advisory'],
-  R28: ['error', 'Title highlight (.hl only in a content-page h1, one phrase, zh <= 12 CJK / en <= 36 chars)', 'style'],
-  R27: ['warn', 'Empty illustration slot (.illus with no image): a finished deck should not keep placeholders', 'advisory'],
-  R26: ['error', 'Source line / APA reference (max 2 lines, clear of page number, journal+volume in <i>: italic for English, bold for Chinese)', 'style'],
-};
 const findings = [];
 // Tiers: floor (readability, never overridable) · system (design-system integrity, never overridable)
 //        style (overridable with data-lint-allow="R13: reason") · advisory (never blocks)
 const add = (rule, file, where, detail, allow = null) => {
-  const [level, , tier] = RULES[rule];
+  const { level, tier } = RULES[rule];
   if (allow && tier === 'style') return findings.push({ rule, level: 'overridden', tier, file: path.basename(file), where, detail, reason: allow });
   if (allow) detail += `  (override ignored: ${tier} rule)`;
   findings.push({ rule, level, tier, file: path.basename(file), where, detail });
@@ -87,7 +68,7 @@ for (const file of files) {
   staticChecks(file, fs.readFileSync(file, 'utf8'));
   const { browser, page, errors } = await openPage(file);
   errors.forEach(e => add('R22', file, 'page', e));
-  const res = await page.evaluate(({ rules, defined, chrome }) => {
+  const res = await page.evaluate(({ rules, defined, chrome, G }) => {
     const out = [];
     const allowFor = (el, rule) => { for (let e = el; e && e.getAttribute; e = e.parentElement) { const a = e.getAttribute('data-lint-allow'); if (!a) continue;
       for (const part of a.split(';')) { const m = part.match(/^\s*(R\d\d)\s*:\s*(.{4,})$/); if (m && m[1] === rule) return m[2].trim(); } } return null; };
@@ -134,6 +115,28 @@ for (const file of files) {
       s.querySelectorAll('.hl').forEach(h => { if (!h.closest('h1.title')) push('R28', id, `highlight outside a content-page title "${h.textContent.trim().slice(0, 20)}"`, h); });
       s.querySelectorAll('h1.title').forEach(t => { const hs = t.querySelectorAll('.hl'); if (hs.length > 1) push('R28', id, `${hs.length} highlighted phrases in one title`, t);
         hs.forEach(h => { const tx = h.textContent.trim(), cjk = [...tx].filter(c => /[一-鿿]/.test(c)).length; if ((zh && cjk > 12) || (!zh && tx.length > 36)) push('R28', id, `highlight too long "${tx}"`, h); }); });
+      // R29 status hues only inside status components (or elements declared data-sem="status")
+      for (const el of s.querySelectorAll('*')) { if (el.closest(G.statusSel)) continue; const cs = getComputedStyle(el);
+        const hues = [cs.color, cs.backgroundColor, parseFloat(cs.borderTopWidth) ? cs.borderTopColor : '', parseFloat(cs.borderLeftWidth) ? cs.borderLeftColor : '', el instanceof SVGElement ? cs.stroke : '', el instanceof SVGElement ? cs.fill : ''];
+        const hit = hues.find(c => G.status.includes(c)); if (!hit) continue;
+        if (hit === cs.color && ![...el.childNodes].some(n => n.nodeType === 3 && n.data.trim()) && !(el instanceof SVGElement)) continue;  // inherited colour on a wrapper
+        push('R29', id, `${el.tagName.toLowerCase()}${el.getAttribute('class') ? '.' + el.getAttribute('class').split(/\s+/).join('.') : ''} uses ${hit}`, el); }
+      // R30 one emphasis per slide: a title highlight excludes blue text emphasis in the body
+      if (s.querySelector('h1.title .hl')) s.querySelectorAll('b,strong,em,mark,a,.acc,span:not([class])').forEach(e => { if (e.closest('h1.title,.tb')) return;
+        if (getComputedStyle(e).color === G.emph && e.textContent.trim()) push('R30', id, `blue emphasis "${e.textContent.trim().slice(0, 20)}" besides the title highlight`, e); });
+      // R31 arrows mean sequence or cause: none between a claim and its evidence (data-sem)
+      const semOf = x => !x ? '' : x.matches('[data-sem]') ? x.dataset.sem : (x.querySelector('[data-sem]')?.dataset.sem || '');
+      s.querySelectorAll('.arr').forEach(a => { let w = a; while (w.parentElement && w.parentElement.children.length === 1 && w.parentElement !== s) w = w.parentElement;
+        const pair = [semOf(w.previousElementSibling), semOf(w.nextElementSibling)].join(' ');
+        if (/\bclaim\b/.test(pair) && /\bevidence\b/.test(pair)) push('R31', id, 'arrow between data-sem="claim" and data-sem="evidence"', a); });
+      // R32 verdict badge: class, mark shape and verdict word agree
+      s.querySelectorAll('.verdict').forEach(v => { const state = v.classList.contains('gap') ? 'gap' : v.classList.contains('partly') ? 'partly' : 'met';
+        const mark = v.querySelector('.vmark svg')?.dataset.mark, word = (v.querySelector('.vword')?.textContent || '').trim();
+        if (!mark) push('R32', id, `verdict "${word}" has no shape mark (colour alone)`, v); else if (mark !== state) push('R32', id, `verdict ${state} drawn with the ${mark} mark`, v);
+        const words = G.words[state]?.[zh ? 'zh' : 'en'] || []; if (words.length && !words.includes(word)) push('R32', id, `verdict ${state} labelled "${word}" (expected ${words.join(' / ')})`, v); });
+      // R33 numbered pins: the figure and the list carry the same numbers
+      { const onFig = [...s.querySelectorAll('.pin')].filter(p => !p.closest('.pinlist')).map(p => p.textContent.trim()).sort(), inList = [...s.querySelectorAll('.pinlist .pin')].map(p => p.textContent.trim()).sort();
+        if (onFig.length && inList.length && onFig.join() !== inList.join()) push('R33', id, `figure [${onFig}] vs list [${inList}]`); }
       // R27 imagery placeholders (iasdr-imagery.md §5)
       s.querySelectorAll('.illus').forEach(f => { if (!f.querySelector('img,svg')) push('R27', id, 'empty .illus slot', f); });
       // R26 source line / APA 7 references (zh-typesetting.md §11)
@@ -168,7 +171,7 @@ for (const file of files) {
     });
     const loaded = [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family);
     return { out, loaded: [...new Set(loaded)] };
-  }, { rules: Object.keys(RULES), defined: [...definedClasses], chrome: [...PAGE_CHROME] });
+  }, { rules: Object.keys(RULES), defined: [...definedClasses], chrome: [...PAGE_CHROME], G: { status: STATUS_RGB, emph: EMPH_RGB, statusSel: STATUS_SEL, words: VERDICT_WORDS } });
   await browser.close();
   res.out.forEach(f => add(f.rule, file, f.where, f.detail, f.allow));
   if (!res.loaded.some(f => f.startsWith('IASDR '))) add('R19', file, 'page', `local fonts not loaded (loaded: ${res.loaded.join(', ') || 'none'}); run scripts/fetch-fonts.sh`);
@@ -178,7 +181,7 @@ for (const file of files) {
 const uniq = [...new Map(findings.map(f => [JSON.stringify(f), f])).values()];
 const by = {}; for (const f of uniq) (by[f.rule] ??= []).push(f);
 for (const r of Object.keys(RULES)) {
-  const all = by[r] || []; const list = all.filter(f => f.level !== 'overridden'); const over = all.length - list.length; const [lvl, desc, tier] = RULES[r];
+  const all = by[r] || []; const list = all.filter(f => f.level !== 'overridden'); const over = all.length - list.length; const { level: lvl, desc, tier } = RULES[r];
   console.log(`${list.length ? (lvl === 'error' ? 'FAIL' : 'WARN') : 'OK  '}  ${r}  [${tier}] ${desc}${list.length ? `  (${list.length})` : ''}${over ? `  · ${over} overridden` : ''}`);
   list.slice(0, 6).forEach(f => console.log(`        ${f.file} ${f.where}  ${f.detail}`)); if (list.length > 6) console.log(`        … ${list.length - 6} more`);
 }

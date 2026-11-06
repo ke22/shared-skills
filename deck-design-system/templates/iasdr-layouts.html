@@ -27,7 +27,7 @@ const NOTE=()=>`<p class="sample-note">${T('Sample content · slot guidance','�
 const SRC=(e,z)=>`<p class="src">${T(e,z)}</p>`;
 const ROLE=(k,icon,e,z)=>`<span class="role r${k}"><i>${I(icon,40,'white')}</i>${T(e,z)}</span>`;
 const STAT=(v,u,e,z)=>`<div class="stat"><p class="v">${v}<small>${u}</small></p><p class="l">${T(e,z)}</p></div>`;
-const VMARK={met:'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',partly:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 5a7 7 0 0 1 0 14z" fill="currentColor"/></svg>',gap:'<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>'};
+const VMARK={met:'<svg data-mark="met" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',partly:'<svg data-mark="partly" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 5a7 7 0 0 1 0 14z" fill="currentColor"/></svg>',gap:'<svg data-mark="gap" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>'};
 const QUOTE=(e,z,be,bz)=>`<div class="quote"><div><p>${T(e,z)}</p><p class="by">${T(be,bz)}</p></div></div>`;
 const PHONE=(e,z)=>`<div class="phone"><div class="scr">${T(e,z)}</div></div>`;
 const DESK=(e,z,w=640)=>`<div class="desk" style="width:${w}px"><div class="bez" style="height:${Math.round(w*.59)}px"><div class="scr">${T(e,z)}</div></div><div class="stand"></div><div class="foot"></div></div>`;
@@ -40,8 +40,8 @@ const add=(id,ne,nz,html,cls='')=>S.push({id,ne,nz,html,cls});
 add('N38a','Claim and evidence · stacked cards','主張與佐證・疊卡',()=>`
 ${TB('Claim and evidence','主張與佐證','State one judgment; every card below supports it','一句判斷，下方每張卡都在支持它')}
 <div class="body stack">
- <div class="card hcard">${I('book-open',128)}<p class="h3">${T('Supporting point one','支持點一')}</p><p class="cite">${T('(Author, 2024)','（作者，2024）')}</p><p class="bl measure">${T('One or two sentences of evidence. Name the source on the right; keep each card to one idea.','一到兩句證據，右上標出處。每張卡只講一個重點。')}</p></div>
- <div class="card hcard">${I('chart-column',128)}<p class="h3">${T('Supporting point two','支持點二')}</p><p class="cite">${T('(Agency, 2025)','（機構，2025）')}</p><p class="bl measure">${T('A second, independent line of evidence. Two or three cards at most.','第二條獨立的證據。最多兩到三張卡。')}</p></div>
+ <div class="card hcard" data-sem="evidence">${I('book-open',128)}<p class="h3">${T('Supporting point one','支持點一')}</p><p class="cite">${T('(Author, 2024)','（作者，2024）')}</p><p class="bl measure">${T('One or two sentences of evidence. Name the source on the right; keep each card to one idea.','一到兩句證據，右上標出處。每張卡只講一個重點。')}</p></div>
+ <div class="card hcard" data-sem="evidence">${I('chart-column',128)}<p class="h3">${T('Supporting point two','支持點二')}</p><p class="cite">${T('(Agency, 2025)','（機構，2025）')}</p><p class="bl measure">${T('A second, independent line of evidence. Two or three cards at most.','第二條獨立的證據。最多兩到三張卡。')}</p></div>
 </div>${NOTE()}`);
 
 add('N39a','Composition · equal columns','組成與並列・等寬欄',()=>`
@@ -91,7 +91,7 @@ ${TB('Team','專案團隊','Three partners, each responsible for one part of the
 add('N04a','Problem scale · stat clusters','問題規模・數字群',()=>`
 ${TB('Background','研究背景','Say how big the problem is, then show the numbers','先說問題多大，再用數字證明')}
 <div class="body g3">
- ${[['Demand','需求面'],['Workforce','人力面'],['Daily load','日常負擔']].map(([e,z],i)=>`<div class="card"><p class="h2">${T(e,z)}</p><div class="cluster">${STAT(['35','90','35'][i],T(['k','k','h'][i],['萬','萬','小時'][i]),'Label for this number','這個數字的說明')}${STAT(['1.6','70','4'][i],T(['k','%','×'][i],['萬','%','倍'][i]),'Label for this number','這個數字的說明')}</div></div>`).join('')}
+ ${[['Demand','需求面'],['Workforce','人力面'],['Daily load','日常負擔']].map(([e,z],i)=>`<div class="card" data-sem="evidence"><p class="h2">${T(e,z)}</p><div class="cluster">${STAT(['35','90','35'][i],T(['k','k','h'][i],['萬','萬','小時'][i]),'Label for this number','這個數字的說明')}${STAT(['1.6','70','4'][i],T(['k','%','×'][i],['萬','%','倍'][i]),'Label for this number','這個數字的說明')}</div></div>`).join('')}
 </div>${SRC('Sources: agency (year); agency (year).','資料來源：機構（年份）；機構（年份）。')}${NOTE()}`);
 
 add('N46a','Root cause · push and constraint','問題成因・推力與限制',()=>`
@@ -257,8 +257,8 @@ ${TB('Breakpoints','四大服務斷點','Learning happens in the field, after se
 add('N48a','Finding with participant quotes','發現與受訪者引言',()=>`
 ${TB('Finding 1','痛點 1','State the finding in one line, <span class="hl">key phrase in accent</span>','一句話寫出發現，<span class="hl">關鍵詞改成強調色</span>')}
 <div class="body" style="display:grid;grid-template-columns:320px 1fr;gap:64px;align-items:center">
- <div class="circ dark" style="--d:320px;font-size:var(--h3)">${T('The finding<br>in a few words','用幾個字<br>寫出痛點')}</div>
- <div class="col gap24"><p class="cap">${T('In their words','受訪者怎麼說')}</p>
+ <div class="circ dark" data-sem="claim" style="--d:320px;font-size:var(--h3)">${T('The finding<br>in a few words','用幾個字<br>寫出痛點')}</div>
+ <div class="col gap24" data-sem="evidence"><p class="cap">${T('In their words','受訪者怎麼說')}</p>
   ${QUOTE('“The participant’s own words, with <b>the one line that matters in bold</b>.”','「受訪者的原話放在這裡，<b>粗體標出最關鍵的一句</b>，其餘照原話保留。」','P01 · Role','P01 角色')}
   ${QUOTE('“A second, independent voice saying the same thing <b>in different words</b>.”','「第二位受訪者，<b>用不同的話說出同一件事</b>。」','P02 · Role','P02 角色')}
  </div>
@@ -398,7 +398,7 @@ ${TB('Conditions','條件','What the system does in each situation','系統在�
 add('N49a','Evaluation verdicts','評估判定',()=>`
 ${TB('Prototype evaluation','原型評估結果','Of three criteria, <span class="hl">one is not yet met</span>','三個評估面向中，<span class="hl">還有一個沒做到</span>')}
 <div class="body g3">
- ${[['met','Met','達成','Criterion one, as a claim','評估面向一的判定'],['partly','Partly met','部分達成','Criterion two, as a claim','評估面向二的判定'],['gap','Not yet','尚未達成','Criterion three, as a claim','評估面向三的判定']].map(([k,we,wz,te,tz])=>`<div class="card md col gap24"><div class="verdict${k==='met'?'':' '+k}"><span class="vmark">${VMARK[k]}</span><div><span class="vword">${T(we,wz)}</span><p class="vtext">${T(te,tz)}</p></div></div><hr class="rule"><p class="b">${T('The evidence: a number, or what the test showed.','證據：數據，或測試中看到的情形。')}</p>${QUOTE('“A participant quote, <b>key line in bold</b>.”','「受訪者的原話，<b>粗體標出最關鍵的一句</b>。」','P01 · Role','P01 角色')}</div>`).join('')}
+ ${[['met','Met','達成','Criterion one, as a claim','評估面向一的判定'],['partly','Partly met','部分達成','Criterion two, as a claim','評估面向二的判定'],['gap','Not yet','尚未達成','Criterion three, as a claim','評估面向三的判定']].map(([k,we,wz,te,tz])=>`<div class="card md col gap24"><div class="verdict${k==='met'?'':' '+k}" data-sem="claim"><span class="vmark">${VMARK[k]}</span><div><span class="vword">${T(we,wz)}</span><p class="vtext">${T(te,tz)}</p></div></div><hr class="rule"><div class="col gap24" data-sem="evidence"><p class="b">${T('The evidence: a number, or what the test showed.','證據：數據，或測試中看到的情形。')}</p>${QUOTE('“A participant quote, <b>key line in bold</b>.”','「受訪者的原話，<b>粗體標出最關鍵的一句</b>。」','P01 · Role','P01 角色')}</div></div>`).join('')}
 </div>${NOTE()}`);
 
 /* ---------------- G. discussion and close ---------------- */

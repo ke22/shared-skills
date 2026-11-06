@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { openPage } from './browser-lib.mjs';
+import { RULES, TIERS as TIER } from './lint-rules.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const args = process.argv.slice(2), opt = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
@@ -17,7 +18,6 @@ const theme = JSON.parse(read('tokens.json')).themes.iasdr;
 const manifest = JSON.parse(read('manifest.json'));
 const layoutsDoc = JSON.parse(read('layouts.json'));
 const css = read('templates/iasdr.css');
-const lintSrc = read('scripts/lint-deck.mjs');
 const mdi = v => esc(v).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code>$1</code>');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -53,8 +53,7 @@ const ROLE_ORDER = ['display', 'statement', 'subtitle', 'kicker', 'eyebrow', 'h1
 const HEAD_ROLES = new Set(['display', 'statement', 'subtitle', 'kicker', 'eyebrow', 'h1', 'h2', 'h3', 'lead', 'stat']);
 const ROLE_USE = { display: '封面大標', statement: '提問頁主句', subtitle: '封面副標', kicker: '主句上方小字', eyebrow: '標題上方段落名', h1: '頁面標題（一句斷言）', h2: '區塊標題', h3: '卡片標題', lead: '引言句', 'body-l': '大內文', body: '內文', caption: '引用、圖說', chip: '膠囊標籤', micro: '來源列、頁碼（最小字級）', stat: '數字磚' };
 
-const lintRules = [...lintSrc.matchAll(/(R\d\d): \['(error|warn)', '((?:[^'\\]|\\.)*)', '(\w+)'\]/g)].map(m => ({ id: m[1], level: m[2], desc: m[3].replace(/\\'/g, "'"), tier: m[4] }));
-const TIER = { floor: ['可讀性底線', '不能覆寫'], system: ['系統完整性', '不能覆寫'], style: ['風格', '可附理由覆寫'], advisory: ['提醒', '不擋產出'] };
+const lintRules = Object.entries(RULES).map(([id, r]) => ({ id, ...r }));
 
 // ---------------------------------------------------------------- renders
 async function toWebp(conv, png, maxW, maxH) {
@@ -213,19 +212,64 @@ function layouts(slides) {
     const first = l.implemented[0], key = first ? l.id + first : null;
     return `<article class="lay" id="L-${l.id}">
       <button type="button" class="thumb" data-open="${l.id}" aria-label="放大 ${esc(l.id)} ${esc(l.name)}">${key ? langPair(slides, key, `${l.id} ${l.name}`) : '<div class="noimg">尚未實作</div>'}</button>
-      <div class="lbody"><header><code class="cid">${l.id}</code><h4>${esc(l.name)}</h4></header><p class="q">${mdi(l.question)}</p>
+      <div class="lbody"><header><code class="cid">${l.id}</code><h4>${esc(l.name)}</h4></header><p class="q">${mdi(l.question)}</p><p class="fam"><a href="#F-${l.family.id}">${esc(l.family.name)}</a>${esc(l.pickOver.why)}</p>
       ${l.variants.length ? `<ul class="vars">${l.variants.map(v => `<li class="${v.implemented ? 'done' : ''}"><b>${v.id}</b> ${mdi(v.name)}<span>${mdi(v.when)}</span></li>`).join('')}</ul>` : ''}
       ${l.workbench.components.length ? `<p class="wb">工作台：${l.workbench.components.map(c => `<code>${esc(c)}</code>`).join(' ')}</p>` : ''}</div></article>`;
   };
   const deckIds = Object.keys(slides).filter(k => /^L\d+-/.test(k) && k.endsWith('|zh-Hant')).map(k => k.split('|')[0]).sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
   return `${sections.map(s => `<div class="lsec"><h3><span>${esc(s.id)}</span>${esc(s.name)}</h3><div class="lays">${layoutsDoc.layouts.filter(l => l.section.id === s.id).map(card).join('')}</div></div>`).join('')}
-  <div class="lsec"><h3><span>範本</span>iasdr-deck.html：十頁中英範本</h3><div class="decks">${deckIds.map(id => `<figure><button type="button" class="thumb" data-deck="${id}" aria-label="放大 ${id}">${langPair(slides, id, id)}</button><figcaption><code>${esc(id)}</code></figcaption></figure>`).join('')}</div></div>
+  <div class="lsec"><h3><span>範本</span>iasdr-deck.html：十頁中英範本</h3><div class="decks">${deckIds.map(id => `<figure><button type="button" class="thumb" data-deck="${id}" aria-label="放大 ${id}">${langPair(slides, id, id)}</button><figcaption><code>${esc(id)}</code></figcaption></figure>`).join('')}</div></div>`;
+}
+
+// ---- 選版型: families (question -> layout -> variant fields) and the deck spines ----
+const VOC_ZH = Object.fromEntries(Object.entries(layoutsDoc.selectVocabulary).map(([k, m]) => [k, Object.fromEntries(Object.entries(m).map(([zh, en]) => [en, zh]))]));
+const countZh = c => !c ? '' : c.max === null ? `${c.min} 項以上` : c.min === c.max ? `${c.min} 項` : `${c.min}–${c.max} 項`;
+function selectChips(sel) {
+  const out = [];
+  if (sel.count) out.push(`<span class="k n">${countZh(sel.count)}</span>`);
+  for (const d of sel.data) out.push(`<span class="k d">${esc(VOC_ZH.data[d])}</span>`);
+  for (const p of sel.position) out.push(`<span class="k p">${esc(VOC_ZH.position[p])}</span>`);
+  for (const o of sel.occasion) out.push(`<span class="k o">${esc(VOC_ZH.occasion[o])}</span>`);
+  return out.join('');
+}
+function choose() {
+  const byId = Object.fromEntries(layoutsDoc.layouts.map(l => [l.id, l]));
+  const fam = f => `<article class="fam-card" id="F-${f.id}"><header><h3>${esc(f.name)}</h3><p>${esc(f.question)}</p></header>
+    <ol class="picks">${f.layouts.map(id => { const l = byId[id]; return `<li><div class="pk"><a class="cid" href="#L-${l.id}">${l.id}</a><b>${esc(l.name)}</b></div><p class="why">${esc(l.pickOver.why)}</p>
+      ${l.variants.length ? `<ul class="vsel">${l.variants.map(v => `<li class="${v.implemented ? 'done' : ''}"><b>${v.id}</b><span class="vn">${esc(v.name)}</span>${selectChips(v.select)}</li>`).join('')}</ul>` : ''}</li>`; }).join('')}</ol></article>`;
+  return `<ol class="steps3"><li><b>1 找家族</b><span>聽眾這一頁想知道什麼？對照每個家族的共通問題。</span></li><li><b>2 選版型</b><span>同家族的版型各有一句「選它的理由」，也就是不選鄰近版型的理由。</span></li><li><b>3 選變體</b><span>依內容的項數、資料類型、位置與場合選；實心代號表示已實作。</span></li></ol>
+  <p class="legend-k"><span class="k n">項數</span><span class="k d">資料</span><span class="k p">位置</span><span class="k o">場合</span>沒有標示表示不限。都不合適時用 <a href="#L-N47">N47 自訂圖解</a>，不要硬塞進 N38、N39。</p>
+  <div class="fams">${layoutsDoc.families.map(fam).join('')}</div>
   <div class="lsec"><h3><span>主線</span>五種簡報的版型順序</h3><div class="spines">${layoutsDoc.spines.map(sp => `<div class="spine"><h4>${esc(sp.type)}</h4><p class="muted">${esc(sp.spine)}</p><ol>${sp.steps.map(st => `<li class="${st.optional ? 'opt' : ''}"><a href="#L-${st.layout}">${st.layout}${st.variant || ''}</a>${st.alternative ? `<span>/${esc(st.alternative)}</span>` : ''}</li>`).join('')}</ol></div>`).join('')}</div></div>`;
+}
+
+// ---- 視覺語法: manifest.grammar, with a small drawing of each mark ----
+const C = theme.css;
+const GLYPH = {
+  G1: `<path d="M6 20H58M46 10l12 10-12 10" fill="none" stroke="${C['--accent']}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  G2: `<circle cx="32" cy="20" r="16" fill="${C['--accent']}"/>`,
+  G3: `<circle cx="32" cy="20" r="16" fill="${C['--ink']}"/>`,
+  G4: `<circle cx="18" cy="20" r="10" fill="${C['--ink']}"/><circle cx="46" cy="20" r="8.5" fill="none" stroke="${C['--ink']}" stroke-width="3"/>`,
+  G5: `<path d="M4 20H60" stroke="${C['--warning']}" stroke-width="4" stroke-dasharray="9 7"/>`,
+  G6: `<circle cx="20" cy="20" r="14" fill="${C['--accent']}"/><text x="20" y="26" text-anchor="middle" font-size="17" font-weight="700" fill="#fff" font-family="Manrope,sans-serif">1</text><path d="M38 14H60M38 26H54" stroke="${C['--rule'] || '#C9D0DC'}" stroke-width="4" stroke-linecap="round"/>`,
+  G7: `<circle cx="12" cy="20" r="8" fill="${C['--warning']}"/><circle cx="32" cy="20" r="8" fill="${C['--danger']}"/><circle cx="52" cy="20" r="8" fill="${C['--success']}"/>`,
+  G8: `<path d="M4 14H30" stroke="${C['--ink']}" stroke-width="6" stroke-linecap="round"/><path d="M36 14H60" stroke="${C['--accent']}" stroke-width="6" stroke-linecap="round"/><path d="M4 28H44" stroke="${C['--ink']}" stroke-width="6" stroke-linecap="round"/>`,
+  G9: `<circle cx="12" cy="20" r="10" fill="${C['--ink']}"/><path d="M7 20l3.5 3.5L17 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="20" r="10" fill="${C['--warning']}"/><circle cx="32" cy="20" r="5" fill="none" stroke="#fff" stroke-width="2"/><path d="M32 15a5 5 0 0 1 0 10z" fill="#fff"/><circle cx="52" cy="20" r="10" fill="${C['--danger']}"/><path d="M48 16l8 8M56 16l-8 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>`,
+  G10: `<rect x="2" y="4" width="60" height="32" rx="6" fill="${C['--tint'] || '#EEF4FF'}"/><path d="M10 15H26" stroke="${C['--text'] || '#333'}" stroke-width="3" stroke-linecap="round"/><path d="M30 15H54" stroke="${C['--ink']}" stroke-width="6" stroke-linecap="round"/><path d="M10 26H44" stroke="${C['--text'] || '#333'}" stroke-width="3" stroke-linecap="round"/>`,
+};
+function grammar() {
+  const g = manifest.grammar, compName = Object.fromEntries(manifest.components.map(c => [c.id, c.name]));
+  const ruleLink = r => `<a class="rid" href="#${r}">${r}</a>`;
+  return `<div class="gram">${g.marks.map(m => `<article class="gm"><div class="glyph">${GLYPH[m.id] ? `<svg viewBox="0 0 64 40" width="64" height="40" aria-hidden="true">${GLYPH[m.id]}</svg>` : ''}</div>
+    <div class="gtext"><h4><code class="cid">${m.id}</code>${esc(m.mark)}</h4><p>${esc(m.meaning)}</p><p class="no"><b>不可用來</b>${esc(m.notFor)}</p>
+    <p class="gmeta">${m.components.map(c => `<a href="#${c}">${c} ${esc(compName[c] || '')}</a>`).join('、')}${m.rules.length ? `　檢查 ${m.rules.map(ruleLink).join(' ')}` : ''}</p></div></article>`).join('')}</div>
+  <div class="two"><div><h4>判定詞（C65）</h4><div class="tablewrap"><table><thead><tr><th>判定</th><th>符號</th><th>中文</th><th>英文</th></tr></thead><tbody>${Object.entries(g.verdictWords).map(([k, w]) => `<tr><td><code>${k}</code></td><td>${esc(w.mark)}</td><td>${esc(w.zh.join('／'))}</td><td>${esc(w.en.join(' / '))}</td></tr>`).join('')}</tbody></table></div></div>
+  <div><h4>語意屬性 <code>data-sem</code></h4><div class="tablewrap"><table><thead><tr><th>值</th><th>標在哪裡</th><th>檢查</th></tr></thead><tbody>${g.semAttributes.map(a => `<tr><td><code>${a.value}</code></td><td>${esc(a.where)}</td><td>${a.readBy.map(ruleLink).join(' ')}</td></tr>`).join('')}</tbody></table></div></div></div>`;
 }
 
 function rules() {
   const tiers = ['floor', 'system', 'style', 'advisory'];
-  return `<div class="two"><div><h4>中文排版</h4><ul class="rl">
+  return `<div><h4>中文排版</h4><ul class="rl">
     <li><b>內文斷行</b><span><code>word-break: normal</code> ＋ <code>line-break: strict</code>：遵守標點禁則，句號、逗號不落在行首。</span></li>
     <li><b>標題斷行</b><span>標題用 <code>keep-all</code>，由作者在語意單位之間手動斷行；每行不超過 20 字、最多 2 行。</span></li>
     <li><b>不要用</b><span><code>keep-all</code> ＋ <code>overflow-wrap: anywhere</code>：實測會把分號推到行首。</span></li>
@@ -234,8 +278,8 @@ function rules() {
     <li><b>強調</b><span>一頁只用一種強調方式；中文不用斜體、底線。</span></li>
     <li><b>頁尾文獻</b><span>APA 7，最多 2 行；英文期刊名與卷數斜體，中文改粗體；中文簡報裡的英文文獻加 <code>lang="en"</code>。</span></li>
     <li><b>中英對照</b><span>中文字級約為英文的 0.9 倍，行高較大（內文 1.6 對 1.3）；英文字距略負，中文為 0。</span></li></ul></div>
-  <div><h4>lint 規則（${lintRules.length} 條）</h4><div class="tablewrap"><table class="rules"><thead><tr><th>規則</th><th>檢查</th><th>層級</th></tr></thead><tbody>${tiers.flatMap(t => lintRules.filter(r => r.tier === t)).map(r => `<tr><td><code>${r.id}</code></td><td>${esc(r.desc)}</td><td><span class="pill ${r.tier}">${TIER[r.tier][0]}</span></td></tr>`).join('')}</tbody></table></div>
-  <p class="note">${tiers.map(t => `<span class="pill ${t}">${TIER[t][0]}</span> ${TIER[t][1]}`).join('　')}。風格規則可在元素上加 <code>data-lint-allow="R13: 理由"</code> 覆寫。</p></div></div>`;
+  <div><h4>lint 規則（${lintRules.length} 條）</h4><div class="tablewrap"><table class="rules"><thead><tr><th>規則</th><th>檢查什麼</th><th>怎麼修</th><th>層級</th></tr></thead><tbody>${tiers.flatMap(t => lintRules.filter(r => r.tier === t)).map(r => `<tr id="${r.id}"><td><code>${r.id}</code></td><td>${esc(r.zh)}</td><td>${mdi(r.fix)}</td><td><span class="pill ${r.tier}">${TIER[r.tier][0]}</span></td></tr>`).join('')}</tbody></table></div>
+  <p class="note">${tiers.map(t => `<span class="pill ${t}">${TIER[t][0]}</span> ${TIER[t][1]}`).join('　')}。風格規則可在元素上加 <code>data-lint-allow="R13: 理由"</code> 覆寫。</p></div>`;
 }
 
 function page({ slides, comps }) {
@@ -400,7 +444,34 @@ details summary{cursor:pointer;font-size:12.5px;color:var(--muted)} .toks{line-h
 .rl{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .rl li{display:grid;grid-template-columns:72px 1fr;gap:10px;font-size:14px}
 .rl li b{font-family:var(--f-head);color:var(--ink)}
-.rules td:nth-child(2){min-width:260px}
+.rules td:nth-child(2){min-width:180px} .rules td:nth-child(3){min-width:260px}
+.steps3{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
+.steps3 li{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:4px}
+.steps3 b{font:800 15px var(--f-head);color:var(--ink)} .steps3 span{font-size:13.5px;color:var(--muted)}
+.legend-k{margin:0;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.k{display:inline-flex;align-items:center;font:600 11.5px/1 var(--f-body);padding:3px 7px;border-radius:6px;white-space:nowrap}
+.k.n{background:var(--ink);color:var(--surface)} .k.d{background:var(--tint);color:var(--accent)} .k.p{border:1px solid var(--accent);color:var(--accent)} .k.o{border:1px dashed var(--muted);color:var(--muted)}
+.fams{columns:3 340px;column-gap:14px}
+.fam-card{break-inside:avoid;margin-bottom:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:10px;scroll-margin-top:72px;min-width:0}
+.fam-card header h3{font-size:17px} .fam-card header p{margin:2px 0 0;color:var(--ink);font-weight:500;font-size:14px}
+.picks{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.picks>li{display:grid;gap:4px;padding-top:10px;border-top:1px solid var(--line);min-width:0}
+.pk{display:flex;gap:8px;align-items:baseline} .pk a.cid{text-decoration:none} .pk b{font:700 14.5px var(--f-head);color:var(--ink)}
+.why{margin:0;font-size:13.5px;color:var(--text)}
+.vsel{list-style:none;margin:2px 0 0;padding:0;display:grid;gap:4px}
+.vsel li{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:12.5px;color:var(--muted)}
+.vsel li>b{font:700 11.5px var(--f-mono);color:var(--muted);border:1px solid var(--line);border-radius:4px;width:18px;height:18px;line-height:16px;text-align:center}
+.vsel li.done>b{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.vsel .vn{color:var(--text);margin-right:2px}
+.fam{margin:0;font-size:12.5px!important;color:var(--muted)} .fam a{font-weight:700;margin-right:6px;text-decoration:none}
+.gram{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:12px}
+.gm{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:start}
+.glyph{background:${theme.colors.bgA};border-radius:10px;height:56px;display:grid;place-items:center}
+.gtext{display:grid;gap:4px;min-width:0} .gtext h4{margin:0;display:flex;gap:8px;align-items:baseline} .gtext p{margin:0;font-size:13.5px}
+.gtext .no{color:var(--muted)} .gtext .no b{color:var(--bad);font-weight:700;margin-right:6px}
+.gmeta{font-size:12.5px!important;color:var(--muted)} .gmeta a{text-decoration:none}
+.rid{font:600 12px var(--f-mono);text-decoration:none}
+.rules tr{scroll-margin-top:72px} .rules td:nth-child(3){color:var(--muted)}
 footer.end{padding-block:32px 48px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:grid;gap:6px}
 dialog{border:0;padding:0;border-radius:16px;background:var(--surface);color:var(--text);width:min(1100px,calc(100vw - 24px));max-height:calc(100vh - 24px)}
 dialog::backdrop{background:rgb(10 16 30 / .7)}
@@ -417,13 +488,21 @@ html{scroll-behavior:smooth}
 </style>
 
 <div class="top"><div class="wrap"><a class="brand" href="#top"><i></i>IASDR 簡報設計系統</a>
-<nav aria-label="區塊"><a href="#tokens">Token</a><a href="#grid">格線</a><a href="#imagery">圖像</a><a href="#icons">Icon</a><a href="#components">元件</a><a href="#layouts">版型</a><a href="#rules">規則</a></nav>
+<nav aria-label="區塊"><a href="#choose">選版型</a><a href="#layouts">版型</a><a href="#components">元件</a><a href="#grammar">視覺語法</a><a href="#tokens">Token</a><a href="#grid">格線</a><a href="#imagery">圖像</a><a href="#icons">Icon</a><a href="#rules">規則</a></nav>
 <div class="seg" role="group" aria-label="範例語言"><button type="button" id="lang-zh" data-lang="zh" aria-pressed="true">中文</button><button type="button" id="lang-en" data-lang="en" aria-pressed="false">English</button></div></div></div>
 
 <main class="wrap" id="top">
 <div class="hero"><span class="eyebrow">deck-design-system · iasdr</span><h1>一套視覺標準，兩種排版系統</h1>
 <p>研討會、口試與研究簡報共用的設計系統。同一組格線與元件，中文與英文各有自己的字級、行高與字距。這一頁的數值、元件與版型都由原始檔產生；HTML 經 lint 檢查後，可直接轉成可編輯的 PPTX。</p>
-<ul class="facts"><li><b>1920 × 1080</b>畫布，8px 單位</li><li><b>12</b>欄格線</li><li><b>${counts.comps}</b>個元件（${counts.rendered} 個已渲染）</li><li><b>${counts.layouts}</b>個敘事版型，${counts.variants} 個變體（${counts.impl} 個已實作）</li><li><b>${counts.rules}</b>條 lint 規則</li></ul></div>
+<ul class="facts"><li><b>1920 × 1080</b>畫布，8px 單位</li><li><b>12</b>欄格線</li><li><b>${counts.comps}</b>個元件（${counts.rendered} 個已渲染）</li><li><b>${counts.layouts}</b>個敘事版型（${layoutsDoc.families.length} 個家族），${counts.variants} 個變體（${counts.impl} 個已實作）</li><li><b>${counts.rules}</b>條 lint 規則</li></ul></div>
+
+<section class="block" id="choose"><header><h2>選版型</h2><p>先決定這一頁要回答聽眾什麼問題，再選版型。${layoutsDoc.layouts.length} 個版型分成 ${layoutsDoc.families.length} 個家族；同家族的版型容易混淆，每個都寫明選它的理由。來源是 <code>references/narrative-layouts.md</code> 的「版型家族」與「變體選用欄位」，機器可讀版在 <code>layouts.json</code>。</p></header>${choose()}</section>
+
+<section class="block" id="layouts"><header><h2>版型</h2><p>依簡報的段落排列。每張卡下方是它所屬的家族與選用理由；實心的變體代號表示已實作。點圖片可放大，右上角可切換中英文版本。</p></header>${layouts(slides)}</section>
+
+<section class="block" id="components"><header><h2>元件</h2><p>每張圖都是從範本實際渲染截下來的。「只有 CSS」表示樣式已寫好、範本還沒用到；「尚未實作」表示規格已定、還沒有樣式。</p></header>${components(comps)}</section>
+
+<section class="block" id="grammar"><header><h2>視覺語法</h2><p>同一個形狀或顏色在整套簡報只代表一件事，聽眾不看圖例也讀得懂。來源是 <code>references/components.md</code> 的「視覺語法」，標有檢查規則的，<code>lint-deck.mjs</code> 會擋下錯用。</p></header>${grammar()}</section>
 
 <section class="block" id="tokens"><header><h2>Design token</h2><p>顏色分兩層。元件與簡報只用<b>語意色</b>：依用途分成結構、強調、狀態、類別、互動，同一個藍色在不同用途有不同名字，狀態永遠不借用結構藍。<b>基礎色</b>是唯一寫色碼的地方。來源是 <code>tokens.json</code> 的 <code>themes.iasdr</code>。對比結論以「當文字或標記用在淺色頁上」判斷：對白色與頁面底色都 ≥ 4.5 可做內文，≥ 3 只限 24px 粗體或 32px 以上，低於 3 只限裝飾。</p></header>
 <h3 style="font-size:18px">語意色（元件用這一層）</h3>${semanticColors()}
@@ -448,10 +527,6 @@ html{scroll-behavior:smooth}
 <section class="block" id="icons"><header><h2>Icon</h2><p>依 <code>components.md</code> 的概念對照表分組；每個概念固定用同一個 icon。需要「人」或「情境」時改用插畫（見上一節）。</p></header>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="sc-ig" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="24"><stop offset="0" stop-color="${theme.colors.iconA}"/><stop offset="1" stop-color="${theme.colors.iconB}"/></linearGradient></defs></svg>
 ${icons()}</section>
-
-<section class="block" id="components"><header><h2>元件</h2><p>每張圖都是從範本實際渲染截下來的。「只有 CSS」表示樣式已寫好、範本還沒用到；「尚未實作」表示規格已定、還沒有樣式。</p></header>${components(comps)}</section>
-
-<section class="block" id="layouts"><header><h2>版型</h2><p>一個版型回答一個問題。先依問題選版型，再依條件選變體；實心的變體代號表示已實作。點圖片可放大，右上角可切換中英文版本。</p></header>${layouts(slides)}</section>
 
 <section class="block" id="rules"><header><h2>排版與檢查規則</h2><p>完整規則見 <code>references/zh-typesetting.md</code> 與 <code>references/iasdr-typesetting.md</code>；<code>scripts/lint-deck.mjs</code> 會在產出前逐條檢查。</p></header>${rules()}</section>
 

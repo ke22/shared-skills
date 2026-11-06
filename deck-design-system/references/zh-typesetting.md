@@ -3,7 +3,7 @@
 適用於 `iasdr` 主題的中文版。字級、行高、格線見 `iasdr-typesetting.md`；這份只講**斷行、標點、混排與寫法**。
 
 - **實測**：2026-11-06 在 Chrome 157 實際渲染 28px Noto Sans TC 測過，結果附在 §1。
-- **參考過的錯誤**：iTrace 簡報、口試簡報的實際問題，標在各條規則裡。
+- **參考過的錯誤**：專案計畫簡報、口試簡報的實際問題，標在各條規則裡。
 
 ## 1. 斷行設定（實測結論）
 
@@ -60,7 +60,7 @@ PPTX、Word、其他瀏覽器的支援不同，所以**能寫在原文裡的規�
 
 - 數字＋單位：`12 人`、`2–3 個月`、`48.6%`、`NT$ 500 萬`。
 - 英文詞組與產品名：`LINE 官方帳號`、`AI 小幫手`、`People, Process, Props`。
-- 專有名詞與代號：`P1`、`H2`、`iSupport M5`、人名、機構名。
+- 專有名詞與代號：`P1`、`H2`、`Module M5`、人名、機構名。
 
 ### 2.4 孤字與寡行
 
@@ -75,12 +75,12 @@ PPTX、Word、其他瀏覽器的支援不同，所以**能寫在原文裡的規�
 | 中文與數字之間留半形空白 | 完成 12 場訪談、2026 年 | 完成12場訪談 |
 | 全形標點前後不加空白 | 採用 AI，提升效率 | 採用 AI ，提升效率 |
 | 符號與數字之間不加空白 | 48.6%、NT$ 500 萬 | 48.6 % |
-| 英文保留原本的大小寫 | iSupport、LINE、iTrace | Isupport、Line |
+| 英文保留原本的大小寫 | iPad、LINE、GitHub | Ipad、Line、Github |
 
 - **字型**：中文裡的英文與數字用英文字型（Manrope／Inter），中文落到 Noto Sans TC。CSS 字型堆疊寫成 `"Manrope","Noto Sans TC"`。PPTX 要分別設定拉丁字型與東亞字型。
 - **一定要宣告語言**：`lang="zh-Hant"`，讓字型選用繁體字形。
 - **字型用本機檔**：`templates/fonts/`（`scripts/fetch-fonts.sh`）；樣式裡本機字型排第一，Google Fonts 只當備援。
-- **避免字型被替換**：iTrace 與口試簡報的 PDF 都嵌入了 SimSun、MS PMincho、Times New Roman，表示匯出時字型被替換。口試封面的英文副標就顯示成 Times New Roman。匯出 PDF 前要確認本機已安裝字型，再用 `pdffonts` 檢查嵌入的字型清單。
+- **避免字型被替換**：專案計畫簡報與口試簡報的 PDF 都嵌入了 SimSun、MS PMincho、Times New Roman，表示匯出時字型被替換。口試封面的英文副標就顯示成 Times New Roman。匯出 PDF 前要確認本機已安裝字型，再用 `pdffonts` 檢查嵌入的字型清單。
 
 ## 4. 標點
 

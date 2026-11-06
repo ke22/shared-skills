@@ -74,8 +74,8 @@ description: >
 |---|---|
 | `manifest.json` | **元件清單**，由程式產生，不要手改。記錄 66 個元件的用途、選擇器、用到的 token、文字欄位與字數規則、在 HTML／PPTX 的實作狀態、實際出現在哪些版型，以及每個版型由哪些元件組成 |
 | `scripts/build-manifest.mjs` | 從 `components.md`、`iasdr.css`、`tokens.json` 與兩份範本的渲染結果產生清單；`--check` 檢查清單是否過期 |
-| `scripts/lint-deck.mjs` | 用清單與排版規則檢查任何 iasdr HTML 簡報：R01–R05 靜態檢查（色碼、間距、字級、襯線字、未定義 class），R34 inline 基礎色提醒；R10–R28 渲染檢查（對比、藍底字、最小字級、標題行數、置中行數、行長、邊界、中文混排與標點、字型、元件文字、越界、腳本錯誤、綠色語意、自訂圖解、頁尾 APA 文獻、空的插畫位置、標題上色）；有錯就 exit 1 |
-| `layouts.json` | **敘事版型清單**，由 `scripts/build-layouts.mjs` 從 `narrative-layouts.md` 與 `manifest.json` 產生：49 個版型各自回答的問題、87 個變體與「什麼時候用」、組成元件、對應的工作台元件與敘事關係（讀自工作台註冊表）、實作狀態，以及 5 條簡報主線。選法：**先依問題選版型，再依條件選變體** |
+| `scripts/lint-deck.mjs` | 用清單與排版規則檢查任何 iasdr HTML 簡報：R01–R05 靜態檢查（色碼、間距、字級、襯線字、未定義 class），R34 inline 基礎色提醒；R10–R28 渲染檢查（對比、藍底字、最小字級、標題行數、置中行數、行長、邊界、中文混排與標點、字型、元件文字、越界、腳本錯誤、綠色語意、自訂圖解、頁尾 APA 文獻、空的插畫位置、標題上色）；R29–R33 視覺語法（狀態色只在狀態元件、標題上色不與內文藍字並存、主張與佐證之間不畫箭頭、判定徽章符號與判定一致、圖上編號與列表一致，見 `components.md`「視覺語法」）；有錯就 exit 1。規則表（含中文說明與修法）在 `scripts/lint-rules.mjs` |
+| `layouts.json` | **敘事版型清單**，由 `scripts/build-layouts.mjs` 從 `narrative-layouts.md` 與 `manifest.json` 產生：49 個版型各自回答的問題、87 個變體與「什麼時候用」、組成元件、對應的工作台元件與敘事關係（讀自工作台註冊表）、實作狀態，以及 5 條簡報主線。另有 10 個**版型家族**（每個版型一句「選它、不選鄰近版型的理由」）與每個變體的**選用欄位**（項數、資料類型、位置、場合）。選法：**先找家族，再依理由選版型，再依欄位選變體** |
 | `scripts/test-design-system.mjs` | 一個指令跑完：tokens 一致、清單沒過期、兩份範本 lint 全過、`tests/fixtures/bad-deck.html` 會觸發每一條規則（確認沒有失效的規則）、範本轉 PPTX 不掉字 |
 | `scripts/html-to-pptx.mjs` | **HTML 轉可編輯 PPTX**（見下節） |
 | `scripts/pptx-post.mjs` | PPTX 匯出後處理：中英字型分開、行高改為固定點數 |
@@ -86,8 +86,8 @@ description: >
 | 層級 | 規則 | 能不能覆寫 |
 |---|---|---|
 | 可讀性底線 floor | R03、R10、R11、R12、R16、R18、R21、R22 | 不能；寫了覆寫也會被忽略並標註 |
-| 系統完整性 system | R01、R02、R04、R05 | 不能 |
-| 風格 style | R13、R14、R15、R17、R20、R26、R28 | 可以：在元素或其上層加 `data-lint-allow="R13: 理由"`，理由至少 4 個字；報告會列出所有覆寫 |
+| 系統完整性 system | R01、R02、R04、R05、R29、R32、R33 | 不能 |
+| 風格 style | R13、R14、R15、R17、R20、R26、R28、R30、R31 | 可以：在元素或其上層加 `data-lint-allow="R13: 理由"`，理由至少 4 個字；報告會列出所有覆寫 |
 | 提醒 advisory | R19、R23、R24、R25、R27、R34 | 不擋產出 |
 
 **表達力的出口與指標**：
