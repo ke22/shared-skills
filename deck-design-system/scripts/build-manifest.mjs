@@ -30,6 +30,7 @@ const SELECTORS = {
   C44: ['.bp'], C45: ['.bp .line'], C46: ['.channels'], C47: ['.decision'], C48: ['.circ', '.node'], C49: ['.net-node', '.sysbar'],
   C50: ['.zone'], C51: ['.pin'], C52: ['.rule'], C53: ['.phone', '.desk'], C54: ['.screen'], C55: ['.photo'], C56: ['.mosaic'],
   C57: ['.artifact'], C58: ['.avatar'], C59: ['.logo', '.logo-slot'], C60: ['.qr'], C61: ['.ic', '.icon'], C62: ['.figure'],
+  C63: ['.illus'], C64: ['.photo-wash'],
 };
 // --- which text roles a component's slots use (limits come from TEXT_RULES) ---
 const SLOTS = {

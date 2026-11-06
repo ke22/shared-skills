@@ -44,6 +44,7 @@ const RULES = {
   R23: ['warn', 'Success colour used: confirm the item is completed AND verified', 'advisory'],
   R24: ['warn', 'Custom figure used (counts toward promotion: same kind in 3 decks -> new component)', 'advisory'],
   R25: ['warn', 'Custom figure without data-figure-kind or figcaption', 'advisory'],
+  R27: ['warn', 'Empty illustration slot (.illus with no image): a finished deck should not keep placeholders', 'advisory'],
   R26: ['error', 'Source line / APA reference (max 2 lines, clear of page number, journal+volume in <i>: italic for English, bold for Chinese)', 'style'],
 };
 const findings = [];
@@ -120,6 +121,8 @@ for (const file of files) {
         if (cs.color === 'rgb(38, 137, 86)' || cs.backgroundColor === 'rgb(38, 137, 86)') push('R23', id, q, el);
         if (cs.fontStyle === 'italic' && /[一-鿿]/.test(txt)) push('R26', id, `Chinese text set in italics ${q} (use bold: <i> inside a Chinese reference)`, el);
       }
+      // R27 imagery placeholders (iasdr-imagery.md §5)
+      s.querySelectorAll('.illus').forEach(f => { if (!f.querySelector('img,svg')) push('R27', id, 'empty .illus slot', f); });
       // R26 source line / APA 7 references (zh-typesetting.md §11)
       s.querySelectorAll('.src').forEach(src => {
         const L = lines(src); if (L.length > 2) push('R26', id, `source line has ${L.length} lines (max 2; put full references on a reference slide)`, src);

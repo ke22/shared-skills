@@ -144,7 +144,9 @@ function measure({ lang }) {
       return [z, positioned];
     };
     const realPush = items.push.bind(items);
-    items.push = it => realPush({ ...it, stack: [...stackKey(current), items.length] });
+    // the slide is the stacking context root: its own background is always the bottom layer,
+    // even under children with negative z-index (e.g. .photo-wash)
+    items.push = it => realPush({ ...it, stack: current === slide ? [-1e9, 0, items.length] : [...stackKey(current), items.length] });
     const rel = r => ({ left: r.left - S.left, top: r.top - S.top, width: r.width, height: r.height });
     const visible = r => r.width > 0.5 && r.height > 0.5 && r.right > S.left && r.left < S.right && r.bottom > S.top && r.top < S.bottom;
 

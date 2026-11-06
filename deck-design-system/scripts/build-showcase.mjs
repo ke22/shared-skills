@@ -349,7 +349,7 @@ html{scroll-behavior:smooth}
 </style>
 
 <div class="top"><div class="wrap"><a class="brand" href="#top"><i></i>IASDR 簡報設計系統</a>
-<nav aria-label="區塊"><a href="#tokens">Token</a><a href="#grid">格線</a><a href="#components">元件</a><a href="#layouts">版型</a><a href="#rules">規則</a></nav>
+<nav aria-label="區塊"><a href="#tokens">Token</a><a href="#grid">格線</a><a href="#imagery">圖像</a><a href="#components">元件</a><a href="#layouts">版型</a><a href="#rules">規則</a></nav>
 <div class="seg" role="group" aria-label="範例語言"><button type="button" id="lang-zh" data-lang="zh" aria-pressed="true">中文</button><button type="button" id="lang-en" data-lang="en" aria-pressed="false">English</button></div></div></div>
 
 <main class="wrap" id="top">
@@ -361,6 +361,20 @@ html{scroll-behavior:smooth}
 ${swatches()}<h3 style="font-size:18px">字級</h3>${typeScale()}${spacing()}</section>
 
 <section class="block" id="grid"><header><h2>格線與邊界</h2><p>以 1920 × 1080 的實際比例繪製。卡片從邊界 ${pxVar('--mx')} 開始，與標題直條對齊；標題文字縮排 ${pxVar('--title-indent')}。</p></header>${grid()}</section>
+
+<section class="block" id="imagery"><header><h2>圖像</h2><p>原版的辨識度有一半來自圖像。完整規格見 <code>references/iasdr-imagery.md</code>；素材另外準備，不取自原檔。</p></header>
+<div class="two"><div><h4>插畫 C63 <code>.illus</code></h4><ul class="rl">
+<li><b>線條</b><span>單色線條，1920 畫布上 6px，圓頭圓角；輪廓留 1–3 處缺口，不填色。</span></li>
+<li><b>顏色</b><span>由上到下的漸層 <code>--icon-a</code> → <code>--icon-b</code>，以整張插畫的高度計算。</span></li>
+<li><b>造型</b><span>簡化的側面人物，大圓頭、無五官細節，配一到兩件道具（筆電、平板、書、望遠鏡、長條圖、帶三點的視窗）；最多一個狀態符號（問號、亂線團、虛線箭頭）。</span></li>
+<li><b>尺寸</b><span>疊卡 144–176，欄卡上方 160–200，情境大圖 240–320；並列卡片的插畫同高、底緣對齊。</span></li>
+<li><b>何時用</b><span>卡片在講「一個人遇到的情況」用插畫；講「一個概念或資料類型」用 icon。同一頁不混用。</span></li></ul></div>
+<div><h4>照片與標誌</h4><ul class="rl">
+<li><b>色塊頁</b><span><code>.photo-slot.has-photo</code>：照片與 <code>--field</code> 色彩增值，形成雙色調，往左淡出；白字對比仍需 ≥ 4.5。</span></li>
+<li><b>內容頁</b><span>C64 <code>.photo-wash</code>：去色、透明度 10%、貼右緣寬 30%，在內容下方；一份簡報最多三頁。</span></li>
+<li><b>頭像</b><span>圓形、無外框；封面 84px，團隊頁 120–160px；用本人同意的照片。</span></li>
+<li><b>標誌</b><span>封面左上研討會標誌（白色，高 48–64），右上校系章（寬 120–140）；只用正式檔案，沒有就留空。</span></li>
+<li><b>佔位</b><span>範本不印出佔位文字；空的 <code>.illus</code> 由 lint R27 提醒。</span></li></ul></div></div></section>
 
 <section class="block" id="components"><header><h2>元件</h2><p>每張圖都是從範本實際渲染截下來的。「只有 CSS」表示樣式已寫好、範本還沒用到；「尚未實作」表示規格已定、還沒有樣式。</p></header>${components(comps)}</section>
 
