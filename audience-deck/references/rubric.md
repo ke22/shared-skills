@@ -105,7 +105,7 @@
 
 | 問題 | 修法 | 落在哪裡 |
 |---|---|---|
-| v1.2 記錄的「單一 main-title（64px）取代 sec-title+lede」從未經真實案例驗證——現在第一次拿到真實成品 deck（`references/V6場域驗證規劃v2-edited-2026-07-09 (1).html`）核對，發現真實成品從頭到尾固定用 `sec-title`＋`main-header-group` 兩層，`main-title` 是 48px 不是 64px，且多一個先前完全沒記錄的 `.slide-nav` 頁碼元件 | 標題骨架章節改回記錄 `sec-title`（28px）＋`main-title`（48px）＋`.slide-nav` 為預設；`.lede` 維持「無真實案例支持或反對，不強推」的保守態度；同步修正 SKILL.md Phase 3、house-style.md 通用頁面骨架圖與一致性硬規則 | SKILL.md Phase 3；house-style.md 標題骨架章節、通用頁面骨架、版型庫、一致性硬規則 |
+| v1.2 記錄的「單一 main-title（64px）取代 sec-title+lede」從未經真實案例驗證——現在第一次拿到真實成品 deck（V6 場域驗證規劃 deck，私人檔，不在 repo；見 house-style.md 校正依據）核對，發現真實成品從頭到尾固定用 `sec-title`＋`main-header-group` 兩層，`main-title` 是 48px 不是 64px，且多一個先前完全沒記錄的 `.slide-nav` 頁碼元件 | 標題骨架章節改回記錄 `sec-title`（28px）＋`main-title`（48px）＋`.slide-nav` 為預設；`.lede` 維持「無真實案例支持或反對，不強推」的保守態度；同步修正 SKILL.md Phase 3、house-style.md 通用頁面骨架圖與一致性硬規則 | SKILL.md Phase 3；house-style.md 標題骨架章節、通用頁面骨架、版型庫、一致性硬規則 |
 | Design tokens 缺 `--color-warning`，真實成品有這個 token（note-amber 系列用） | 補上 `--color-warning: #D6A226` | house-style.md Design tokens |
 | 版型庫只有 9 種，真實成品裡出現的雙欄任務卡、代辦檢核清單、字母卡橫列都沒被記錄 | 新增版型 10（雙欄任務卡）、11（代辦檢核清單）、12（字母卡橫列），並補上 note-amber/note-blue 提示框、chip 標籤、時程軸元件說明 | house-style.md 標題骨架與核心元件章節、版型庫 |
 
