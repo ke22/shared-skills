@@ -18,7 +18,7 @@
 
 | 代號 | 來源 | 頁碼依據 |
 |---|---|---|
-| IA | IASDR 2025 簡報（`Full Papers _746_Shen Yen Yi.pdf`） | PDF 頁 |
+| IA | IASDR 2025 研討會簡報 | PDF 頁 |
 | iT | `iTrace_專案計劃簡報_V3.pdf` | 投影片右下頁碼 |
 | OD | 碩士論文口試簡報（`2026-01-20 論文口試_簡報_陳心瑩.pdf`） | 投影片右下頁碼；封面與結束頁沒有頁碼 |
 | WB | 工作台：`semantic-layout.js` 元件註冊表、`component-contracts.md`、`presentation-workflow/references/modes/` | — |

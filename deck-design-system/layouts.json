@@ -16,8 +16,8 @@
   },
   "relationshipsSource": "presentation-studio/app/presentation-workbench/src/lib/semantic-layout.js",
   "sources": {
-    "references/narrative-layouts.md": "7e3c93531f89454e",
-    "manifest.json": "1882dbb1ea3fde32"
+    "references/narrative-layouts.md": "d6106416975c196f",
+    "manifest.json": "864dcdaa8fc360e7"
   },
   "layouts": [
     {
