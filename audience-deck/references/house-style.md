@@ -48,21 +48,32 @@
 
 ## Design tokens（CSS custom properties，可直接用於 HTML deck）
 
+**色票來源已統一**：下面「色票」區塊由 `shared-skills/deck-design-system/tokens.json` 的 `research` 主題產生，不要在這裡手改。要改色票，改那個檔後跑 `node shared-skills/deck-design-system/scripts/sync-tokens.mjs --write`；`check-tokens.mjs` 會檢查這份有沒有漂移。若專案已有掃描得到的成品 deck，仍以那份實際模板為準（見 §0）。
+
+色票（fallback；角色說明：`primary` 深藍＝main-title／indicator-bar 底／強調字；`secondary` 亮藍＝sec-title pill／表頭／箭頭；`warning`＝note-amber 系列；`text-muted`＝頁碼與 citation 灰字，勿再調淺）：
+
+<!-- deck-tokens:research:start -->
 ```css
 :root {
-  /* palette — fallback tokens；若專案已有掃描得到的成品 deck，一律以那份實際模板為準（見 §0） */
-  --color-primary:   #0F45B3;  /* 深藍：main-title、indicator-bar 底、強調字 */
-  --color-secondary: #2A64D8;  /* 亮藍：sec-title pill、表頭、箭頭、次強調 */
-  --color-bg-light:  linear-gradient(135deg, #f5f8fc 0%, #e2ebf8 100%); /* 內容頁底 */
-  --color-bg-dark:   radial-gradient(circle at center, #1E50C5 0%, #0C2E85 100%); /* 封面/轉場底 */
-  --color-surface:   #FFFFFF;  /* 卡片底 */
-  --color-success:   #68A758;  /* 綠勾（正面結果、達成） */
-  --color-danger:    #C54B3C;  /* 紅叉（缺口、風險、失效） */
-  --color-warning:   #D6A226;  /* 待解決疑問／警示 note 用（note-amber 系列） */
-  --text-main:       #2B2B2B;  /* 內文（白底 12.6:1，WCAG AA） */
-  --text-muted:      #5A6472;  /* 頁碼 / citation 灰字（5.6:1，AA；勿用 #888 僅 3.5:1） */
-  --text-inverse:    #FFFFFF;
+  --color-primary: #144BB8;
+  --color-secondary: #1C5CE2;
+  --color-bg-light: linear-gradient(135deg, #F5F8FC 0%, #E2EBF8 100%);
+  --color-bg-dark: radial-gradient(circle at center, #2551CC 0%, #0E2656 100%);
+  --color-surface: #FFFFFF;
+  --color-success: #268956;
+  --color-danger: #C34733;
+  --color-warning: #9B6410;
+  --text-main: #0E2656;
+  --text-muted: #596C91;
+  --text-inverse: #FFFFFF;
+}
+```
+<!-- deck-tokens:research:end -->
 
+間距、圓角、字體（版型專用，不屬於色票，在這裡維護）：
+
+```css
+:root {
   --space-sm: 20px; --space-md: 40px; --space-lg: 60px; --space-xl: 80px;
   --radius-sm: 10px; --radius-md: 20px; --radius-pill: 999px;
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
