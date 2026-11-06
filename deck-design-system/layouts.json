@@ -16,8 +16,8 @@
   },
   "relationshipsSource": "presentation-studio/app/presentation-workbench/src/lib/semantic-layout.js",
   "sources": {
-    "references/narrative-layouts.md": "acf4aedaa8ae6bc5",
-    "manifest.json": "1899c55bd9751522"
+    "references/narrative-layouts.md": "30d6836b96992463",
+    "manifest.json": "da4fb0fc436b2a0b"
   },
   "layouts": [
     {
@@ -90,7 +90,7 @@
         "IA p2–p3",
         "OD p8"
       ],
-      "docStatus": "有",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -214,7 +214,7 @@
         "OD p7",
         "OD p13"
       ],
-      "docStatus": "有",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -293,7 +293,7 @@
         "iT p1",
         "OD 封面"
       ],
-      "docStatus": "改（缺數字磚、學位膠囊）",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -358,7 +358,7 @@
         "iT p2",
         "OD p4–p8"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -404,7 +404,7 @@
       "sources": [
         "iT p3"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P2",
       "implemented": [
         "a"
@@ -475,7 +475,7 @@
         "OD p1",
         "IA p2"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -523,7 +523,7 @@
       "sources": [
         "OD p2"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P2",
       "implemented": [
         "a"
@@ -603,7 +603,7 @@
         "IA p3",
         "OD p5–p6"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -681,7 +681,7 @@
         "OD p18",
         "OD p21"
       ],
-      "docStatus": "有（段落過場 c 已實作）",
+      "docStatus": "部分（a、c 有）",
       "priority": "P1",
       "implemented": [
         "a",
@@ -740,7 +740,7 @@
         "iT p7",
         "OD p3"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（b 有）",
       "priority": "P1",
       "implemented": [
         "b"
@@ -790,7 +790,7 @@
       "sources": [
         "iT p5"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -865,7 +865,7 @@
         "iT p8",
         "OD p12"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -914,7 +914,7 @@
       "sources": [
         "OD p9"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -974,7 +974,7 @@
         "iT p9",
         "OD p11"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1030,7 +1030,7 @@
         "L5",
         "IA p6–p8"
       ],
-      "docStatus": "有",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1075,7 +1075,7 @@
         "iT p26",
         "iT p29"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1120,7 +1120,7 @@
       "sources": [
         "iT p27"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1172,7 +1172,7 @@
         "iT p28",
         "iT p30"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P2",
       "implemented": [
         "a"
@@ -1224,7 +1224,7 @@
       "sources": [
         "iT p10–p12"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1283,7 +1283,7 @@
       "sources": [
         "OD p14–p15"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1342,7 +1342,7 @@
         "iT p13",
         "OD p17"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1413,7 +1413,7 @@
         "IA p7",
         "OD p13"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1440,7 +1440,6 @@
           "renderedComponents": [
             "C01",
             "C12",
-            "C36",
             "C48"
           ]
         },
@@ -1457,7 +1456,6 @@
       ],
       "components": [
         "C48",
-        "C36",
         "C12"
       ],
       "workbench": {
@@ -1473,7 +1471,7 @@
         "TP p8",
         "IC p7"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1521,7 +1519,7 @@
       "sources": [
         "iT p15"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1597,7 +1595,7 @@
       "sources": [
         "OD p19–p23"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1678,7 +1676,7 @@
         "IA p9",
         "L9"
       ],
-      "docStatus": "改（L9 只有空框）",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1728,7 +1726,7 @@
       "sources": [
         "iT p18"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1810,7 +1808,7 @@
         "IA p9",
         "TP p13"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a、c 有）",
       "priority": "P1",
       "implemented": [
         "a",
@@ -1872,7 +1870,7 @@
       "sources": [
         "iT p20–p23"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -1930,7 +1928,7 @@
         "IA p8",
         "IA p11"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P2",
       "implemented": [
         "a"
@@ -1985,7 +1983,7 @@
       "sources": [
         "OD p16"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2031,7 +2029,7 @@
       "sources": [
         "iT p24"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2092,7 +2090,7 @@
         "WB",
         "OD p24–p25"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2136,7 +2134,7 @@
       "sources": [
         "WB"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2182,7 +2180,7 @@
       "sources": [
         "WB"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2227,7 +2225,7 @@
       "sources": [
         "WB"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P2",
       "implemented": [
         "a"
@@ -2282,7 +2280,7 @@
       "sources": [
         "TP p17–p20"
       ],
-      "docStatus": "新",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2369,7 +2367,7 @@
         "OD p30",
         "L7"
       ],
-      "docStatus": "改（缺產品畫面）",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2429,7 +2427,7 @@
         "OD p29",
         "L8"
       ],
-      "docStatus": "有",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2477,7 +2475,7 @@
       "sources": [
         "OD p5 ↔ OD p27"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2521,7 +2519,7 @@
       "sources": [
         "OD p28"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2566,7 +2564,7 @@
       "sources": [
         "iT p31"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P2",
       "implemented": [
         "a"
@@ -2615,7 +2613,7 @@
         "iT p32",
         "WB"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2691,7 +2689,7 @@
         "OD 結束頁",
         "L10"
       ],
-      "docStatus": "改",
+      "docStatus": "部分（a 有）",
       "priority": "P1",
       "implemented": [
         "a"
@@ -2716,7 +2714,7 @@
       "sources": [
         "WB"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P3",
       "implemented": [
         "a"
@@ -2748,7 +2746,7 @@
       "sources": [
         "WB"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P3",
       "implemented": [
         "a"
@@ -2779,7 +2777,7 @@
       "sources": [
         "WB"
       ],
-      "docStatus": "新",
+      "docStatus": "有",
       "priority": "P3",
       "implemented": [
         "a"

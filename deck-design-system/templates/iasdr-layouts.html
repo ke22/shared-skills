@@ -27,7 +27,7 @@ const NOTE=()=>`<p class="sample-note">${T('Sample content · slot guidance','�
 const SRC=(e,z)=>`<p class="src">${T(e,z)}</p>`;
 const ROLE=(k,icon,e,z)=>`<span class="role r${k}"><i>${I(icon,40,'white')}</i>${T(e,z)}</span>`;
 const STAT=(v,u,e,z)=>`<div class="stat"><p class="v">${v}<small>${u}</small></p><p class="l">${T(e,z)}</p></div>`;
-const VMARK={met:'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',partly:'<svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>',gap:'<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>'};
+const VMARK={met:'<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',partly:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 5a7 7 0 0 1 0 14z" fill="currentColor"/></svg>',gap:'<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>'};
 const QUOTE=(e,z,be,bz)=>`<div class="quote"><div><p>${T(e,z)}</p><p class="by">${T(be,bz)}</p></div></div>`;
 const PHONE=(e,z)=>`<div class="phone"><div class="scr">${T(e,z)}</div></div>`;
 const DESK=(e,z,w=640)=>`<div class="desk" style="width:${w}px"><div class="bez" style="height:${Math.round(w*.59)}px"><div class="scr">${T(e,z)}</div></div><div class="stand"></div><div class="foot"></div></div>`;
@@ -256,10 +256,9 @@ ${TB('Breakpoints','四大服務斷點','Learning happens in the field, after se
 
 add('N48a','Finding with participant quotes','發現與受訪者引言',()=>`
 ${TB('Finding 1','痛點 1','State the finding in one line, <span class="hl">key phrase in accent</span>','一句話寫出發現，<span class="hl">關鍵詞改成強調色</span>')}
-<div class="body" style="display:grid;grid-template-columns:320px 64px 1fr;gap:40px;align-items:center">
- <div class="circ solid" style="--d:320px;font-size:var(--h3)">${T('The finding<br>in a few words','用幾個字<br>寫出痛點')}</div>
- ${A(64)}
- <div class="col gap24">
+<div class="body" style="display:grid;grid-template-columns:320px 1fr;gap:64px;align-items:center">
+ <div class="circ dark" style="--d:320px;font-size:var(--h3)">${T('The finding<br>in a few words','用幾個字<br>寫出痛點')}</div>
+ <div class="col gap24"><p class="cap">${T('In their words','受訪者怎麼說')}</p>
   ${QUOTE('“The participant’s own words, with <b>the one line that matters in bold</b>.”','「受訪者的原話放在這裡，<b>粗體標出最關鍵的一句</b>，其餘照原話保留。」','P01 · Role','P01 角色')}
   ${QUOTE('“A second, independent voice saying the same thing <b>in different words</b>.”','「第二位受訪者，<b>用不同的話說出同一件事</b>。」','P02 · Role','P02 角色')}
  </div>
@@ -350,7 +349,7 @@ ${TB('Prototype design','原型設計','The framework links user stages to syste
 add('N42a','Outcomes and impact','成效與影響',()=>`
 ${TB('Field validation','場域驗證','Over half of the services now run online','超過一半的服務已轉由線上完成')}
 <div class="body s57">
- <div class="card col center tc gap24"><span class="chip">${T('Digital substitution rate','數位服務替代率')}</span><p class="hero"><span class="v">52.2<small style="font-size:.5em">%</small></span></p><p class="cap">${T('Share of registrations completed online','線上完成報名的比例')}</p><hr class="rule" style="width:100%"><div class="row gap56 center">${STAT('6,200','+','LINE followers','LINE 好友數')}${STAT('3,300','+','paid registrations','完成報名與付款')}</div></div>
+ <div class="card col center tc gap24"><span class="chip">${T('Digital substitution rate','數位服務替代率')}</span><p class="hero"><span class="v">56.4<small style="font-size:.5em">%</small></span></p><p class="cap">${T('Share of registrations completed online','線上完成報名的比例')}</p><hr class="rule" style="width:100%"><div class="row gap56 center">${STAT('4,800','+','LINE followers','LINE 好友數')}${STAT('2,700','+','paid registrations','完成報名與付款')}</div></div>
  <div class="col gap32" style="justify-content:center">
   ${[[1,'users','Visitors','信眾','Registration time fell from days to minutes.','報名時間由數週縮短至數分鐘。'],[3,'hand-heart','Volunteers','志工','Fewer repeated entries and checks.','重複登錄與人工校對明顯降低。'],[2,'user-check','Staff','專職人員','Event preparation fell to a few hours.','活動整理時間縮短至數小時。']].map(([k,ic,e,z,de,dz])=>`<div class="row gap32" style="align-items:flex-start"><div style="width:220px">${ROLE(k,ic,e,z)}</div><p class="bl">${T(de,dz)}</p></div>`).join('<hr class="rule">')}
   <p class="band soft">${T('Other units now ask to adopt it.','其他部門由下而上主動提出導入需求。')}</p>
@@ -397,9 +396,9 @@ ${TB('Conditions','條件','What the system does in each situation','系統在�
 </div>${NOTE()}`);
 
 add('N49a','Evaluation verdicts','評估判定',()=>`
-${TB('Prototype evaluation','原型評估結果','The prototype reads the situation, <span class="hl">but cannot yet hold context</span>','原型已能判斷情境，<span class="hl">但還不能延續脈絡</span>')}
+${TB('Prototype evaluation','原型評估結果','Of three criteria, <span class="hl">one is not yet met</span>','三個評估面向中，<span class="hl">還有一個沒做到</span>')}
 <div class="body g3">
- ${[['met','Met','達成','Adapts to the case record','能依個案資料調整'],['partly','Partly met','部分達成','Knows when to call for help','知道何時找專業支援'],['gap','Not yet','尚未達成','Keeps context across turns','延續對話脈絡']].map(([k,we,wz,te,tz])=>`<div class="card md col gap24"><div class="verdict${k==='met'?'':' '+k}"><span class="vmark">${VMARK[k]}</span><div><span class="vword">${T(we,wz)}</span><p class="vtext">${T(te,tz)}</p></div></div><hr class="rule"><p class="b">${T('The evidence: a number, or what the test showed.','證據：數據，或測試中看到的情形。')}</p>${QUOTE('“A participant quote, <b>key line in bold</b>.”','「受訪者的原話，<b>粗體標出最關鍵的一句</b>。」','P01 · Role','P01 角色')}</div>`).join('')}
+ ${[['met','Met','達成','Criterion one, as a claim','評估面向一的判定'],['partly','Partly met','部分達成','Criterion two, as a claim','評估面向二的判定'],['gap','Not yet','尚未達成','Criterion three, as a claim','評估面向三的判定']].map(([k,we,wz,te,tz])=>`<div class="card md col gap24"><div class="verdict${k==='met'?'':' '+k}"><span class="vmark">${VMARK[k]}</span><div><span class="vword">${T(we,wz)}</span><p class="vtext">${T(te,tz)}</p></div></div><hr class="rule"><p class="b">${T('The evidence: a number, or what the test showed.','證據：數據，或測試中看到的情形。')}</p>${QUOTE('“A participant quote, <b>key line in bold</b>.”','「受訪者的原話，<b>粗體標出最關鍵的一句</b>。」','P01 · Role','P01 角色')}</div>`).join('')}
 </div>${NOTE()}`);
 
 /* ---------------- G. discussion and close ---------------- */

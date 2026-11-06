@@ -430,11 +430,12 @@ h1.title .hl{color:var(--accent)}
 /* C12 quote: one key phrase per quote in bold */
 .quote b{font-weight:800;color:var(--ink)}
 
-/* C65 verdict badge: mark + verdict word + one-line judgement; never green (R23 keeps green for completed AND verified) */
+/* C65 verdict badge: mark + verdict word + one-line judgement. Status never borrows the structural blue:
+   met = ink, partly = warning (half circle), not yet = danger (cross); never green (R23) */
 .verdict{display:flex;align-items:center;gap:20px}
-.verdict .vmark{width:56px;height:56px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--accent);color:#fff}
+.verdict .vmark{width:56px;height:56px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--ink);color:#fff}
 .verdict .vmark svg{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
-.verdict .vword{display:block;font:700 var(--caption)/1.2 var(--f-body);color:var(--accent);margin-bottom:4px}
+.verdict .vword{display:block;font:700 var(--caption)/1.2 var(--f-body);color:var(--ink);margin-bottom:4px}
 .verdict .vtext{font:var(--h3-w) calc(var(--h3) * .8)/1.25 var(--f-head);color:var(--ink)}
 .verdict.partly .vmark{background:var(--warning)} .verdict.partly .vword{color:var(--warning)}
 .verdict.gap .vmark{background:var(--danger)} .verdict.gap .vword{color:var(--danger)}

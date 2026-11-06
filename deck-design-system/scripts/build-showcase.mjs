@@ -18,6 +18,7 @@ const manifest = JSON.parse(read('manifest.json'));
 const layoutsDoc = JSON.parse(read('layouts.json'));
 const css = read('templates/iasdr.css');
 const lintSrc = read('scripts/lint-deck.mjs');
+const mdi = v => esc(v).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code>$1</code>');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 // ---------------------------------------------------------------- data from the sources
@@ -37,10 +38,10 @@ const pxVar = name => parseFloat((vars.find(v => v.name === name) || {}).value) 
 const lum = hex => { const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(x => x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
 const contrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
 const COLOR_GROUPS = [
-  ['品牌與強調', ['--field', '--accent', '--accent-2', '--chip', '--accent-soft', '--bar-top', '--bar-bottom', '--icon-a', '--icon-b', '--section-mark']],
+  ['品牌與強調', ['--field', '--on-field', '--accent', '--accent-2', '--chip', '--accent-soft', '--bar-top', '--bar-bottom', '--icon-a', '--icon-b', '--section-mark']],
   ['文字', ['--ink', '--text', '--text-2', '--inactive', '--rule']],
   ['頁面與表面', ['--bg-a', '--bg-b', '--card', '--tint', '--line', '--surface-2', '--device']],
-  ['深色頁', ['--dark', '--dark-2', '--dark-line', '--dark-raised', '--on-field', '--on-dark-2']],
+  ['深色頁', ['--dark', '--dark-2', '--dark-line', '--dark-raised', '--on-dark-2']],
   ['狀態（只用於語意）', ['--danger', '--danger-soft', '--warning', '--warning-soft', '--success', '--success-soft']],
   ['角色（最多四種，以明度區分）', ['--role-1', '--role-2', '--role-3', '--role-4']],
 ];
@@ -182,7 +183,7 @@ function components(comps) {
   <div class="comps">${manifest.components.map(c => `<article class="comp" data-g="${esc(c.group)}" id="${c.id}">
     <div class="cimg">${img(comps[c.id], c.name)}</div>
     <div class="cbody"><header><code class="cid">${c.id}</code><h4>${esc(c.name)}</h4></header>
-    <p>${esc(c.purpose)}</p>${c.spec ? `<p class="specline">${esc(c.spec)}</p>` : ''}${c.zhNote ? `<p class="specline zh">中文：${esc(c.zhNote)}</p>` : ''}
+    <p>${mdi(c.purpose)}</p>${c.spec ? `<p class="specline">${mdi(c.spec)}</p>` : ''}${c.zhNote ? `<p class="specline zh">中文：${mdi(c.zhNote)}</p>` : ''}
     <div class="meta">${status(c)}</div>
     ${c.tokens.length ? `<details><summary>用到 ${c.tokens.length} 個 token</summary><p class="toks">${c.tokens.map(t => `<code>${esc(t)}</code>`).join(' ')}</p></details>` : ''}
     ${c.usedIn.length ? `<p class="used">用於 ${c.usedIn.slice(0, 8).map(u => `<a href="#L-${esc(u.replace(/[a-d]$/, ''))}">${esc(u)}</a>`).join(' ')}${c.usedIn.length > 8 ? ` 等 ${c.usedIn.length} 頁` : ''}</p>` : ''}</div></article>`).join('')}</div>`;
@@ -194,8 +195,8 @@ function layouts(slides) {
     const first = l.implemented[0], key = first ? l.id + first : null;
     return `<article class="lay" id="L-${l.id}">
       <button type="button" class="thumb" data-open="${l.id}" aria-label="放大 ${esc(l.id)} ${esc(l.name)}">${key ? langPair(slides, key, `${l.id} ${l.name}`) : '<div class="noimg">尚未實作</div>'}</button>
-      <div class="lbody"><header><code class="cid">${l.id}</code><h4>${esc(l.name)}</h4></header><p class="q">${esc(l.question)}</p>
-      ${l.variants.length ? `<ul class="vars">${l.variants.map(v => `<li class="${v.implemented ? 'done' : ''}"><b>${v.id}</b> ${esc(v.name)}<span>${esc(v.when)}</span></li>`).join('')}</ul>` : ''}
+      <div class="lbody"><header><code class="cid">${l.id}</code><h4>${esc(l.name)}</h4></header><p class="q">${mdi(l.question)}</p>
+      ${l.variants.length ? `<ul class="vars">${l.variants.map(v => `<li class="${v.implemented ? 'done' : ''}"><b>${v.id}</b> ${mdi(v.name)}<span>${mdi(v.when)}</span></li>`).join('')}</ul>` : ''}
       ${l.workbench.components.length ? `<p class="wb">工作台：${l.workbench.components.map(c => `<code>${esc(c)}</code>`).join(' ')}</p>` : ''}</div></article>`;
   };
   const deckIds = Object.keys(slides).filter(k => /^L\d+-/.test(k) && k.endsWith('|zh-Hant')).map(k => k.split('|')[0]).sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
@@ -320,7 +321,7 @@ tbody tr:last-child>*{border-bottom:0}
 .f span{color:var(--muted);font-weight:500;margin-left:2px}
 .f.on{background:var(--accent);border-color:var(--accent);color:var(--surface)} .f.on span{color:inherit;opacity:.8}
 .comps{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));gap:14px}
-.comp{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:grid;grid-template-rows:170px 1fr;scroll-margin-top:72px}
+.comp{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:grid;grid-template-rows:170px 1fr;grid-template-columns:minmax(0,1fr);scroll-margin-top:72px}
 .cimg{background:${theme.colors.bgB};display:grid;place-items:center;padding:10px;border-bottom:1px solid var(--line)}
 .cimg img{max-height:150px;width:auto;object-fit:contain;border-radius:6px}
 .noimg{display:grid;place-items:center;color:var(--muted);font-size:13px;width:100%;height:100%;min-height:90px;background:repeating-linear-gradient(135deg,transparent 0 10px,var(--line) 10px 11px)}
@@ -335,18 +336,18 @@ tbody tr:last-child>*{border-bottom:0}
 .pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)}
 .pill.floor{background:var(--bad-bg);color:var(--bad)} .pill.system{background:var(--tint);color:var(--accent)} .pill.style{background:var(--warn-bg);color:var(--warn)} .pill.advisory{background:var(--line);color:var(--muted)}
 details summary{cursor:pointer;font-size:12.5px;color:var(--muted)} .toks{line-height:1.9}
-.used{font-size:12.5px!important;color:var(--muted)} .used a{font:600 12px var(--f-mono);margin-right:4px}
+.used{font-size:12.5px!important;color:var(--muted)} .used a{font:600 12px var(--f-mono);margin-right:4px;overflow-wrap:anywhere}
 .lsec{display:grid;gap:14px} .lsec+.lsec{margin-top:20px}
 .lsec h3{font-size:18px;display:flex;gap:10px;align-items:center}
 .lsec h3 span{font:800 12px var(--f-mono);background:var(--ink);color:var(--bg);padding:4px 8px;border-radius:6px}
 .lays{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:16px}
-.lay{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;scroll-margin-top:72px}
+.lay{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;grid-template-columns:minmax(0,1fr);scroll-margin-top:72px}
 .thumb{display:block;width:100%;padding:0;border:0;background:${theme.colors.bgA};cursor:zoom-in;aspect-ratio:16/9;overflow:hidden}
 .thumb img,.thumb .noimg{width:100%;height:100%;object-fit:cover;display:block}
 .lbody{padding:12px 14px 14px;display:grid;gap:8px;align-content:start;min-width:0}
 .q{color:var(--ink);font-weight:500}
 .vars{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:12.5px}
-.vars li{display:grid;grid-template-columns:18px auto;column-gap:6px;color:var(--muted)}
+.vars li{display:grid;grid-template-columns:18px minmax(0,1fr);column-gap:6px;color:var(--muted)}
 .vars li b{grid-row:span 2;font:700 12px var(--f-mono);color:var(--muted);text-align:center;border:1px solid var(--line);border-radius:4px;height:18px;line-height:16px}
 .vars li.done b{background:var(--accent);border-color:var(--accent);color:var(--surface)}
 .vars li span{grid-column:2;font-size:12px}
