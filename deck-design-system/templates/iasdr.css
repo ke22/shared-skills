@@ -397,3 +397,8 @@ table.tbl{width:100%;border-collapse:separate;border-spacing:0;background:var(--
 .summary .lab{white-space:nowrap}
 /* audit fixes: text on the blue field is at least 24px bold (iasdr-typesetting.md section 7) */
 .field .cap,.field .stat .l,.field .chip{font-size:24px;font-weight:700}
+
+/* C62 custom figure: free form inside, same tokens and readability floor outside */
+.figure{flex:1;min-height:0;margin:0;display:flex;flex-direction:column;gap:16px}
+.figure .canvas{flex:1;min-height:0;border-radius:var(--r-lg);background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;overflow:hidden;padding:var(--pad-md)}
+.figure figcaption{font:400 var(--caption)/var(--caption-lh) var(--f-body);color:var(--text-2)}

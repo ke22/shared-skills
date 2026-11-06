@@ -29,7 +29,7 @@ const SELECTORS = {
   C36: ['.arr'], C37: ['.rail'], C38: ['.chev'], C39: ['.dia'], C40: ['.funnel'], C41: ['.dur'], C42: ['.tline'], C43: ['.gtl'],
   C44: ['.bp'], C45: ['.bp .line'], C46: ['.channels'], C47: ['.decision'], C48: ['.circ', '.node'], C49: ['.net-node', '.sysbar'],
   C50: ['.zone'], C51: ['.pin'], C52: ['.rule'], C53: ['.phone', '.desk'], C54: ['.screen'], C55: ['.photo'], C56: ['.mosaic'],
-  C57: ['.artifact'], C58: ['.avatar'], C59: ['.logo', '.logo-slot'], C60: ['.qr'], C61: ['.ic', '.icon'],
+  C57: ['.artifact'], C58: ['.avatar'], C59: ['.logo', '.logo-slot'], C60: ['.qr'], C61: ['.ic', '.icon'], C62: ['.figure'],
 };
 // --- which text roles a component's slots use (limits come from TEXT_RULES) ---
 const SLOTS = {
@@ -41,6 +41,7 @@ const SLOTS = {
   C31: { value: 'display', definition: 'caption' }, C33: { header: 'body', cell: 'body' }, C37: { label: 'body-l' }, C38: { label: 'body' },
   C42: { version: 'h3', note: 'body' }, C43: { group: 'h3', cell: 'body' }, C44: { role: 'body', cell: 'caption' }, C48: { label: 'body|h3' },
   C51: { number: 'chip', heading: 'h3', body: 'body' },
+  C62: { caption: 'caption' },
 };
 // --- limits that the typesetting docs state as rules (checked by lint-deck.mjs) ---
 const TEXT_RULES = {

@@ -74,12 +74,28 @@ description: >
 | `manifest.json` | **元件清單**，由程式產生，不要手改。記錄 61 個元件的用途、選擇器、用到的 token、文字欄位與字數規則、在 HTML／PPTX 的實作狀態、實際出現在哪些版型，以及每個版型由哪些元件組成 |
 | `scripts/build-manifest.mjs` | 從 `components.md`、`iasdr.css`、`tokens.json` 與兩份範本的渲染結果產生清單；`--check` 檢查清單是否過期 |
 | `scripts/lint-deck.mjs` | 用清單與排版規則檢查任何 iasdr HTML 簡報：R01–R05 靜態檢查（色碼、間距、字級、襯線字、未定義 class），R10–R23 渲染檢查（對比、藍底字、最小字級、標題行數、置中行數、行長、邊界、中文混排與標點、字型、元件文字、越界、腳本錯誤、綠色語意）；有錯就 exit 1 |
+| `layouts.json` | **敘事版型清單**，由 `scripts/build-layouts.mjs` 從 `narrative-layouts.md` 與 `manifest.json` 產生：47 個版型各自回答的問題、82 個變體與「什麼時候用」、組成元件、對應的工作台元件與敘事關係（讀自工作台註冊表）、實作狀態，以及 5 條簡報主線。選法：**先依問題選版型，再依條件選變體** |
 | `scripts/test-design-system.mjs` | 一個指令跑完：tokens 一致、清單沒過期、兩份範本 lint 全過、`tests/fixtures/bad-deck.html` 會觸發每一條規則（確認沒有失效的規則） |
+
+**規則分層**（`lint-deck.mjs` 每條規則標出層級）：
+
+| 層級 | 規則 | 能不能覆寫 |
+|---|---|---|
+| 可讀性底線 floor | R03、R10、R11、R12、R16、R18、R21、R22 | 不能；寫了覆寫也會被忽略並標註 |
+| 系統完整性 system | R01、R02、R04、R05 | 不能 |
+| 風格 style | R13、R14、R15、R17、R20 | 可以：在元素或其上層加 `data-lint-allow="R13: 理由"`，理由至少 4 個字；報告會列出所有覆寫 |
+| 提醒 advisory | R19、R23、R24、R25 | 不擋產出 |
+
+**表達力的出口與指標**：
+- 沒有版型能不變形地表達時，用 **N47 自訂圖解**（元件 C62，`<figure class="figure" data-figure-kind="類型">`）。內容形式不限，但要通過底線規則。不要把內容硬塞進 N38、N39。
+- 同一個 `data-figure-kind` 在 3 份簡報出現，就提案升格成正式元件。lint 報告最後的 `Metrics` 會統計自訂圖類型與覆寫次數。
+- 工作台的 QA 報告有提醒級的 `semantic.component-fallbacks`：列出被退回通用元件或換成其他元件的頁面與比例（不擋產出）。比例高代表版型庫不夠。
 
 **改了設計系統之後**：
 
 ```bash
-node scripts/build-manifest.mjs        # 重新產生清單
+node scripts/build-manifest.mjs        # 重新產生元件清單
+node scripts/build-layouts.mjs         # 重新產生版型清單
 node scripts/test-design-system.mjs    # 全部要 PASS
 ```
 

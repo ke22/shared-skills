@@ -48,6 +48,22 @@ ${TB('Composition','組成與並列','A whole is made of three parts of equal we
  ${[['layers','Part one','第一部分'],['workflow','Part two','第二部分'],['network','Part three','第三部分']].map(([ic,e,z])=>`<div class="card icard">${I(ic,128)}<p class="h3">${T(e,z)}</p><p class="b">${T('What this part contributes, in one or two lines.','這部分的作用，一到兩行。')}</p></div>`).join('')}
 </div>${NOTE()}`);
 
+add('N47a','Custom figure','自訂圖解',()=>`
+${TB('Custom figure','自訂圖解','A one-off relationship gets its own figure, not a forced layout','一次性的關係，用自訂圖呈現，不硬套版型')}
+<div class="body col gap24">
+ <figure class="figure" data-figure-kind="nested-scope">
+  <div class="canvas"><svg width="1100" height="440" viewBox="0 0 1100 440">
+   <rect x="20" y="20" width="1060" height="400" rx="32" fill="var(--tint)"/><rect x="200" y="80" width="700" height="280" rx="24" fill="var(--card)" stroke="var(--accent-soft)" stroke-width="3"/>
+   <rect x="380" y="150" width="340" height="140" rx="16" fill="var(--accent)"/>
+   <text x="60" y="64" style="font:600 22px var(--f-body);fill:var(--text-2)">${T('Organisation','組織')}</text>
+   <text x="236" y="122" style="font:600 22px var(--f-body);fill:var(--text-2)">${T('Service system','服務系統')}</text>
+   <text x="550" y="230" text-anchor="middle" style="font:700 30px var(--f-head);fill:#fff">${T('Ritual data','儀式資料')}</text>
+  </svg></div>
+  <figcaption>${T('Figure: three nested scopes that no standard layout expresses. Kind: nested-scope.','圖：三層巢狀範圍，現有版型無法表達。類型：nested-scope。')}</figcaption>
+ </figure>
+ <p class="band soft">${T('If this kind appears in three decks, promote it to a component.','同一類型在三份簡報出現，就升格成正式元件。')}</p>
+</div>${NOTE()}`);
+
 /* ---------------- A. opening ---------------- */
 add('N01a','Cover with scale','封面與規模',()=>`
 <div class="photo-slot" data-label="${T('PHOTO SLOT · duotone 15%','照片位置・雙色調 15%')}"></div>
