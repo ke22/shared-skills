@@ -4,7 +4,7 @@
 //   node sync-tokens.mjs --write    apply
 //   node sync-tokens.mjs --css demo print the :root block of a theme
 import fs from 'node:fs';
-import { CONSUMERS, HOUSE_START, HOUSE_END, loadSource, studioView, same, cssBlock, houseRegion } from './tokens-lib.mjs';
+import { CONSUMERS, HOUSE_START, HOUSE_END, loadSource, studioView, same, cssBlock, houseRegion, semanticCss, semanticRegion } from './tokens-lib.mjs';
 
 const args = process.argv.slice(2);
 const write = args.includes('--write');
@@ -37,6 +37,15 @@ const html = fs.readFileSync(CONSUMERS.demoTemplate, 'utf8');
 const rootLine = ':root{' + Object.entries(src.themes.demo.css).map(([k, v]) => `${k}:${v}`).join(';') + ';color-scheme:light}';
 const htmlNext = html.replace(/:root\s*\{[^}]*\}/, rootLine);
 if (htmlNext !== html) changes.push([CONSUMERS.demoTemplate, htmlNext]);
+
+// iasdr semantic layer: generated block placed after the [lang="zh-Hant"] token block
+if (src.themes.iasdr?.semantic) {
+  const css = fs.readFileSync(CONSUMERS.iasdrTemplate, 'utf8'), block = semanticCss(src.themes.iasdr), region = semanticRegion(css);
+  let next;
+  if (region) next = css.slice(0, region.a) + block + css.slice(region.b);
+  else { const zh = css.indexOf('[lang="zh-Hant"]{'), end = css.indexOf('\n}', zh) + 2; next = css.slice(0, end) + '\n' + block + css.slice(end); }
+  if (next !== css) changes.push([CONSUMERS.iasdrTemplate, next]);
+}
 
 if (!changes.length) { console.log('Everything already in sync.'); process.exit(0); }
 for (const [file, content] of changes) {

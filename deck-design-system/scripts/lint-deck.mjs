@@ -20,6 +20,10 @@ const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.json'), 'u
 const theme = JSON.parse(fs.readFileSync(path.join(ROOT, 'tokens.json'), 'utf8')).themes.iasdr;
 const tokenHex = new Set(Object.values(theme.css).filter(v => /^#[0-9a-f]{6}$/i.test(v)).map(v => v.toUpperCase()));
 const definedClasses = new Set(manifest.definedClasses);
+// base colour -> the semantic tokens that should be used instead (R34)
+const SEMANTIC_FOR = {};
+for (const t of theme.semantic?.tokens ?? []) (SEMANTIC_FOR[t.ref] ??= []).push(t.name);
+for (const k of Object.keys(SEMANTIC_FOR)) if (['--ink'].includes(k)) delete SEMANTIC_FOR[k]; else SEMANTIC_FOR[k] = SEMANTIC_FOR[k].join(' / ');
 const PAGE_CHROME = new Set(['deck', 'deck-label', 'lib-label']); // gallery chrome outside slides
 
 const RULES = {
@@ -44,6 +48,7 @@ const RULES = {
   R23: ['warn', 'Success colour used: confirm the item is completed AND verified', 'advisory'],
   R24: ['warn', 'Custom figure used (counts toward promotion: same kind in 3 decks -> new component)', 'advisory'],
   R25: ['warn', 'Custom figure without data-figure-kind or figcaption', 'advisory'],
+  R34: ['warn', 'Base colour token in an inline style (use the semantic token: structure / emphasis / status / category)', 'advisory'],
   R28: ['error', 'Title highlight (.hl only in a content-page h1, one phrase, zh <= 12 CJK / en <= 36 chars)', 'style'],
   R27: ['warn', 'Empty illustration slot (.illus with no image): a finished deck should not keep placeholders', 'advisory'],
   R26: ['error', 'Source line / APA reference (max 2 lines, clear of page number, journal+volume in <i>: italic for English, bold for Chinese)', 'style'],
@@ -71,6 +76,9 @@ function staticChecks(file, src) {
     for (const [, n] of val.matchAll(/(?<![\w.-])(\d+)px/g)) if (+n % 4) add('R02', file, 'source', `${prop}: ${n}px`);
   for (const [, n] of body.matchAll(/font(?:-size)?\s*:[^;}]*?(\d+)px/g)) if (+n < 18) add('R03', file, 'source', `${n}px`);
   for (const m of body.matchAll(/\b(Georgia|Times(?: New Roman)?|Cambria|SimSun|PMingLiU|MingLiU)\b/g)) add('R04', file, 'source', m[1]);
+  // R34: inline styles name base colours that have a semantic replacement (tokens.json themes.iasdr.semantic)
+  if (!file.endsWith('.css')) for (const m of src.matchAll(/style\s*=\s*\\?["']([^"']*)\\?["']/g))
+    for (const t of m[1].matchAll(/var\((--[\w-]+)\)/g)) if (SEMANTIC_FOR[t[1]]) add('R34', file, 'source', `${t[1]} → ${SEMANTIC_FOR[t[1]]}`);
 }
 staticChecks(cssPath, fs.readFileSync(cssPath, 'utf8'));
 

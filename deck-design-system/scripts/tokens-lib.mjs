@@ -66,6 +66,25 @@ export function demoRootVars(html) {
   return vars;
 }
 
+// ---- iasdr semantic layer (L1): tokens.json themes.iasdr.semantic -> a generated block in iasdr.css ----
+export const SEM_START = '/* deck-tokens:semantic:start — generated from tokens.json themes.iasdr.semantic by scripts/sync-tokens.mjs; do not edit */';
+export const SEM_END = '/* deck-tokens:semantic:end */';
+export function semanticCss(theme) {
+  const s = theme.semantic, base = theme.css;
+  const refs = [...s.tokens.map(t => t.ref), ...Object.values(s.contexts).flatMap(c => Object.values(c.tokens)), ...s.aliases.map(a => a.aliasOf)];
+  const missing = refs.filter(r => !(r in base));
+  if (missing.length) throw new Error(`semantic refs not in themes.iasdr.css: ${[...new Set(missing)].join(', ')}`);
+  const names = new Set(s.tokens.map(t => t.name)), unknown = Object.values(s.contexts).flatMap(c => Object.keys(c.tokens)).filter(n => !names.has(n));
+  if (unknown.length) throw new Error(`context overrides a token that is not defined: ${unknown.join(', ')}`);
+  for (const a of s.aliases) if (base[a.name] !== base[a.aliasOf]) throw new Error(`alias ${a.name} (${base[a.name]}) no longer equals ${a.aliasOf} (${base[a.aliasOf]}): update the alias record`);
+  const decl = pairs => pairs.map(([k, r]) => `${k}:var(${r})`).join(';');
+  return [SEM_START, `:root{${decl(s.tokens.map(t => [t.name, t.ref]))}}`, ...Object.values(s.contexts).map(c => `${c.selector}{${decl(Object.entries(c.tokens))}}`), SEM_END].join('\n');
+}
+export function semanticRegion(css) {
+  const a = css.indexOf(SEM_START), b = css.indexOf(SEM_END);
+  return a < 0 || b < a ? null : { a, b: b + SEM_END.length, text: css.slice(a, b + SEM_END.length) };
+}
+
 /** Parse a CSS block by its selector prefix, e.g. ':root{' or '[lang="zh-Hant"]{'. */
 export function cssBlockVars(html, opener) {
   const i = html.indexOf(opener); if (i < 0) return null;

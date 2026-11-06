@@ -132,6 +132,24 @@
 
 ## 7. 色彩
 
+顏色分兩層，2026-11-06 起元件只用**語意層**：
+
+- **基礎色**（下表）：唯一寫色碼的地方，在 `iasdr.css` 的 `:root`。
+- **語意色**：寫在 `tokens.json` 的 `themes.iasdr.semantic`，由 `scripts/sync-tokens.mjs --write` 產生到 `iasdr.css` 的 `deck-tokens:semantic` 區塊，不要手改。依用途分五個通道：
+
+| 通道 | token | 規則 |
+|---|---|---|
+| 結構 | `--struct-mark`、`--struct-line`、`--struct-fill`、`--struct-muted` | 固定出現的系統元素（眉標、編號、表頭、流程線、圖解節點）。不代表重要，也不代表好壞 |
+| 強調 | `--emph` | 作者選的重點，一頁一處：標題 `.hl`、焦點框 C27、`.acc` |
+| 狀態 | `--status-met`、`--status-partial`、`--status-gap`、`--status-verified`、`--status-na`、`--status-unknown`（含 `-soft` 底色） | 判定、狀態點、錯誤與警示。**不借用結構藍**；一律配形狀（勾、半圓、叉、空心）與文字 |
+| 類別 | `--cat-1`–`--cat-4` | 角色與分類，最多 4 種，以明度區分，一律配標籤 |
+| 互動 | `--link` | 只用在互動 HTML 與展示頁 |
+
+- **情境**：色塊頁（`.slide.field`）與深色頁（`.slide.dark`）重新指定部分語意色，例如色塊頁的結構與強調改用 `--on-field`。元件不必為這兩種頁面另寫覆寫。
+- **同值別名**：`--chip`、`--role-1` 等於 `--accent`；`--role-2` 等於 `--ink`；`--role-3` 等於 `--accent-soft`；`--role-4` 等於 `--rule`。每個別名在 `tokens.json` 記錄理由；值不再相等時 `check-tokens` 會擋下。
+- **對比結論**：`manifest.json` 的 `colors` 為每個顏色算出結論——當文字放在淺色頁上：可做內文、只限大字或只限裝飾；當底色時：上面的白字可不可以做內文。主色 `--accent` 對頁面底色只有 4.34:1，**只限大字**。
+- **簡報裡**：inline style 不要直接寫基礎色，lint R34 會提醒並給出替代的語意 token。
+
 | Token | 色碼 | 用途 | 標記 |
 |---|---|---|---|
 | field | `#3A77ED` | 封面、提問、結語的滿版底色 | 實測 |

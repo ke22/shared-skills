@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="iasdr.css">
 <script src="icons.js"></script>
-<style>.lib-label{font:600 26px/1.3 var(--f-body);color:#333;width:1920px}.lib-label b{color:var(--accent)}</style>
+<style>.lib-label{font:600 26px/1.3 var(--f-body);color:#333;width:1920px}.lib-label b{color:var(--struct-mark)}</style>
 </head>
 <body class="show-slots">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="24"><stop offset="0" stop-color="#0C98FE"/><stop offset="1" stop-color="#2F82FC"/></linearGradient></defs></svg>
@@ -55,8 +55,8 @@ ${TB('Custom figure','自訂圖解','A one-off relationship gets its own figure,
 <div class="body col gap24">
  <figure class="figure" data-figure-kind="nested-scope">
   <div class="canvas"><svg width="1100" height="440" viewBox="0 0 1100 440">
-   <rect x="20" y="20" width="1060" height="400" rx="32" fill="var(--tint)"/><rect x="200" y="80" width="700" height="280" rx="24" fill="var(--card)" stroke="var(--accent-soft)" stroke-width="3"/>
-   <rect x="380" y="150" width="340" height="140" rx="16" fill="var(--accent)"/>
+   <rect x="20" y="20" width="1060" height="400" rx="32" fill="var(--tint)"/><rect x="200" y="80" width="700" height="280" rx="24" fill="var(--card)" stroke="var(--struct-muted)" stroke-width="3"/>
+   <rect x="380" y="150" width="340" height="140" rx="16" fill="var(--struct-mark)"/>
    <text x="60" y="64" style="font:600 22px var(--f-body);fill:var(--text-2)">${T('Organisation','組織')}</text>
    <text x="236" y="122" style="font:600 22px var(--f-body);fill:var(--text-2)">${T('Service system','服務系統')}</text>
    <text x="550" y="230" text-anchor="middle" style="font:700 30px var(--f-head);fill:#fff">${T('Ritual data','儀式資料')}</text>
@@ -215,7 +215,7 @@ ${TB('Before · in service','服務中現況','Workers face the problem alone an
   <p class="rl">${ROLE(1,'hand-heart','Worker','居服員')}</p>${[1,2,3,4].map(()=>`<div class="cell front">${T('What the worker does','居服員做什麼')}</div>`).join('')}
   <p class="rl">${T('Touchpoint','接觸點')}<small>${T('channel or object','管道或物件')}</small></p>${[1,2,3,4].map(()=>`<div class="cell back">${T('Phone, LINE, paper','電話、LINE、紙本')}</div>`).join('')}
   <p class="rl">${ROLE(2,'user-check','Supervisor','督導')}</p><div class="cell empty">—</div><div class="cell empty">—</div><div class="cell">${T('Remote judgement','遠端協助判斷')}</div><div class="cell">${T('Coordinates next steps','協調後續')}</div>
-  <p class="rl">${I('triangle-alert',40,'solid')}<span style="color:var(--warning)">${T('Pain point','痛點')}</span></p><div class="cell empty">—</div><div class="cell pain" style="grid-column:span 2">${T('Hard to tell symptoms from normal ageing','難以區別症狀與一般老化')}</div><div class="cell empty">—</div>
+  <p class="rl">${I('triangle-alert',40,'solid')}<span style="color:var(--status-partial)">${T('Pain point','痛點')}</span></p><div class="cell empty">—</div><div class="cell pain" style="grid-column:span 2">${T('Hard to tell symptoms from normal ageing','難以區別症狀與一般老化')}</div><div class="cell empty">—</div>
  </div>
  <p class="band soft mt16">${T('Break: the worker serves alone and knowledge does not reach the field.','斷點：居服員單獨服務，課程知識無法涵蓋現場狀況。')}</p>
 </div>${NOTE()}`);
@@ -239,7 +239,7 @@ ${TB('Findings 4.1','研究發現 4.1','Eleven pain points fall into four kinds 
  </div>
  <div class="pinlist">${[['Role coordination','角色協作斷裂'],['Channel','溝通管道斷裂'],['Touchpoint','接觸點流程斷裂'],['Physical–digital','實體與數位斷裂']].map(([e,z],i)=>`<div class="row"><span class="pin warn">${i+1}</span><div><p class="h3">${T(e,z)}</p><p class="b muted">${T('Where it happens and why.','發生在哪裡、為什麼。')}</p></div></div>`).join('')}</div>
 </div>
-<div class="legend" style="position:absolute;left:var(--mx);bottom:28px"><span><i class="sw" style="background:var(--tint)"></i>${T('Internal','內部管理')}</span><span><i class="sw" style="background:var(--surface-2)"></i>${T('Public','公共管道')}</span><span><i class="ln" style="border-color:var(--warning)"></i>${T('Broken flow','斷裂的資訊流')}</span></div>${NOTE()}`);
+<div class="legend" style="position:absolute;left:var(--mx);bottom:28px"><span><i class="sw" style="background:var(--tint)"></i>${T('Internal','內部管理')}</span><span><i class="sw" style="background:var(--surface-2)"></i>${T('Public','公共管道')}</span><span><i class="ln" style="border-color:var(--status-partial)"></i>${T('Broken flow','斷裂的資訊流')}</span></div>${NOTE()}`);
 
 add('N16a','Breaks by role and stage','斷點歸納',()=>`
 ${TB('Breakpoints','角色斷點統整','Breaks differ by role and by stage of service','斷點因角色與服務階段而不同')}
@@ -377,7 +377,7 @@ ${TB('Change','改變','The responsibility moved from memory to the system','責
 add('N26a','Readiness status','就緒狀態',()=>`
 ${TB('Status','進度','Say how far each part has really got','說清楚每件事實際做到哪一步')}
 <div class="body col gap16" style="justify-content:center">
- ${[['circle-check','accent','Documented','已寫成文件'],['circle-check','accent','Implemented','已實作'],['circle-check','accent','Checked','已檢查'],['circle-dashed','','Independently verified','獨立驗證'],['circle-dashed','','Field tested','現場測過']].map(([ic,c,e,z],i)=>`<div class="card md row gap32" style="padding:20px 36px"><span style="color:${c?'var(--accent)':'var(--accent-soft)'}">${I(ic,40,'solid')}</span><p class="h3" style="width:420px">${T(e,z)}</p><p class="b ${c?'':'muted'}">${T(c?'Evidence that this step is done.':'Not yet: what is still missing.',c?'這一步完成的證據。':'尚未：還缺什麼。')}</p></div>`).join('')}
+ ${[['circle-check','accent','Documented','已寫成文件'],['circle-check','accent','Implemented','已實作'],['circle-check','accent','Checked','已檢查'],['circle-dashed','','Independently verified','獨立驗證'],['circle-dashed','','Field tested','現場測過']].map(([ic,c,e,z],i)=>`<div class="card md row gap32" style="padding:20px 36px"><span style="color:${c?'var(--struct-mark)':'var(--struct-muted)'}">${I(ic,40,'solid')}</span><p class="h3" style="width:420px">${T(e,z)}</p><p class="b ${c?'':'muted'}">${T(c?'Evidence that this step is done.':'Not yet: what is still missing.',c?'這一步完成的證據。':'尚未：還缺什麼。')}</p></div>`).join('')}
 </div>${NOTE()}`);
 
 add('N27a','Evidence coverage','證據覆蓋',()=>`
@@ -415,8 +415,8 @@ add('N31a','Discussion','討論',()=>`
 ${TB('Discussion','討論','Three data dimensions together explain the change','三種資料一起，才能解釋改變')}
 <div class="body"><div class="card disc" style="justify-content:center;gap:48px">
  <div class="row center" style="gap:0">
-  <div class="circ" style="--d:260px;font-size:var(--h3)">${T('Self-report','自評')}</div><span style="width:120px;border-top:4px solid var(--accent)"></span>
-  <div class="circ solid" style="--d:300px;font-size:var(--h3)">${T('User needs','使用者需求')}</div><span style="width:120px;border-top:4px solid var(--accent)"></span>
+  <div class="circ" style="--d:260px;font-size:var(--h3)">${T('Self-report','自評')}</div><span style="width:120px;border-top:4px solid var(--struct-mark)"></span>
+  <div class="circ solid" style="--d:300px;font-size:var(--h3)">${T('User needs','使用者需求')}</div><span style="width:120px;border-top:4px solid var(--struct-mark)"></span>
   <div class="circ" style="--d:260px;font-size:var(--h3)">${T('Behaviour','行為線索')}</div>
  </div>
  <p class="lead">${T('Future work should combine all three to follow change over time.','後續研究應整合三種資料，追蹤長期的變化。')}</p>

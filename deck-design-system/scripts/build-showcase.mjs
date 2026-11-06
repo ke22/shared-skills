@@ -104,13 +104,31 @@ async function capture() {
 }
 
 // ---------------------------------------------------------------- page
+const COLORS = manifest.colors;
+const CTIER = { text: ['可做內文', 'ok'], large: ['只限大字', 'warn'], decor: ['只限裝飾', 'muted'] };
+const tierPill = t => t ? `<span class="pill ${CTIER[t][1]}" title="當文字或標記用在淺色頁上">${CTIER[t][0]}</span>` : '';
+const inkOn = hex => contrast(hex, '#111111') > contrast(hex, '#FFFFFF') ? '#111111' : '#FFFFFF';
+const CHANNEL_NAME = { structure: '結構', emphasis: '強調', status: '狀態', category: '類別', interaction: '互動' };
+const CONTEXT_NAME = { field: '色塊頁', dark: '深色頁' };
+
+// L1: what components use, grouped by meaning
+function semanticColors() {
+  const chans = Object.keys(COLORS.channels);
+  return `<div class="sem">${chans.map(ch => `<div class="semgroup"><h4>${CHANNEL_NAME[ch] || ch} <code>${ch}</code></h4><p class="note">${esc(COLORS.channels[ch])}</p>
+  <ul class="semlist">${COLORS.semantic.filter(t => t.channel === ch).map(t => `<li><span class="semchip" style="background:${t.value};color:${inkOn(t.value)}">${esc(t.value)}</span>
+   <span class="semname"><code>${esc(t.name)}</code><span class="muted">= <code>${esc(t.ref)}</code></span></span><span class="semuse">${esc(t.usage)}</span><span class="semtiers">${(t.uses || ['ink']).map(u => u === 'ink' ? `<span>當文字 ${tierPill(t.tier)}</span>` : u === 'fill' ? `<span>白字在上 ${tierPill(t.fillTier)}</span>` : `<span class="muted">${u === 'surface' ? '大面積底色' : '線條與外框'}</span>`).join('')}</span>
+   ${Object.entries(t.contexts).map(([k, c]) => `<span class="semctx" title="${esc(COLORS.contexts[k].note)}"><i style="background:${c.value}"></i>${CONTEXT_NAME[k] || k}：<code>${esc(c.ref)}</code></span>`).join('')}</li>`).join('')}</ul></div>`).join('')}</div>`;
+}
+
+// L0: the only place colour values live; aliases are listed under the colour they equal
 function swatches() {
-  return COLOR_GROUPS.map(([title, names]) => `<div class="swgroup"><h4>${esc(title)}</h4><div class="swgrid">${names.map(n => {
-    const v = vars.find(x => x.name === n); if (!v || !/^#/.test(v.value)) return '';
-    const onWhite = contrast(v.value, '#FFFFFF'), onBg = contrast(v.value, theme.colors.bgA);
-    const ink = contrast(v.value, '#111111') > contrast(v.value, '#FFFFFF') ? '#111111' : '#FFFFFF';
-    return `<figure class="sw"><div class="chipc" style="background:${v.value};color:${ink}"><span>${esc(v.value.toUpperCase())}</span></div><figcaption><code>${esc(n)}</code>${v.comment ? `<span class="use">${esc(v.comment)}</span>` : ''}<span class="cr" title="對比度：對白色／對頁面底色"><b>${onWhite.toFixed(2)}</b> 白 · <b>${onBg.toFixed(2)}</b> 底</span></figcaption></figure>`;
-  }).join('')}</div></div>`).join('');
+  const byName = Object.fromEntries(COLORS.base.map(b => [b.name, b]));
+  const aliases = n => COLORS.base.filter(b => b.aliasOf === n);
+  return COLOR_GROUPS.map(([title, names]) => { const cards = names.map(n => {
+    const v = vars.find(x => x.name === n), b = byName[n]; if (!v || !b || b.aliasOf) return '';
+    const al = aliases(n);
+    return `<figure class="sw"><div class="chipc" style="background:${b.value};color:${inkOn(b.value)}"><span>${esc(b.value)}</span></div><figcaption><code>${esc(n)}</code>${al.length ? `<span class="alias">同值別名：${al.map(a => `<code title="${esc(a.aliasReason || '')}">${esc(a.name)}</code>`).join('、')}</span>` : ''}${v.comment ? `<span class="use">${esc(v.comment)}</span>` : ''}<span class="tierrow">${tierPill(b.tier)}<span class="cr" title="對比度：對白色／對頁面底色">${b.onWhite.toFixed(2)} 白 · ${b.onPage.toFixed(2)} 底</span></span></figcaption></figure>`;
+  }).join(''); return cards ? `<div class="swgroup"><h4>${esc(title)}</h4><div class="swgrid">${cards}</div></div>` : ''; }).join('');
 }
 
 function typeScale() {
@@ -239,6 +257,7 @@ function page({ slides, comps }) {
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1E1E1E;--surface:#2B2C30;--ink:#F3F5FA;--text:#E6E8EE;--muted:#B9BEC9;--line:#41444C;--accent:#8DB2FF;--tint:#2E3A55;--ok:#6FCF97;--warn:#E8B25A;--bad:#F08C7A;--ok-bg:#1F3A2C;--warn-bg:#3D3020;--bad-bg:#43251F;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#1E1E1E;--surface:#2B2C30;--ink:#F3F5FA;--text:#E6E8EE;--muted:#B9BEC9;--line:#41444C;--accent:#8DB2FF;--tint:#2E3A55;--ok:#6FCF97;--warn:#E8B25A;--bad:#F08C7A;--ok-bg:#1F3A2C;--warn-bg:#3D3020;--bad-bg:#43251F;color-scheme:dark}
 *{box-sizing:border-box}
+img{max-width:100%;height:auto}
 body{background:var(--bg);color:var(--text);font:400 15px/1.6 var(--f-body)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
 a{color:var(--accent)}
@@ -256,13 +275,13 @@ h1,h2,h3,h4{font-family:var(--f-head);color:var(--ink);text-wrap:balance;margin:
 .seg button{border:0;background:none;color:var(--muted);font:600 13px/1 var(--f-body);padding:7px 12px;border-radius:999px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
 button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.hero{padding-block:48px 24px;display:grid;gap:14px}
+.hero{padding-block:48px 24px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
 .hero .eyebrow{font:700 13px/1 var(--f-head);letter-spacing:.08em;color:var(--accent);text-transform:uppercase}
 .hero h1{font-size:clamp(30px,4.6vw,48px);font-weight:800;letter-spacing:-.01em;line-height:1.12}
 .hero p{max-width:64ch;color:var(--muted);margin:0}
 .facts{display:flex;flex-wrap:wrap;gap:8px 22px;margin:8px 0 0;padding:0;list-style:none;font-size:14px;color:var(--muted)}
 .facts b{font:700 15px var(--f-head);color:var(--ink);font-variant-numeric:tabular-nums;margin-right:4px}
-section.block{padding-block:40px;border-top:1px solid var(--line);scroll-margin-top:72px;display:grid;gap:22px}
+section.block{padding-block:40px;border-top:1px solid var(--line);scroll-margin-top:72px;display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
 section.block>header{display:grid;gap:6px}
 section.block>header h2{font-size:26px;font-weight:800;display:flex;align-items:center;gap:12px}
 section.block>header h2::before{content:"";width:8px;height:26px;border-radius:4px;background:linear-gradient(180deg,var(--bar-a),var(--bar-b))}
@@ -276,6 +295,20 @@ h4{font-size:15px;font-weight:700;margin-bottom:10px}
 .sw figcaption{padding:8px 10px 10px;display:grid;gap:2px;min-width:0}
 .sw .use{font-size:12px;color:var(--muted);line-height:1.4}
 .cr{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums} .cr b{color:var(--text);font-weight:600}
+.alias{font-size:12px;color:var(--muted)} .tierrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:2px}
+.pill.muted{background:var(--line);color:var(--muted)}
+.sem{display:grid;gap:18px}
+.semgroup{display:grid;gap:6px}
+.semgroup h4{margin:0} .semgroup h4 code{font-weight:500}
+.semlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.semlist li{display:grid;grid-template-columns:96px minmax(140px,220px) minmax(0,1fr) auto;gap:4px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.semchip{display:inline-flex;align-items:flex-end;height:36px;border-radius:8px;padding:4px 6px;font:600 11px var(--f-mono)}
+.semname{display:grid;min-width:0} .semname code{color:var(--ink);font-weight:600;overflow-wrap:anywhere}
+.semuse{font-size:13px;color:var(--text);min-width:0}
+.semtiers{display:grid;gap:4px;justify-items:end;font-size:12px;color:var(--muted)} .semtiers>span{display:inline-flex;gap:6px;align-items:center}
+.semctx{grid-column:2 / -1;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.semctx i{width:12px;height:12px;border-radius:3px;border:1px solid var(--line);display:inline-block}
+@media (max-width:640px){.semlist li{grid-template-columns:64px minmax(0,1fr)}.semuse,.semtiers{grid-column:2;justify-items:start}}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
@@ -392,8 +425,9 @@ html{scroll-behavior:smooth}
 <p>研討會、口試與研究簡報共用的設計系統。同一組格線與元件，中文與英文各有自己的字級、行高與字距。這一頁的數值、元件與版型都由原始檔產生；HTML 經 lint 檢查後，可直接轉成可編輯的 PPTX。</p>
 <ul class="facts"><li><b>1920 × 1080</b>畫布，8px 單位</li><li><b>12</b>欄格線</li><li><b>${counts.comps}</b>個元件（${counts.rendered} 個已渲染）</li><li><b>${counts.layouts}</b>個敘事版型，${counts.variants} 個變體（${counts.impl} 個已實作）</li><li><b>${counts.rules}</b>條 lint 規則</li></ul></div>
 
-<section class="block" id="tokens"><header><h2>Design token</h2><p>唯一來源是 <code>tokens.json</code> 的 <code>themes.iasdr</code>，投影成 <code>iasdr.css</code> 的 CSS 變數。對比度欄位是對白色與頁面底色（${theme.colors.bgA}）的比值；一般文字需 4.5，24px 粗體或 32px 以上需 3。</p></header>
-${swatches()}<h3 style="font-size:18px">字級</h3>${typeScale()}${spacing()}</section>
+<section class="block" id="tokens"><header><h2>Design token</h2><p>顏色分兩層。元件與簡報只用<b>語意色</b>：依用途分成結構、強調、狀態、類別、互動，同一個藍色在不同用途有不同名字，狀態永遠不借用結構藍。<b>基礎色</b>是唯一寫色碼的地方。來源是 <code>tokens.json</code> 的 <code>themes.iasdr</code>。對比結論以「當文字或標記用在淺色頁上」判斷：對白色與頁面底色都 ≥ 4.5 可做內文，≥ 3 只限 24px 粗體或 32px 以上，低於 3 只限裝飾。</p></header>
+<h3 style="font-size:18px">語意色（元件用這一層）</h3>${semanticColors()}
+<h3 style="font-size:18px">基礎色</h3>${swatches()}<h3 style="font-size:18px">字級</h3>${typeScale()}${spacing()}</section>
 
 <section class="block" id="grid"><header><h2>格線與邊界</h2><p>以 1920 × 1080 的實際比例繪製。卡片從邊界 ${pxVar('--mx')} 開始，與標題直條對齊；標題文字縮排 ${pxVar('--title-indent')}。</p></header>${grid()}</section>
 

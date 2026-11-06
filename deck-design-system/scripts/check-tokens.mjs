@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Verify every consumer still matches deck-design-system/tokens.json. Exit 1 on drift.
 import fs from 'node:fs';
-import { CONSUMERS, STALE_COPIES, loadSource, studioView, same, parseVars, houseRegion, demoRootVars, cssBlockVars } from './tokens-lib.mjs';
+import { CONSUMERS, STALE_COPIES, loadSource, studioView, same, parseVars, houseRegion, demoRootVars, cssBlockVars, semanticCss, semanticRegion } from './tokens-lib.mjs';
 
 const src = loadSource();
 const { research, demo } = src.themes;
@@ -47,6 +47,14 @@ if (src.themes.iasdr) try {
   else if (same(root, src.themes.iasdr.css) && same(zh, src.themes.iasdr.cssZh)) oks.push('deck-design-system templates/iasdr.css (en + zh-Hant)');
   else errors.push('iasdr template CSS differs from themes.iasdr.css / cssZh');
 } catch (e) { errors.push(`iasdr template unreadable: ${e.message}`); }
+
+// 5b. iasdr semantic layer (L1) block == generated from themes.iasdr.semantic; aliases still hold
+if (src.themes.iasdr?.semantic) try {
+  const css = fs.readFileSync(CONSUMERS.iasdrTemplate, 'utf8'), region = semanticRegion(css), want = semanticCss(src.themes.iasdr);
+  if (!region) errors.push('iasdr.css has no deck-tokens:semantic block (run sync-tokens.mjs --write)');
+  else if (region.text === want) oks.push(`deck-design-system templates/iasdr.css semantic layer (${src.themes.iasdr.semantic.tokens.length} tokens, ${Object.keys(src.themes.iasdr.semantic.contexts).length} contexts)`);
+  else errors.push('iasdr.css semantic block differs from themes.iasdr.semantic (run sync-tokens.mjs --write)');
+} catch (e) { errors.push(`iasdr semantic layer: ${e.message}`); }
 
 // 6. stale copies (warn only)
 for (const f of STALE_COPIES) {
