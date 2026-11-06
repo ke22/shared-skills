@@ -1,0 +1,4 @@
+interface:
+  display_name: "Traditional Chinese → English Research Slides"
+  short_description: "Translate and update research presentation decks"
+  default_prompt: "Use $zh-tw-en-research-presentation to translate or incrementally update this Traditional Chinese research deck into professional English."

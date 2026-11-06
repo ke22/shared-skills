@@ -58,6 +58,7 @@ Per-repo: symlink or copy a skill subfolder into `.claude/skills/<name>/`
 | `audience-deck` | 做簡報, 換個對象再講一次, build a deck, present to [audience] | Reframe one research bank per audience — locks audience first, outputs action-title outline then HTML/pptx |
 | `demo-player-deck` | demo 簡報, 網頁簡報, 把 demo 影片放進簡報, HTML deck with video | Single-file HTML demo deck with a stage-indexed video player; template, timeline checker, online/offline packaging, decision record |
 | `deck-design-system` | 簡報色票, design token, 統一簡報樣式, token 漂移, sync tokens | Single source of truth for deck design tokens (research / demo themes); sync and drift-check scripts for presentation-studio, audience-deck, demo-player-deck |
+| `zh-tw-en-research-presentation` | 簡報翻譯, 中翻英簡報, translate deck to English, update English deck | Translate or incrementally update zh-TW research PPTX into professional English with QA checklist and translation registry |
 | `product-download-page` | 產品頁, 下載頁, GitHub Pages, 發版後更新網站, download page | Static product/download page on GitHub Pages tied to releases/latest; real screenshots with provenance, web film encode, consent gate, live verification |
 
 ## Workspace

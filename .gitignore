@@ -2,7 +2,7 @@
 # deck-design-system: large font binaries are fetched by scripts/fetch-fonts.sh
 deck-design-system/templates/fonts/*.ttf
 
-# audience-deck: real research decks used as style calibration stay local (this repo is public;
-# they contain unpublished study design). Keep them under references/private/.
-audience-deck/references/private/
+# This repo is public. Unpublished research material a skill calibrates against (real decks,
+# project-defined constructs, pilot results) stays local under <skill>/references/private/.
+**/references/private/
 audience-deck/references/V6場域驗證規劃v2-edited-2026-07-09 (1).html
