@@ -52,3 +52,16 @@ test('a count match alone is not enough: two plain-text points do not become par
   const r = resolveLayout({ component: 'assertion-evidence', count: 1, data: ['text'], position: 'opening' }, doc);
   assert.ok(!r.fit || r.layout !== 'N48', JSON.stringify(r));
 });
+
+test('the author can name a layout or a variant; impossible choices come back with the reason', () => {
+  assert.equal(resolveLayout({ layout: 'N38', count: 2, data: ['text'] }, doc).layout, 'N38');
+  assert.equal(resolveLayout({ layout: 'N38b', count: 2, data: ['number'] }, doc).key, 'N38b', 'a named variant is kept even when the data does not match');
+  const r = resolveLayout({ layout: 'N48a', count: 3, data: ['quote'] }, doc);
+  assert.equal(r.fit, false); assert.match(r.reason, /項數 3/);
+  assert.match(resolveLayout({ layout: 'N99' }, doc).reason, /unknown layout/);
+});
+
+test('the author can name a family; the component only adds score inside it', () => {
+  const r = resolveLayout({ family: '流程', component: 'assertion-evidence', count: 4, data: ['steps'] }, doc);
+  assert.equal(r.fit, true); assert.equal(r.family, '流程');
+});
