@@ -6,3 +6,6 @@ deck-design-system/templates/fonts/*.ttf
 # project-defined constructs, pilot results) stays local under <skill>/references/private/.
 **/references/private/
 audience-deck/references/V6場域驗證規劃v2-edited-2026-07-09 (1).html
+
+# deck-design-system: generated showcase (scripts/build-showcase.mjs)
+deck-design-system/dist/
