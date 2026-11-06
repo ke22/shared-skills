@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- Lint fixture: every slide deliberately breaks design-system rules. scripts/test-design-system.mjs expects each rule R01–R23 to fire here. Do not "fix" this file. --><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="../../templates/iasdr.css"><script src="../../templates/icons.js"></script></head><body>
+<div class="deck" lang="en">
+ <section class="slide field" data-layout="BAD1">
+  <span class="chip" style="font-size:20px;align-self:flex-start">R11 small chip on field</span>
+  <p style="font-size:14px;color:#ff0000;margin-top:10px;font-family:Georgia">R01 R02 R03 R04 R12</p>
+ </section>
+ <section class="slide" data-layout="BAD2">
+  <header class="tb"><p class="eyebrow">Bad</p><h1 class="title">This title is deliberately written to be far too long so that it runs over two lines and keeps going on a third line</h1></header>
+  <div class="body col gap24">
+   <div class="typo-card card"><p class="b" style="color:#BBBBBB">R05 unknown class and R10 low contrast grey text</p></div>
+   <p class="bl" style="text-align:center;max-width:600px">R14 centred paragraph that is long enough to wrap onto more than two lines of text inside a narrow column on this slide</p>
+   <p class="bl" style="max-width:none">R15 this English line is intentionally very long so that a single rendered line holds far more than seventy-five characters of running text</p>
+   <span class="chip" style="width:160px;white-space:normal">R20 a chip that wraps onto two lines</span><span class="idtag">ABCDE</span>
+   <p class="b" style="color:var(--success)">R23 success colour</p>
+   <div style="height:900px;flex:none"></div>
+  </div>
+  <p style="position:absolute;left:20px;top:600px">R16 outside margin</p>
+ </section>
+</div>
+<div class="deck" lang="zh-Hant">
+ <section class="slide" data-layout="BAD3">
+  <header class="tb"><p class="eyebrow">壞例</p><h1 class="title">這是一個刻意寫得超過二十個中文字的標題用來測試</h1></header>
+  <div class="body col gap24">
+   <p class="bl">使用LINE官方帳號完成訪談, 再整理“結果”。</p>
+   <p class="bl" style="word-break:keep-all;overflow-wrap:anywhere;width:11.3em;letter-spacing:.02em;font-size:28px">數位化若忽略宮廟既有以人情與彈性為核心的參與制度，將削弱信眾對制度的信任；因此透過制度一致、入口多元的虛實並行設計。</p>
+  </div>
+ </section>
+</div>
+<script>throw new Error('R22 deliberate script error')</script>
+</body></html>

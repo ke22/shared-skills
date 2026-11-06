@@ -120,7 +120,7 @@ h1.title{font:var(--h1-w) var(--h1)/var(--h1-lh) var(--f-head);letter-spacing:va
 /* type roles */
 .h2{font:var(--h2-w) var(--h2)/var(--h2-lh) var(--f-head);color:var(--accent)}
 .h3{font:var(--h3-w) var(--h3)/var(--h3-lh) var(--f-head);color:var(--text)}
-.lead{font:var(--lead-w) var(--lead)/var(--lead-lh) var(--f-head);color:var(--text);text-align:center;text-wrap:balance}
+.lead{font:var(--lead-w) var(--lead)/var(--lead-lh) var(--f-head);color:var(--text);text-align:center;text-wrap:balance;max-width:28em;margin-inline:auto}  /* <= 75 chars / 32 字 per line */
 .bl{font:400 var(--body-l)/var(--body-l-lh) var(--f-body)}
 .b{font:400 var(--body)/var(--body-lh) var(--f-body);color:var(--text)}
 .cap{font:400 var(--caption)/var(--caption-lh) var(--f-body);color:var(--text-2)}
@@ -313,6 +313,8 @@ table.tbl{width:100%;border-collapse:separate;border-spacing:0;background:var(--
 .dia .sub{font:500 var(--caption) var(--f-body);fill:var(--text-2)}
 .dia polygon{fill:var(--card);stroke:var(--accent);stroke-width:4}
 .dia polygon.on{fill:var(--tint)}
+.decision polygon{fill:var(--tint);stroke:var(--accent);stroke-width:4}
+.decision text{font:700 30px var(--f-head);fill:var(--accent)}
 .dur{display:flex;gap:8px}
 .dur div{height:44px;border-radius:var(--r-pill);display:grid;place-items:center;font:600 var(--caption)/1 var(--f-body);color:#fff;background:var(--accent)}
 .dur div:nth-child(2n){background:var(--accent-2)}

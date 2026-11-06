@@ -64,3 +64,25 @@ description: >
 - `demo` 主題不經過 studio 的 `validateDesignTokens`，它只有 HTML 投影。
 - `audience-deck/house-style.md` 的 §0 仍然成立：專案內已有成品 deck 時，以成品為準。但新成品應該從這裡取色，不再各自定義。
 - 版型、元件、圖解規則仍在各自的 skill：`research-deck-production/references/` 與 `audience-deck/references/house-style.md`。
+
+## 元件清單與檢查（iasdr）
+
+參考 Gen UI 的做法：**AI 選元件、平台用同一份規格檢查、畫面由固定元件組成。**
+
+| 檔案 | 用途 |
+|---|---|
+| `manifest.json` | **元件清單**，由程式產生，不要手改。記錄 61 個元件的用途、選擇器、用到的 token、文字欄位與字數規則、在 HTML／PPTX 的實作狀態、實際出現在哪些版型，以及每個版型由哪些元件組成 |
+| `scripts/build-manifest.mjs` | 從 `components.md`、`iasdr.css`、`tokens.json` 與兩份範本的渲染結果產生清單；`--check` 檢查清單是否過期 |
+| `scripts/lint-deck.mjs` | 用清單與排版規則檢查任何 iasdr HTML 簡報：R01–R05 靜態檢查（色碼、間距、字級、襯線字、未定義 class），R10–R23 渲染檢查（對比、藍底字、最小字級、標題行數、置中行數、行長、邊界、中文混排與標點、字型、元件文字、越界、腳本錯誤、綠色語意）；有錯就 exit 1 |
+| `scripts/test-design-system.mjs` | 一個指令跑完：tokens 一致、清單沒過期、兩份範本 lint 全過、`tests/fixtures/bad-deck.html` 會觸發每一條規則（確認沒有失效的規則） |
+
+**改了設計系統之後**：
+
+```bash
+node scripts/build-manifest.mjs        # 重新產生清單
+node scripts/test-design-system.mjs    # 全部要 PASS
+```
+
+**檢查自己的簡報**：`node scripts/lint-deck.mjs path/to/deck.html --json report.json`
+
+需要 Chrome 與 Playwright（預設用 Codex runtime；可用 `WORKBENCH_RUNTIME_MODULES`、`CHROME_PATH` 指定），以及本機字型（`scripts/fetch-fonts.sh`）。

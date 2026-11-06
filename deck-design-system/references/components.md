@@ -2,6 +2,8 @@
 
 **元件**是敘事的積木：單獨不講完整的故事，多個組合起來成為一個版型（見 `narrative-layouts.md`）。
 
+> 這份文件是元件的**說明**；機器可讀的版本是 `../manifest.json`，由 `scripts/build-manifest.mjs` 從本文件、`iasdr.css` 與範本渲染結果產生。改這份文件後要重跑產生器，`test-design-system.mjs` 會擋下過期的清單。
+
 - **數值依據**：`tokens.json` 的 `themes.iasdr`，畫布 1920 × 1080，基本單位 8px。
 - **中英差異**：只列和 `iasdr-typesetting.md` 預設不同的地方。中文斷行與標點見 `zh-typesetting.md`。
 - **現況**：「有」表示 `templates/iasdr-deck.html` 已實作，「新」表示要新做。
