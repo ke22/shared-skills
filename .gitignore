@@ -1,0 +1,3 @@
+
+# deck-design-system: large font binaries are fetched by scripts/fetch-fonts.sh
+deck-design-system/templates/fonts/*.ttf

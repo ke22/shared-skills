@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IASDR Layout Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="iasdr.css">
+<script src="icons.js"></script>
+<style>.lib-label{font:600 26px/1.3 var(--f-body);color:#333;width:1920px}.lib-label b{color:var(--accent)}</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="24"><stop offset="0" stop-color="#0C98FE"/><stop offset="1" stop-color="#2F82FC"/></linearGradient></defs></svg>
+<div id="root"></div>
+<script>
+/* =====================================================================
+   Layout library: one slide per narrative layout (variant a, plus N06c).
+   Slot text describes what belongs in each slot; numbers are samples.
+   IDs follow ../references/narrative-layouts.md; components follow components.md.
+   ===================================================================== */
+let L='en';
+const T=(en,zh)=>L==='en'?en:zh;
+const I=(n,s=64,c='')=>{const w=(s>=96?6:s>=56?4:s>=36?3:2.5)*24/s;return `<svg class="ic ${c}" width="${s}" height="${s}" viewBox="0 0 24 24" style="stroke-width:${w}">${ICONS[n]||''}</svg>`;};
+const A=(w=64,dir='r')=>{const r={r:0,l:180,d:90,u:-90}[dir];return `<svg class="arr" width="${w}" height="${w}" viewBox="0 0 64 64" style="transform:rotate(${r}deg)"><path d="M8 32H54M40 18l14 14-14 14"/></svg>`;};
+const TB=(ee,ez,te,tz)=>`<header class="tb"><p class="eyebrow">${T(ee,ez+`<span class="en">${ee}</span>`)}</p><h1 class="title">${T(te,tz)}</h1></header>`;
+const NOTE=()=>`<p class="sample-note">${T('Sample content · slot guidance','示意內容・欄位說明')}</p>`;
+const SRC=(e,z)=>`<p class="src">${T(e,z)}</p>`;
+const ROLE=(k,icon,e,z)=>`<span class="role r${k}"><i>${I(icon,40,'white')}</i>${T(e,z)}</span>`;
+const STAT=(v,u,e,z)=>`<div class="stat"><p class="v">${v}<small>${u}</small></p><p class="l">${T(e,z)}</p></div>`;
+const PHONE=(e,z)=>`<div class="phone"><div class="scr">${T(e,z)}</div></div>`;
+const DESK=(e,z,w=640)=>`<div class="desk" style="width:${w}px"><div class="bez" style="height:${Math.round(w*.59)}px"><div class="scr">${T(e,z)}</div></div><div class="stand"></div><div class="foot"></div></div>`;
+const PHOTO=(h,e,z)=>`<div class="photo" style="height:${h}px">${T(e,z)}</div>`;
+
+const S=[];
+const add=(id,ne,nz,html,cls='')=>S.push({id,ne,nz,html,cls});
+
+/* ---------------- 0. universal ---------------- */
+add('N38a','Claim and evidence · stacked cards','主張與佐證・疊卡',()=>`
+${TB('Claim and evidence','主張與佐證','State one judgment; every card below supports it','一句判斷，下方每張卡都在支持它')}
+<div class="body stack">
+ <div class="card hcard">${I('book-open',128)}<p class="h3">${T('Supporting point one','支持點一')}</p><p class="cite">${T('(Author, 2024)','（作者，2024）')}</p><p class="bl measure">${T('One or two sentences of evidence. Name the source on the right; keep each card to one idea.','一到兩句證據，右上標出處。每張卡只講一個重點。')}</p></div>
+ <div class="card hcard">${I('chart-column',128)}<p class="h3">${T('Supporting point two','支持點二')}</p><p class="cite">${T('(Agency, 2025)','（機構，2025）')}</p><p class="bl measure">${T('A second, independent line of evidence. Two or three cards at most.','第二條獨立的證據。最多兩到三張卡。')}</p></div>
+</div>${NOTE()}`);
+
+add('N39a','Composition · equal columns','組成與並列・等寬欄',()=>`
+${TB('Composition','組成與並列','A whole is made of three parts of equal weight','一個整體由三個同等份量的部分組成')}
+<div class="body g3">
+ ${[['layers','Part one','第一部分'],['workflow','Part two','第二部分'],['network','Part three','第三部分']].map(([ic,e,z])=>`<div class="card icard">${I(ic,128)}<p class="h3">${T(e,z)}</p><p class="b">${T('What this part contributes, in one or two lines.','這部分的作用，一到兩行。')}</p></div>`).join('')}
+</div>${NOTE()}`);
+
+/* ---------------- A. opening ---------------- */
+add('N01a','Cover with scale','封面與規模',()=>`
+<div class="photo-slot" data-label="${T('PHOTO SLOT · duotone 15%','照片位置・雙色調 15%')}"></div>
+<p class="logo-slot" style="position:relative">${T('Logo','標誌')}</p>
+<span class="chip outline" style="position:relative;margin-top:56px;align-self:flex-start;box-shadow:inset 0 0 0 2px #fff;color:#fff">${T('Master’s thesis defence 2026','2026 碩士論文口試')}</span>
+<h1 style="position:relative;margin-top:40px;font:var(--display-w) var(--display)/var(--display-lh) var(--f-head);letter-spacing:var(--display-tr);max-width:1450px">${T('One line that names the study','一句話點出<br>這份研究')}</h1>
+<div class="row gap56" style="position:relative;margin-top:56px">${STAT('21','','interviews and reviews','場訪談與評測')}${STAT('19','','participants','位受訪者')}${STAT('3','','partner teams','個合作團隊')}</div>
+<div class="row gap24" style="position:absolute;right:var(--mx);bottom:var(--mb)"><span class="avatar">${T('Photo','照片')}</span><span style="font:700 24px/1.35 var(--f-body)">${T('Presenter name<br>Affiliation','報告者姓名<br>單位')}</span></div>`,'field cover');
+
+add('N02a','Agenda and section map','議程與段落導覽',()=>`
+${TB('Contents','簡報目錄','Four sections, in the order the audience needs them','四個段落，依聽眾需要的順序')}
+<div class="body g4">
+ ${[['01','Overview','專案說明'],['02','Findings','前期研究'],['03','Design','設計成果'],['04','Demo','系統展示']].map(([n,e,z],i)=>`<div class="card seccard"><p class="big">${n}</p>${T('',`<p class="en">${e}</p>`)}<p class="h3">${T(e,z)}</p><ul><li>${T('Point one','要點一')}</li><li>${T('Point two','要點二')}</li><li>${T('Point three','要點三')}</li></ul></div>`).join('')}
+</div><p class="secmark">00</p>${NOTE()}`);
+
+add('N03a','Team and roles','團隊與分工',()=>`
+${TB('Team','專案團隊','Three partners, each responsible for one part of the work','三個團隊，各自負責一部分工作')}
+<div class="body g3">
+ ${[['Design','設計','pencil'],['Care','照護','stethoscope'],['Technology','技術','bot']].map(([e,z])=>`<div class="card person"><span class="avatar">${T('Photo','照片')}</span><div class="col gap16"><span class="chip sm" style="align-self:flex-start">${T(e,z)}</span><p class="h3">${T('Team lead name','負責人姓名')}</p></div><p class="org">${T('University · Department','學校・系所')}</p><p class="b" style="grid-column:1/3">${T('What this team owns, in one sentence.','這個團隊負責什麼，一句話。')}</p><p class="cap members">${T('Members: name, name','成員：姓名、姓名')}</p></div>`).join('')}
+</div>${NOTE()}`);
+
+/* ---------------- B. context ---------------- */
+add('N04a','Problem scale · stat clusters','問題規模・數字群',()=>`
+${TB('Background','研究背景','Say how big the problem is, then show the numbers','先說問題多大，再用數字證明')}
+<div class="body g3">
+ ${[['Demand','需求面'],['Workforce','人力面'],['Daily load','日常負擔']].map(([e,z],i)=>`<div class="card"><p class="h2">${T(e,z)}</p><div class="cluster">${STAT(['35','90','35'][i],T(['k','k','h'][i],['萬','萬','小時'][i]),'Label for this number','這個數字的說明')}${STAT(['1.6','70','4'][i],T(['k','%','×'][i],['萬','%','倍'][i]),'Label for this number','這個數字的說明')}</div></div>`).join('')}
+</div>${SRC('Sources: agency (year); agency (year).','資料來源：機構（年份）；機構（年份）。')}${NOTE()}`);
+
+add('N46a','Root cause · push and constraint','問題成因・推力與限制',()=>`
+${TB('Background','研究背景','Two forces meet and make the problem hard','兩股力量交會，讓問題變得困難')}
+<div class="body col gap40">
+ <div class="row center gap32 fill">
+  <div class="circ soft" style="--d:400px;flex-direction:column;gap:12px"><p class="h2">${T('External push','外部推力')}</p><p class="b muted">${T('What is changing outside','外部正在改變的事')}</p></div>
+  ${A(80)}<div class="circ dark" style="--d:280px;font-size:var(--h3)">${T('The challenge','核心挑戰')}</div>${A(80,'l')}
+  <div class="circ soft" style="--d:400px;flex-direction:column;gap:12px"><p class="h2">${T('Internal limit','內部限制')}</p><p class="b muted">${T('What the organisation cannot change quickly','組織短期改不了的事')}</p></div>
+ </div>
+ <p class="band soft tc">${T('One sentence on why a new approach is needed.','一句話說明為什麼需要新的做法。')}</p>
+</div>${NOTE()}`);
+
+add('N05a','Research gap and entry point','研究缺口與切入點',()=>`
+${TB('Research gap','研究缺口','What is known, what is missing, and where this study enters','已知什麼、缺什麼，這份研究從哪切入')}
+<div class="body col gap40 vc">
+ <div style="display:grid;grid-template-columns:1fr 56px 1fr 56px 1fr;align-items:stretch">
+  ${[['01','What is known','已知'],['02','What is promising','潛力'],['03','What is missing','缺口']].map(([n,e,z],i)=>`${i?`<div class="row center">${A(48)}</div>`:''}<div class="card" style="height:100%"><p class="num">${n}</p><p class="h3">${T(e,z)}</p><p class="b mt16">${T('Two lines that summarise the literature.','兩行文獻摘要。')}</p></div>`).join('')}
+ </div>
+ <p class="band">${T('Entry point: the one gap this study addresses.','切入點：這份研究要補的那個缺口。')}</p>
+</div>${NOTE()}`);
+
+add('N06a','Question (opening)','提問（開場）',()=>`
+<div class="photo-slot" data-label="${T('PHOTO SLOT','照片位置')}"></div>
+<p class="kicker" style="position:relative">${T('How might we','我們該如何')}</p>
+<p class="big" style="position:relative">${T('One question the whole study answers?','用一個問題，<br>概括整份研究要回答的事？')}</p>`,'field statement');
+
+add('N06c','Section transition','段落過場',()=>`
+<div class="col center fill tc gap40">
+ <p class="eyebrow" style="margin:0">${T('Section 4.2 · Organisation','4.2 組織內部層面')}</p>
+ <p style="font:var(--h1-w) var(--h1)/var(--h1-lh) var(--f-head);color:var(--ink);max-width:1400px">${T('The claim this section will support, in two lines at most','這一段要支持的主張，<br>最多兩行')}</p>
+ <span style="width:96px;height:8px;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--bar-top),var(--bar-bottom))"></span>
+</div>${NOTE()}`);
+
+add('N07b','Research question and objectives','研究問題與目標',()=>`
+${TB('Research question','研究問題與目標','One question, then the objectives that answer it','一個研究問題，以及回答它的目標')}
+<div class="body col gap56 vc">
+ <div class="qbox"><p class="lead">${T('How can the approach improve the service in this setting?','如何運用這個方法，改善此場域的服務？')}</p></div>
+ <div class="col gap32">${['O1','O2','O3'].map((o,i)=>`<div class="row gap32"><span class="idtag">${o}</span><p class="bl">${T(['Map the current service and its breaks.','Explain how the designer turns needs into rules.','Describe what AI changes in the design process.'][i],['梳理現行服務與斷點。','說明設計師如何把需求轉為制度。','說明 AI 在設計過程中改變了什麼。'][i])}</p></div>`).join('')}</div>
+</div>${NOTE()}`);
+
+add('N08a','Knowledge framework','知識框架',()=>`
+${TB('Framework','知識框架','The study builds on a five-module framework','研究依據一個五模組的框架')}
+<div class="body col gap16 vc">
+ <div style="display:grid;grid-template-columns:1fr 2fr 2fr;gap:24px">${[['Understand','理解'],['Self-care','照顧者自身'],['Skills','照顧技巧']].map(([e,z])=>`<p class="chip outline" style="justify-content:center">${T(e,z)}</p>`).join('')}</div>
+ <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px">
+  ${[1,2,3,4,5].map(i=>`<div class="card md ${i===5?'focus':''}" style="display:flex;flex-direction:column;gap:16px"><span class="idtag ${i===5?'':'soft'}" style="align-self:flex-start">M${i}</span><p class="h3">${T('Module name','模組名稱')}</p><p class="b muted">${T('What it covers.','涵蓋的內容。')}</p></div>`).join('')}
+ </div>
+ <p class="cap">${T('M5 is the focus of this study.','M5 是本研究聚焦的模組。')}</p>
+</div>${SRC('Source: framework author (year).','資料來源：框架作者（年份）。')}${NOTE()}`);
+
+/* ---------------- C. method ---------------- */
+add('N09a','Research process · diamonds','研究流程總覽・鑽石',()=>`
+${TB('Method','研究方法','Three stages move from the problem to field validation','三個階段，從問題走到場域驗證')}
+<div class="body col center">
+ <svg class="dia" width="1640" height="560" viewBox="0 0 1640 560">
+  ${[0,1,2].map(i=>{const cx=290+i*530;return `<polygon class="${i===1?'on':''}" points="${cx},30 ${cx+260},280 ${cx},530 ${cx-260},280"/><text x="${cx}" y="262" text-anchor="middle">${T(['Define','Develop','Validate'][i],['問題梳理','設計開發','場域驗證'][i])}</text><text class="sub" x="${cx}" y="312" text-anchor="middle">${T(['12 sessions · 10 people','6 sessions · 6 people','3 sessions · 3 people'][i],['12 場・10 人','6 場・6 人','3 場・3 人'][i])}</text>`}).join('')}
+ </svg>
+</div>${NOTE()}`);
+
+add('N40a','Case and selection','研究個案與選擇理由',()=>`
+${TB('Case','研究個案','Why this case was chosen','為什麼選擇這個個案')}
+<div class="body s75">
+ <div class="col gap32">
+  <div class="row gap24"><span class="chip">${T('Owner','業主')}</span><p class="bl">${T('Organisation name','組織名稱')}</p></div>
+  <div class="row gap24"><span class="chip">${T('Team','團隊')}</span><p class="bl">${T('Who carried out the work','實際執行的人')}</p></div>
+  <hr class="rule">
+  ${[1,2,3].map(i=>`<div class="row gap24" style="align-items:flex-start"><span class="pin">${i}</span><div><p class="h3">${T('Selection reason','選擇理由')} ${i}</p><p class="b mt16">${T('Evidence for this reason in one line.','這個理由的依據，一行。')}</p></div></div>`).join('')}
+ </div>
+ <div class="col gap24">${PHOTO(330,'Field photo · blur faces','現場照片・人臉需模糊')}${PHOTO(330,'Field photo · blur faces','現場照片・人臉需模糊')}</div>
+</div>${NOTE()}`);
+
+add('N10a','Method rationale','方法依據與資料蒐集',()=>`
+${TB('Method','研究方法','Every step is backed by a method','每一步都有方法依據')}
+<div class="body col gap40">
+ <div class="rail">${['Recruit','Use','Identify','Recall','Close'].map((e,i)=>`<div class="st"><span class="o">${i+1}</span><p class="h3" style="font-size:var(--body-l)">${T(e,['招募','使用','辨識','回溯','收尾'][i])}</p></div>`).join('')}</div>
+ <table class="tbl"><tr><th>${T('Procedure','程序')}</th><th>${T('Data','主要資料')}</th><th>${T('Method basis','方法依據')}</th></tr>
+ ${[1,2,3].map(i=>`<tr><td class="k">${T('Procedure','程序')} ${i}</td><td>${T('What is recorded','記錄什麼資料')}</td><td>${T('Which method justifies it','依據哪個方法')}</td></tr>`).join('')}</table>
+ <p class="band soft">${T('Stop or extend rule: when the design adds participants.','停止或補充規則：什麼情況下增加受訪者。')}</p>
+</div>${NOTE()}`);
+
+add('N11a','Stage navigator and detail','階段導覽＋細節',()=>`
+${TB('Process','流程','Each stage page shows where the audience is','每個階段頁都標出聽眾現在在哪裡')}
+<div class="body nav-split">
+ <div class="funnel">${[1,2,3,4].map(i=>`<div class="stage ${i===3?'on':''}"><p class="n">${T('Phase','階段')} ${i}</p><p class="t">${T('Stage name','階段名稱')}</p></div>`).join('')}</div>
+ <div class="card detail"><p class="h2">${T('Stage name','階段名稱')}</p>${[['Input','輸入'],['Rule','原則'],['Output','產出']].map(([e,z])=>`<div class="kv"><span class="chip">${T(e,z)}</span><span class="v">${T('One line','一行說明')}</span></div>`).join('')}</div>
+</div>${NOTE()}`);
+
+add('N12a','Study design · delayed intervention','研究設計・延遲介入',()=>`
+${TB('Study design','研究設計','Groups receive the intervention at different times','不同組別在不同時間接受介入')}
+<div class="body col gap40">
+ <div class="gtl" style="--cols:5"><span></span>${[['Intake','收案'],['Month 1','第 1 個月'],['','　'],['Month 2','第 2 個月'],['','　']].map(([e,z])=>`<p class="hd">${T(e,z)}</p>`).join('')}
+  <p class="g">${T('Intervention','介入組')}<small>${T('Odd-numbered sites','奇數序號機構')}</small></p><div class="cell t">${T('Pre-test','前測')}</div><div class="cell i">${T('Use the tool','使用工具')}</div><div class="cell t">${T('Post-test','後測')}</div><div class="cell x" style="grid-column:span 2">${T('Focus group','焦點團體')}</div>
+  <p class="g">${T('Delayed','延遲介入組')}<small>${T('Even-numbered sites','偶數序號機構')}</small></p><div class="cell t">${T('Pre-test','前測')}</div><div class="cell w">${T('Usual care','維持原有資源')}</div><div class="cell t">${T('Post-test 1','後測一')}</div><div class="cell i">${T('Use the tool','使用工具')}</div><div class="cell t">${T('Post-test 2','後測二')}</div>
+ </div>
+ <div class="g3">${[['Method','研究方法'],['Assignment','分派原則'],['Power','權力關係']].map(([e,z])=>`<div class="card md"><p class="h2">${T(e,z)}</p><p class="b mt16">${T('One rule that protects the comparison.','一條保護比較公平性的規則。')}</p></div>`).join('')}</div>
+</div>${NOTE()}`);
+
+add('N13a','Hypotheses and criteria','假設與判斷標準',()=>`
+${TB('Hypotheses','研究假設','Each hypothesis has a criterion and a data source','每個假設都有判斷標準與資料來源')}
+<div class="body col center">
+ <table class="tbl"><tr><th style="width:120px">${T('ID','代號')}</th><th>${T('Hypothesis','研究假設')}</th><th>${T('Criterion','判斷標準')}</th><th>${T('Data','資料收集')}</th></tr>
+ ${[1,2,3].map(i=>`<tr><td><span class="idtag">H${i}</span></td><td class="k">${T('The system improves one outcome','系統能提升某項成果')}</td><td>${T('What change counts as support','什麼改變算是支持')}</td><td>${T('Scale, log or interview','量表、紀錄或訪談')}</td></tr>`).join('')}</table>
+</div>${NOTE()}`);
+
+add('N14a','Participant tasks','參與者任務',()=>`
+${TB('Procedure','研究流程','Participants complete three tasks within one month','參與者在一個月內完成三項任務')}
+<div class="body col gap40 vc">
+ <div class="g3">${[['Ask','照護詢問','at least twice a week','每週至少 2 次'],['Report','服務回報','once per client','每位個案 1 次'],['Review','行前摘要','before the last visit','最後一次服務前']].map(([e,z,fe,fz],i)=>`<div class="card md"><div class="row gap16"><span class="pin">${i+1}</span><p class="h3">${T(e,z)}</p></div><p class="b acc mt24" style="font-weight:600">${T(fe,fz)}</p></div>`).join('')}</div>
+ <table class="tbl"><tr><th>${T('Role','角色')}</th><th>${T('Before','收案前置')}</th><th>${T('During','驗證期')}</th><th>${T('After','驗證結束')}</th></tr>
+ <tr><td>${ROLE(1,'hand-heart','Care worker','居服員')}</td><td>${T('Consent, pre-test','同意書、前測')}</td><td>${T('Three tasks','三項任務')}</td><td>${T('Post-test, focus group','後測、焦點團體')}</td></tr>
+ <tr><td>${ROLE(2,'user-check','Supervisor','督導')}</td><td>${T('Consent, client data','同意書、個案資料')}</td><td class="muted">${T('No action','不需操作')}</td><td>${T('Task-based test','任務式測試')}</td></tr></table>
+</div>${NOTE()}`);
+
+/* ---------------- D. findings ---------------- */
+add('N15a','Current journey and breaks','現況旅程與斷點',()=>`
+${TB('Before · in service','服務中現況','Workers face the problem alone and wait for remote help','居服員獨自面對問題，只能等待遠端指示')}
+<div class="body col gap16">
+ <div class="chev" style="margin-left:252px">${['Care','Notice','Judge','Report'].map((e,i)=>`<div><span class="o">${i+1}</span>${T(e,['執行照顧','發現異常','現場判斷','通報督導'][i])}</div>`).join('')}</div>
+ <div class="bp" style="--cols:4">
+  <p class="rl">${ROLE(1,'hand-heart','Worker','居服員')}</p>${[1,2,3,4].map(()=>`<div class="cell front">${T('What the worker does','居服員做什麼')}</div>`).join('')}
+  <p class="rl">${T('Touchpoint','接觸點')}<small>${T('channel or object','管道或物件')}</small></p>${[1,2,3,4].map(()=>`<div class="cell back">${T('Phone, LINE, paper','電話、LINE、紙本')}</div>`).join('')}
+  <p class="rl">${ROLE(2,'user-check','Supervisor','督導')}</p><div class="cell empty">—</div><div class="cell empty">—</div><div class="cell">${T('Remote judgement','遠端協助判斷')}</div><div class="cell">${T('Coordinates next steps','協調後續')}</div>
+  <p class="rl">${I('triangle-alert',40,'solid')}<span style="color:var(--warning)">${T('Pain point','痛點')}</span></p><div class="cell empty">—</div><div class="cell pain" style="grid-column:span 2">${T('Hard to tell symptoms from normal ageing','難以區別症狀與一般老化')}</div><div class="cell empty">—</div>
+ </div>
+ <p class="band soft mt16">${T('Break: the worker serves alone and knowledge does not reach the field.','斷點：居服員單獨服務，課程知識無法涵蓋現場狀況。')}</p>
+</div>${NOTE()}`);
+
+add('N41a','System map · breaks on the map','系統關係圖・斷點標在圖上',()=>`
+${TB('Findings 4.1','研究發現 4.1','Eleven pain points fall into four kinds of break','十一項痛點可歸納為四類斷點')}
+<div class="body s75" style="grid-template-columns:1120px 1fr">
+ <div style="position:relative;height:100%">
+  <div class="zone" style="left:0;top:0;width:1120px;height:430px;background:var(--tint)"><span class="zl">${T('Internal management','內部管理')}</span></div>
+  <div class="zone" style="left:0;top:446px;width:1120px;height:200px;background:var(--surface-2)"><span class="zl">${T('Public channels','公共服務管道')}</span></div>
+  <svg class="net-svg" width="1120" height="646" style="position:absolute;left:0;top:0">
+   <path d="M150 300H420"/><path d="M560 300H800"/><path d="M490 230V110"/><path class="warn" d="M150 360V540"/><path class="warn" d="M490 360V540"/>
+  </svg>
+  <div class="sysbar" style="left:490px;top:80px">${I('monitor',32,'white')}${T('Back-office system','後台管理系統')}</div>
+  <div class="net-node" style="left:150px;top:300px"><div class="circ" style="--d:150px">${T('Committee','管委會')}</div></div>
+  <div class="net-node" style="left:490px;top:300px"><div class="circ" style="--d:150px">${T('Staff','承辦人員')}</div></div>
+  <div class="net-node" style="left:870px;top:300px"><div class="circ" style="--d:150px">${T('Volunteers','志工')}</div></div>
+  <div class="net-node" style="left:150px;top:560px"><div class="circ soft" style="--d:150px">${T('Visitors','信眾')}</div></div>
+  <div class="net-node" style="left:490px;top:560px"><div class="circ soft" style="--d:150px"><span class="nb">${T('Website','官方網站')}</span></div></div>
+  ${[[285,300,1],[150,450,2],[490,450,3],[490,170,4]].map(([x,y,n])=>`<div class="net-pin" style="left:${x}px;top:${y}px"><span class="pin warn">${n}</span></div>`).join('')}
+ </div>
+ <div class="pinlist">${[['Role coordination','角色協作斷裂'],['Channel','溝通管道斷裂'],['Touchpoint','接觸點流程斷裂'],['Physical–digital','實體與數位斷裂']].map(([e,z],i)=>`<div class="row"><span class="pin warn">${i+1}</span><div><p class="h3">${T(e,z)}</p><p class="b muted">${T('Where it happens and why.','發生在哪裡、為什麼。')}</p></div></div>`).join('')}</div>
+</div>
+<div class="legend" style="position:absolute;left:var(--mx);bottom:28px"><span><i class="sw" style="background:var(--tint)"></i>${T('Internal','內部管理')}</span><span><i class="sw" style="background:var(--surface-2)"></i>${T('Public','公共管道')}</span><span><i class="ln" style="border-color:var(--warning)"></i>${T('Broken flow','斷裂的資訊流')}</span></div>${NOTE()}`);
+
+add('N16a','Breaks by role and stage','斷點歸納',()=>`
+${TB('Breakpoints','角色斷點統整','Breaks differ by role and by stage of service','斷點因角色與服務階段而不同')}
+<div class="body" style="display:grid;grid-template-columns:240px repeat(3,1fr);gap:16px;grid-template-rows:auto 1fr 1fr">
+ <span></span>${[['Before','服務前'],['During','服務中'],['After','服務後']].map(([e,z])=>`<p class="chip dark" style="justify-content:center">${T(e,z)}</p>`).join('')}
+ ${[[1,'hand-heart','Worker','居服員'],[2,'user-check','Supervisor','督導']].map(([k,ic,e,z])=>`<div class="card md col center" style="gap:16px">${ROLE(k,ic,e,z)}</div>${[1,2,3].map(()=>`<div class="card md"><p class="b">${T('The break this role meets at this stage.','這個角色在此階段遇到的斷點。')}</p></div>`).join('')}`).join('')}
+</div>${NOTE()}`);
+
+add('N17a','Key findings · coded cards','關鍵發現・代號卡',()=>`
+${TB('Breakpoints','四大服務斷點','Learning happens in the field, after service and over time','學習發生在現場、事後與長期')}
+<div class="body g4">
+ ${[1,2,3,4].map(i=>`<div class="card md col gap24"><span class="idtag" style="align-self:flex-start;font-size:32px;height:56px">P${i}</span>${ROLE(i===4?2:1,i===4?'user-check':'hand-heart',i===4?'Supervisor':'Worker',i===4?'督導':'居服員')}<p class="h3">${T('The finding in one line','一句話的發現')}</p><hr class="rule"><p class="b muted">${T('Two supporting details from the data.','兩項來自資料的支持細節。')}</p></div>`).join('')}
+</div>${NOTE()}`);
+
+/* ---------------- E. design ---------------- */
+add('N18a','Problem → principle → solution','問題 → 原則 → 方案',()=>`
+${TB('Design principles','設計原則','Each design answers one breakpoint','每個設計方案都回應一個斷點')}
+<div class="body col gap16" style="justify-content:space-between">
+ <div style="display:grid;grid-template-columns:96px 1fr 64px 1.3fr;gap:16px" class="cap"><span>${T('Break','斷點')}</span><span>${T('Principle','設計原則')}</span><span></span><span>${T('Solution','設計方案')}</span></div>
+ ${[1,2,3,4].map(i=>`<div style="display:grid;grid-template-columns:96px 1fr 64px 1.3fr;gap:16px;align-items:center"><span class="idtag" style="font-size:28px;height:56px">P${i}</span><div class="card md" style="padding:24px 32px"><p class="b">${T('What the system must make possible.','系統必須做到的事。')}</p></div>${A(56)}<div class="card md" style="padding:24px 32px;background:${i===1?'var(--tint)':'var(--card)'}"><p class="h3" style="font-size:var(--body-l)">${i===1?'D1':'D2-'+(i-1)} ${T('Solution name','方案名稱')}</p><p class="b muted">${T('How it works, in one line.','運作方式，一行。')}</p></div></div>`).join('')}
+</div>${NOTE()}`);
+
+add('N43a','Design strategies · overview','設計策略總覽與展開',()=>`
+${TB('Findings 4.2','研究發現 4.2','Four interventions turned tacit work into a shared structure','四項介入機制，把隱性工作變成共同的結構')}
+<div class="body col gap40" style="justify-content:center">
+ ${[1,2,3,4].map(i=>`<div class="row gap32" style="align-items:flex-start"><span class="pin" style="width:56px;height:56px;font-size:26px">${i}</span><div><p class="h3">${T('Intervention name: what it achieved','機制名稱：它達成了什麼')}</p><p class="bl muted mt16">${T('How it was done and which evidence shows it.','怎麼做，以及哪些證據支持。')}</p></div></div>`).join('')}
+</div>${NOTE()}`);
+
+add('N19a','System introduction','系統介紹',()=>`
+${TB('System · D1','系統介紹・D1','Workers describe a case in LINE and get specific advice','居服員在 LINE 描述狀況，就能得到具體建議')}
+<div class="body" style="display:grid;grid-template-columns:1fr 300px 300px 1fr;gap:48px;align-items:center">
+ <div class="card md icard">${I('message-circle',64)}<p class="h3">${T('Ask before advising','先問清楚')}</p><p class="b muted">${T('Clarifies time, context and cause.','先釐清時間、情境與前因。')}</p></div>
+ ${PHONE('Real screenshot','真實截圖')}${PHONE('Real screenshot','真實截圖')}
+ <div class="col gap24"><div class="card md icard">${I('list-checks',64)}<p class="h3">${T('Stepwise advice','結構化步驟')}</p></div><div class="card md icard">${I('shield-check',64)}<p class="h3">${T('Risk reminders','風險提醒')}</p></div></div>
+</div>${NOTE()}`);
+
+add('N20a','How it works · role handover','運作步驟與角色交棒',()=>`
+${TB('How it works','系統運作方式','Five steps hand the case from worker to supervisor and back','五個步驟，讓個案在居服員與督導之間交棒')}
+<div class="body s57">
+ <div class="col center">${DESK('Real screenshot of the platform','平台真實截圖',600)}</div>
+ <div class="col gap16" style="justify-content:space-between">
+ ${[['message-circle',1,'Ask','遇到問題提問'],['lightbulb',3,'Clarify and advise','追問並給建議'],['file-text',1,'Report back','服務回報'],['search',2,'Review','檢視與確認'],['heart',3,'Brief before next visit','產出行前摘要']].map(([ic,r,e,z],i)=>`<div class="card md row gap24" style="padding:16px 28px"><span class="num" style="margin:0;width:56px">0${i+1}</span>${ROLE(r,{1:'hand-heart',2:'user-check',3:'bot'}[r],{1:'Worker',2:'Supervisor',3:'System'}[r],{1:'居服員',2:'督導',3:'系統'}[r])}<p class="h3" style="font-size:var(--body-l)">${T(e,z)}</p></div>`).join('')}
+ </div>
+</div>${NOTE()}`);
+
+add('N21a','Mechanism logic','機制邏輯',()=>`
+${TB('How it works','系統運作邏輯','The assistant clarifies first, then retrieves knowledge to advise','小幫手先追問釐清，再撈取知識給建議')}
+<div class="body col gap40 vc">
+ <div class="row gap24" style="justify-content:center">
+  <div class="circ dark" style="--d:180px">${T('Worker asks','居服員提問')}</div>${A(64)}
+  <svg width="300" height="200" viewBox="0 0 300 200"><polygon points="150,8 292,100 150,192 8,100" fill="var(--tint)" stroke="var(--accent)" stroke-width="4"/><text x="150" y="108" text-anchor="middle" style="font:700 30px var(--f-head);fill:var(--accent)">${T('Clarify','追問')}</text></svg>${A(64)}
+  <div class="col gap24"><span class="chip">${T('Chat · emotional support','Chat・情緒支持')}</span><span class="chip">${T('Advice · concrete steps','Advice・具體建議')}</span></div>${A(64)}
+  <div class="card md" style="width:300px"><p class="h3" style="font-size:var(--body-l)">${T('Logged to the platform','回流追蹤平台')}</p></div>
+ </div>
+ <div class="g4">${[1,2,3,4].map(i=>`<div class="card md"><p class="num" style="font-size:var(--body-l)">${T('Step','步驟')} ${i}</p><p class="b">${T('What the model does at this step.','模型在這一步做什麼。')}</p></div>`).join('')}</div>
+</div>${NOTE()}`);
+
+add('N22a','Future service blueprint','新服務藍圖',()=>`
+${TB('Service blueprint','服務藍圖','Every question and report feeds training and knowledge','每次提問與回報，都成為培訓與知識迭代的資料')}
+<div class="body col gap16">
+ <div class="bp" style="--cols:5">
+  <span></span>${[['Prepare','行前準備'],['Serve','服務中'],['Report','服務後'],['Supervise','督導介入'],['Iterate','知識迭代']].map(([e,z],i)=>`<p class="head">${i+1} ${T(e,z)}</p>`).join('')}
+  <p class="rl">${ROLE(1,'hand-heart','Worker','居服員')}</p>${[1,2,3,4,5].map(()=>`<div class="cell front">${T('Visible action','前台行動')}</div>`).join('')}
+  <p class="line">${T('Line of interaction','互動線')}</p>
+  <p class="rl">${ROLE(3,'smartphone','Assistant','小幫手')}<small>${T('front stage','前台')}</small></p>${[1,2,3,0,5].map(v=>v?`<div class="cell front">${T('Assistant response','小幫手回應')}</div>`:`<div class="cell empty">—</div>`).join('')}
+  <p class="line vis">${T('Line of visibility','可視線')}</p>
+  <p class="rl">${ROLE(4,'monitor','Platform','平台')}<small>${T('back stage','後台')}</small></p>${[1,2,3,4,5].map(()=>`<div class="cell back">${T('Back-stage process','後台處理')}</div>`).join('')}
+  <p class="line">${T('Line of internal interaction','內部互動線')}</p>
+  <p class="rl">${ROLE(2,'user-check','Supervisor','督導')}</p>${[1,2,3,4,5].map(()=>`<div class="cell">${T('Supervisor action','督導行動')}</div>`).join('')}
+ </div>
+ <div class="legend mt16"><span><i class="sw" style="background:var(--tint)"></i>${T('Front stage','前台')}</span><span><i class="sw" style="background:var(--surface-2)"></i>${T('Back stage','後台')}</span><span><i class="ln"></i>${T('Interaction line','互動線')}</span></div>
+</div>${NOTE()}`);
+
+add('N23a','Design framework','設計框架',()=>`
+${TB('Prototype design','原型設計','The framework links user stages to system functions','框架把使用者階段連結到系統功能')}
+<div class="body" style="display:grid;grid-template-columns:88px 1fr;gap:0">
+ <div class="col" style="gap:16px"><div style="flex:1;border-radius:var(--r-ml) 0 0 var(--r-ml);background:var(--dark);color:#fff;display:grid;place-items:center"><span style="writing-mode:vertical-rl;font:700 var(--h3)/1 var(--f-head)">${T('USER','使用者')}</span></div><div style="flex:1.4;border-radius:var(--r-ml) 0 0 var(--r-ml);background:var(--dark);color:#fff;display:grid;place-items:center"><span style="writing-mode:vertical-rl;font:700 var(--h3)/1 var(--f-head)">${T('SYSTEM','系統')}</span></div></div>
+ <div class="card" style="border-radius:0 var(--r-lg) var(--r-lg) 0;display:grid;grid-template-rows:1fr auto 1.4fr;gap:32px">
+  <div class="g3">${[['Explore','探索期'],['Advance','進階期'],['Lead','領導期']].map(([e,z])=>`<div><p class="h2">${T(e,z)}</p><p class="b muted mt16">${T('Needs at this stage','此階段的需求')}</p></div>`).join('')}</div>
+  <hr class="rule">
+  <div class="g3">${[['Segment','分群'],['Recommend','推薦'],['Update','更新']].map(([e,z])=>`<div><p class="h3">${T(e,z)}</p><p class="b muted mt16">${T('What the system does','系統做什麼')}</p><span class="chip outline sm mt24">${T('Output format','產出形式')}</span></div>`).join('')}</div>
+ </div>
+</div>${NOTE()}`);
+
+/* ---------------- F. evidence ---------------- */
+add('N42a','Outcomes and impact','成效與影響',()=>`
+${TB('Field validation','場域驗證','Over half of the services now run online','超過一半的服務已轉由線上完成')}
+<div class="body s57">
+ <div class="card col center tc gap24"><span class="chip">${T('Digital substitution rate','數位服務替代率')}</span><p class="hero"><span class="v">52.2<small style="font-size:.5em">%</small></span></p><p class="cap">${T('Share of registrations completed online','線上完成報名的比例')}</p><hr class="rule" style="width:100%"><div class="row gap56 center">${STAT('6,200','+','LINE followers','LINE 好友數')}${STAT('3,300','+','paid registrations','完成報名與付款')}</div></div>
+ <div class="col gap32" style="justify-content:center">
+  ${[[1,'users','Visitors','信眾','Registration time fell from days to minutes.','報名時間由數週縮短至數分鐘。'],[3,'hand-heart','Volunteers','志工','Fewer repeated entries and checks.','重複登錄與人工校對明顯降低。'],[2,'user-check','Staff','專職人員','Event preparation fell to a few hours.','活動整理時間縮短至數小時。']].map(([k,ic,e,z,de,dz])=>`<div class="row gap32" style="align-items:flex-start"><div style="width:220px">${ROLE(k,ic,e,z)}</div><p class="bl">${T(de,dz)}</p></div>`).join('<hr class="rule">')}
+  <p class="band soft">${T('Other units now ask to adopt it.','其他部門由下而上主動提出導入需求。')}</p>
+ </div>
+</div>${NOTE()}`);
+
+add('N24a','Iteration history','迭代歷程',()=>`
+${TB('Iteration','版本迭代','Five versions led from a tool to a field pilot','五個版本，從訪談工具走到場域試行')}
+<div class="body col gap56" style="justify-content:center">
+ <div class="tline">${['V1–V3','V4','V5','V5.1','V6'].map((v,i)=>`<div class="m ${i===4?'todo':''}"><span class="o"></span><p class="v">${v}</p><p class="b">${T(i===4?'In development':'What changed in this version','此版本的改變')}</p></div>`).join('')}</div>
+ <div class="g2">${[['building-2','Expert review','專業人員評測'],['flask-conical','Field pilot','場域試行']].map(([ic,e,z])=>`<div class="card md row gap32">${I(ic,64)}<div><p class="h3">${T(e,z)}</p><p class="b muted mt16">${T('Who evaluated and what they judged.','誰評測、評了什麼。')}</p></div></div>`).join('')}</div>
+</div>${NOTE()}`);
+
+add('N25a','Before and after','前後對照',()=>`
+${TB('Change','改變','The responsibility moved from memory to the system','責任從個人記憶移到系統')}
+<div class="body col gap40">
+ <div class="ba fill">
+  <div class="card"><span class="chip dark tag">${T('Before','原本')}</span><p class="h3">${T('How it worked before','原本的做法')}</p><ul class="b mt24" style="padding-left:1.1em;margin-bottom:0"><li>${T('First observation','第一項觀察')}</li><li>${T('Second observation','第二項觀察')}</li></ul></div>
+  <div class="arrow">${A(72)}</div>
+  <div class="card after"><span class="chip tag">${T('After','改為')}</span><p class="h3">${T('How it works now','現在的做法')}</p><ul class="b mt24" style="padding-left:1.1em;margin-bottom:0"><li>${T('First change','第一項改變')}</li><li>${T('Second change','第二項改變')}</li></ul></div>
+ </div>
+ <p class="band soft">${T('Consequence: what this change makes possible, and what it does not prove.','後果：這個改變帶來什麼，以及它還不能證明什麼。')}</p>
+</div>${NOTE()}`);
+
+add('N26a','Readiness status','就緒狀態',()=>`
+${TB('Status','進度','Say how far each part has really got','說清楚每件事實際做到哪一步')}
+<div class="body col gap16" style="justify-content:center">
+ ${[['circle-check','accent','Documented','已寫成文件'],['circle-check','accent','Implemented','已實作'],['circle-check','accent','Checked','已檢查'],['circle-dashed','','Independently verified','獨立驗證'],['circle-dashed','','Field tested','現場測過']].map(([ic,c,e,z],i)=>`<div class="card md row gap32" style="padding:20px 36px"><span style="color:${c?'var(--accent)':'var(--accent-soft)'}">${I(ic,40,'solid')}</span><p class="h3" style="width:420px">${T(e,z)}</p><p class="b ${c?'':'muted'}">${T(c?'Evidence that this step is done.':'Not yet: what is still missing.',c?'這一步完成的證據。':'尚未：還缺什麼。')}</p></div>`).join('')}
+</div>${NOTE()}`);
+
+add('N27a','Evidence coverage','證據覆蓋',()=>`
+${TB('Data sources','資料來源','Only one checkpoint is covered by all three sources','只有一個檢查點有三方資料對照')}
+<div class="body col gap32" style="justify-content:center">
+ <table class="tbl"><tr><th>${T('Checkpoint','檢查點')}</th><th>${T('Definition','定義')}</th><th class="c">${T('System log','系統紀錄')}</th><th class="c">${T('Interview','訪談')}</th><th class="c">${T('Expert','專家覆核')}</th></tr>
+ ${[[1,0,0],[1,1,1],[0,1,2]].map((r,i)=>`<tr><td class="k">C${i+1} ${T('Checkpoint','檢查點')}</td><td>${T('What it checks','檢查什麼')}</td>${r.map(v=>`<td class="c"><span class="dot ${v===1?'':v===2?'unk':'na'}"></span></td>`).join('')}</tr>`).join('')}</table>
+ <div class="legend"><span><i class="dot"></i>${T('Applicable','適用')}</span><span><i class="dot na"></i>${T('Not applicable','不適用')}</span><span><i class="dot unk"></i>${T('Unknown','未知')}</span></div>
+</div>${NOTE()}`);
+
+add('N28a','Conditions and branches','條件與分支',()=>`
+${TB('Conditions','條件','What the system does in each situation','系統在各種情況下怎麼處理')}
+<div class="body col center">
+ <table class="tbl"><tr><th style="width:520px">${T('Situation','情況')}</th><th>${T('Expected behaviour','預期行為')}</th></tr>
+ ${[0,0,0,1].map((s,i)=>`<tr class="${s?'sev':''}"><td class="k">${T(s?'Emergency':'Situation '+(i+1),s?'緊急狀況':'情況 '+(i+1))}</td><td>${T(s?'Stop advising; tell the worker to call for help.':'One line on the expected behaviour.',s?'停止給建議，提醒居服員立即求助。':'一行預期行為。')}</td></tr>`).join('')}</table>
+</div>${NOTE()}`);
+
+/* ---------------- G. discussion and close ---------------- */
+add('N30a','Results summary','成果總結與貢獻',()=>`
+${TB('Results','研究成果','Four results, from insight to a working prototype','四項成果，從洞察到可運作的原型')}
+<div class="body s75">
+ <div class="summary" style="padding-left:0;grid-template-columns:300px 1fr">
+  ${[['Insight','洞察'],['Strategy','策略'],['Framework','框架'],['Feasibility','可行性']].map(([e,z])=>`<p class="lab">${T(e,z)}</p><div><p class="h3">${T('The result in one line','一句話的成果')}</p><p class="b muted mt16">${T('Supporting detail.','支持細節。')}</p></div>`).join('')}
+ </div>
+ <div class="col center">${DESK('Product screenshot','產品畫面',560)}</div>
+</div>${NOTE()}`);
+
+add('N31a','Discussion','討論',()=>`
+${TB('Discussion','討論','Three data dimensions together explain the change','三種資料一起，才能解釋改變')}
+<div class="body"><div class="card disc" style="justify-content:center;gap:48px">
+ <div class="row center" style="gap:0">
+  <div class="circ" style="--d:260px;font-size:var(--h3)">${T('Self-report','自評')}</div><span style="width:120px;border-top:4px solid var(--accent)"></span>
+  <div class="circ solid" style="--d:300px;font-size:var(--h3)">${T('User needs','使用者需求')}</div><span style="width:120px;border-top:4px solid var(--accent)"></span>
+  <div class="circ" style="--d:260px;font-size:var(--h3)">${T('Behaviour','行為線索')}</div>
+ </div>
+ <p class="lead">${T('Future work should combine all three to follow change over time.','後續研究應整合三種資料，追蹤長期的變化。')}</p>
+</div></div>${NOTE()}`);
+
+add('N44a','Answering the opening challenges','回應開頭的挑戰',()=>`
+${TB('Discussion 5.1','討論 5.1','The four benefits answer the four challenges raised earlier','四項效益，逐一回應前面提出的四大挑戰')}
+<div class="body g2" style="grid-auto-rows:1fr">
+ ${[1,2,3,4].map(i=>`<div class="card md" style="display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:center">${PHOTO(200,'Evidence photo','證據照片')}<div class="col gap16"><span class="idtag soft" style="align-self:flex-start">${T('Challenge','挑戰')} ${i}</span><p class="h3" style="font-size:var(--body-l)">${T('How this study answers it','本研究如何回應')}</p><p class="b muted">${T('The evidence, in one line.','證據，一行。')}</p></div></div>`).join('')}
+</div>${NOTE()}`);
+
+add('N45a','Framework extension','框架擴充',()=>`
+${TB('Discussion 5.2','討論 5.2','The study adds Presence to the People, Process, Props framework','本研究在 People、Process、Props 之外，新增 Presence')}
+<div class="body s57">
+ <div class="col center"><div class="circ solid" style="--d:380px;font-size:var(--h2);flex-direction:column;gap:12px">Presence<span style="font:500 var(--caption)/1 var(--f-body)">${T('added by this study','本研究新增')}</span></div></div>
+ <div class="col gap40" style="justify-content:center">
+  ${['People','Process','Props'].map(n=>`<div class="row gap32"><div class="circ" style="--d:150px;font-size:var(--body-l)">${n}</div><div><p class="h3">${T('What this facet covers','這個構面涵蓋什麼')}</p><p class="b muted mt16">${T('Existing framework (author, year).','既有框架（作者，年份）。')}</p></div></div>`).join('')}
+ </div>
+</div>${NOTE()}`);
+
+add('N32a','Value and impact','價值與影響',()=>`
+${TB('Project value','專案價值','Four kinds of value for the field and for research','對場域與研究的四種價值')}
+<div class="body g2" style="grid-auto-rows:1fr">
+ ${[['clock','Social value','社會價值'],['refresh-cw','Iteration','迭代機制'],['message-circle','Low barrier','低門檻導入'],['flask-conical','Demonstration','示範價值']].map(([ic,e,z])=>`<div class="card md row gap32" style="align-items:flex-start">${I(ic,64)}<div><p class="cap acc" style="font-weight:600">${T(e,z)}</p><p class="h3 mt16">${T('The value in one line','一句話的價值')}</p><p class="b muted mt16">${T('Who benefits and how.','誰受益、如何受益。')}</p></div></div>`).join('')}
+</div>${NOTE()}`);
+
+add('N33a','Next steps and expansion','下一步與擴展',()=>`
+${TB('Next steps','下一步','Three steps, each with an owner and a checkpoint','三個步驟，各有負責人與檢查點')}
+<div class="body col gap56" style="justify-content:center">
+ <div class="rail">${['Pilot','Review','Expand'].map((e,i)=>`<div class="st ${i?'todo':''}"><span class="o">${i+1}</span><p class="h3" style="font-size:var(--body-l)">${T(e,['試行','檢討','擴大'][i])}</p>${ROLE([1,2,4][i],['user-round','user-check','building-2'][i],['Researcher','Supervisor','Partner'][i],['研究者','督導','合作單位'][i])}<p class="cap">${T('Checkpoint and date','檢查點與時間')}</p></div>`).join('')}</div>
+ <div class="g2">${[['Localise','在地化'],['Ecosystem','跨機構生態']].map(([e,z])=>`<div class="card md"><p class="h2">${T(e,z)}</p><p class="b mt16">${T('Where the work can extend, and what it depends on.','可以延伸到哪裡，以及依賴什麼條件。')}</p></div>`).join('')}</div>
+</div>${NOTE()}`);
+
+add('N34a','Thanks and call to action','感謝與行動呼籲',()=>`
+<div class="photo-slot" data-label="${T('PHOTO SLOT','照片位置')}"></div>
+<p class="big" style="position:relative;margin-top:120px;font:600 calc(var(--display) * 1.6)/1 var(--f-head);letter-spacing:var(--display-tr)">${T('Thank you','謝謝聆聽')}</p>
+<p style="position:relative;margin-top:48px;font:var(--subtitle-w) var(--subtitle)/var(--subtitle-lh) var(--f-head)">${T('One action you want from the audience','希望聽眾採取的一個行動')}</p>
+<div class="contact" style="position:absolute;right:var(--mx);bottom:var(--mb);display:flex;align-items:flex-end;gap:32px"><div class="qr">${T('QR slot','QR 位置')}</div><div><p style="font:700 var(--h3)/1 var(--f-head)">${T('CONTACT','聯絡方式')}</p><p class="cap" style="color:var(--on-field);margin-top:12px">name@example.edu</p></div></div>`,'field thanks');
+
+/* ---------------- H. workbench-only ---------------- */
+add('N35a','Options and decision request','選項比較與決策請求',()=>`
+${TB('Decision','決策','Approve option B: the smallest step that produces evidence','建議核准方案 B：能產生證據的最小一步')}
+<div class="body col gap40 vc">
+ <div class="g3">${['A','B','C'].map(o=>`<div class="card md col gap24 ${o==='B'?'focus':''}"><span class="idtag ${o==='B'?'':'soft'}" style="align-self:flex-start">${T('Option','方案')} ${o}</span><p class="h3">${T('Option name','方案名稱')}</p><p class="b">${T('Estimate: range and assumption','預估：範圍與假設')}</p><p class="b muted">${T('Depends on: what must be true','依賴：需要成立的條件')}</p></div>`).join('')}</div>
+ <p class="band">${T('Decision needed from: role · by: date','需要誰決定：角色・期限：日期')}</p>
+</div>${NOTE()}`);
+
+add('N36a','Workshop activity','工作坊活動卡',()=>`
+${TB('Activity','活動','Compare the two cases and submit one sheet per group','比較兩個案例，每組交一張比較表')}
+<div class="body col gap40">
+ <div class="g3">${[['clock','10','min','minutes','分鐘'],['users','4','','people per group','人一組'],['file-text','1','','sheet per group','張比較表']].map(([ic,v,u,e,z])=>`<div class="card md row gap32">${I(ic,64)}${STAT(v,u,e,z)}</div>`).join('')}</div>
+ <div class="g2 fill"><div class="card md"><p class="h2">${T('Steps','步驟')}</p><ol class="bl mt24" style="padding-left:1.2em;margin-bottom:0"><li>${T('Read both cases','閱讀兩個案例')}</li><li>${T('Fill in the sheet fields','填寫比較表欄位')}</li><li>${T('Agree on one conclusion','討論出一個結論')}</li></ol></div><div class="card md"><p class="h2">${T('Done when','完成條件')}</p><p class="bl mt24">${T('Every field on the sheet is filled.','比較表每一欄都填寫完成。')}</p></div></div>
+</div>${NOTE()}`);
+
+add('N37a','Question before answer','先問後答',()=>`
+<p class="kicker" style="margin-top:184px">${T('Think first','先想一想')}</p>
+<p class="big" style="margin-top:64px">${T('Which of the two cases shows the break more clearly?','兩個案例中，<br>哪一個更清楚呈現斷點？')}</p>
+<span class="chip outline" style="position:absolute;left:var(--mx);bottom:var(--mb);box-shadow:inset 0 0 0 2px #fff;color:#fff">${T('2 minutes · discuss in pairs','2 分鐘・兩人討論')}</span>`,'field statement');
+
+/* ---------------- render both languages ---------------- */
+const root=document.getElementById('root');
+for(const lang of ['en','zh-Hant']){
+  L=lang==='en'?'en':'zh';
+  const deck=document.createElement('div');deck.className='deck';deck.lang=lang;
+  deck.innerHTML=`<p class="deck-label">${lang==='en'?'English typesetting':'繁體中文排版'}</p>`+S.map(s=>`<p class="lib-label"><b>${s.id}</b> ${L==='en'?s.ne:s.nz}</p><section class="slide ${s.cls}" data-layout="${s.id}">${s.html()}</section>`).join('');
+  root.appendChild(deck);
+}
+</script>
+</body>
+</html>

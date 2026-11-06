@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 // Verify every consumer still matches deck-design-system/tokens.json. Exit 1 on drift.
 import fs from 'node:fs';
-import { CONSUMERS, STALE_COPIES, loadSource, studioView, same, parseVars, houseRegion, demoRootVars } from './tokens-lib.mjs';
+import { CONSUMERS, STALE_COPIES, loadSource, studioView, same, parseVars, houseRegion, demoRootVars, cssBlockVars } from './tokens-lib.mjs';
 
 const src = loadSource();
 const { research, demo } = src.themes;
 const errors = [], warns = [], oks = [];
 const hex = /^#[0-9A-F]{6}$/i;
 
-// 1. source sanity: semantic colors of research must be hex
-for (const [k, v] of Object.entries(research.colors)) if (!hex.test(v)) errors.push(`source research.colors.${k} is not #RRGGBB: ${v}`);
-for (const [k, v] of Object.entries(demo.colors)) if (!hex.test(v)) errors.push(`source demo.colors.${k} is not #RRGGBB: ${v}`);
+// 1. source sanity: semantic colors of every theme must be hex
+for (const [name, theme] of Object.entries(src.themes))
+  for (const [k, v] of Object.entries(theme.colors ?? {})) if (!hex.test(v)) errors.push(`source ${name}.colors.${k} is not #RRGGBB: ${v}`);
 
 // 2. presentation-studio tokens.json == research theme
 try {
@@ -39,7 +39,16 @@ try {
   else errors.push('demo deck-template.html :root differs from themes.demo.css (run sync-tokens.mjs --write)');
 } catch (e) { errors.push(`deck-template.html unreadable: ${e.message}`); }
 
-// 5. stale copies (warn only)
+// 5. iasdr bilingual template :root and zh-Hant blocks == iasdr.css / iasdr.cssZh
+if (src.themes.iasdr) try {
+  const html = fs.readFileSync(CONSUMERS.iasdrTemplate, 'utf8');
+  const root = cssBlockVars(html, ':root{'), zh = cssBlockVars(html, '[lang="zh-Hant"]{');
+  if (!root || !zh) errors.push('iasdr template is missing its :root or [lang="zh-Hant"] block');
+  else if (same(root, src.themes.iasdr.css) && same(zh, src.themes.iasdr.cssZh)) oks.push('deck-design-system templates/iasdr.css (en + zh-Hant)');
+  else errors.push('iasdr template CSS differs from themes.iasdr.css / cssZh');
+} catch (e) { errors.push(`iasdr template unreadable: ${e.message}`); }
+
+// 6. stale copies (warn only)
 for (const f of STALE_COPIES) {
   if (!fs.existsSync(f)) continue;
   try {

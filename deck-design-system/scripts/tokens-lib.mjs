@@ -12,6 +12,7 @@ export const CONSUMERS = {
   studioTokens: path.join(WORKSPACE, 'presentation-studio/skills/research-deck-production/assets/tokens.json'),
   houseStyle: path.join(WORKSPACE, 'shared-skills/audience-deck/references/house-style.md'),
   demoTemplate: path.join(WORKSPACE, 'shared-skills/demo-player-deck/assets/deck-template.html'),
+  iasdrTemplate: path.join(SKILL_ROOT, 'templates/iasdr.css'),
 };
 // Known stale copies: reported as warnings, never rewritten.
 export const STALE_COPIES = [
@@ -63,4 +64,11 @@ export function demoRootVars(html) {
   const vars = parseVars(m[1] + ';');
   delete vars['color-scheme'];
   return vars;
+}
+
+/** Parse a CSS block by its selector prefix, e.g. ':root{' or '[lang="zh-Hant"]{'. */
+export function cssBlockVars(html, opener) {
+  const i = html.indexOf(opener); if (i < 0) return null;
+  const j = html.indexOf('\n}', i); if (j < 0) return null;
+  return Object.fromEntries([...html.slice(i + opener.length, j).matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]));
 }

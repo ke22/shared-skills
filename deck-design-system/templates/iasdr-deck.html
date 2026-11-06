@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IASDR Bilingual Deck Template</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="iasdr.css">
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="ig" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="128"><stop offset="0" stop-color="#0C98FE"/><stop offset="1" stop-color="#2F82FC"/></linearGradient></defs></svg>
+
+<!-- ========================= ENGLISH ========================= -->
+<p class="deck-label">English typesetting</p>
+<div class="deck" lang="en">
+
+<section class="slide field cover" data-layout="L1-cover">
+  <div class="photo-slot" data-label="PHOTO SLOT · duotone 15%"></div>
+  <p class="logo" style="position:relative">Logo</p>
+  <div class="inst">Seal</div>
+  <h1 class="display" style="position:relative">A Bilingual Deck System Built on One Visual Standard</h1>
+  <p class="sub" style="position:relative">Typesetting rules for Traditional Chinese and English research presentations</p>
+  <div class="foot"><span class="date">Nov, 2026</span><span class="aff">National Taiwan University<br>of Science and Technology</span><span class="who"><span class="avatar">Photo</span>Presenter Name</span></div>
+</section>
+
+<section class="slide field statement" data-layout="L2-statement">
+  <div class="photo-slot" data-label="PHOTO SLOT"></div>
+  <p class="kicker" style="position:relative">How should we</p>
+  <p class="big" style="position:relative">Keep one visual standard while each language follows its own typesetting rules?</p>
+</section>
+
+<section class="slide" data-layout="L3-stacked-cards">
+  <header class="tb"><p class="eyebrow">Typesetting</p><h1 class="title">Two languages share one grid, not one type scale</h1></header>
+  <div class="body stack">
+    <div class="card hcard"><svg class="icon" viewBox="0 0 128 128"><rect x="20" y="20" width="88" height="88" rx="8"/><path d="M44 52h40M44 76h40M64 36v56"/></svg>
+      <p class="h3">Chinese glyphs fill the full em square</p><p class="cite">(Design note)</p>
+      <p class="bl measure">At the same pixel size, Chinese looks larger and denser than English, so Chinese titles are set about 10% smaller with more line height.</p></div>
+    <div class="card hcard"><svg class="icon" viewBox="0 0 128 128"><path d="M16 64h96M28 48l-12 16 12 16M100 48l12 16-12 16"/></svg>
+      <p class="h3">English titles tighten; Chinese titles never do</p><p class="cite">(Design note)</p>
+      <p class="bl measure">English display and title text use slight negative tracking. Chinese keeps zero tracking, because narrower spacing makes characters collide.</p></div>
+  </div>
+  <p class="src">Sample content: explains the template itself.</p>
+</section>
+
+<section class="slide" data-layout="L4-lead-columns">
+  <header class="tb"><p class="eyebrow">Line length</p><h1 class="title">Readable lines are counted differently in each language</h1></header>
+  <div class="body"><div class="card split">
+    <p class="lead">English body reads best at 60–75 characters per line; Chinese at 22–32 characters.</p>
+    <hr class="rule">
+    <div class="cols">
+      <div class="col"><svg class="icon" viewBox="0 0 128 128"><path d="M24 96L52 28l28 68M34 72h36M88 52h20M88 76h20"/></svg><div><p class="h3">English</p><p class="b">Count characters, including spaces. Break at words, and never hyphenate a title.</p></div></div>
+      <div class="col"><svg class="icon" viewBox="0 0 128 128"><rect x="24" y="24" width="80" height="80" rx="6"/><path d="M24 64h80M64 24v80"/></svg><div><p class="h3">Chinese</p><p class="b">Count full-width characters. Keep closing punctuation off the start of a line.</p></div></div>
+    </div>
+  </div></div>
+</section>
+
+<section class="slide" data-layout="L5-navigator-detail">
+  <header class="tb"><p class="eyebrow">Process</p><h1 class="title">Each stage page shows where the audience is</h1></header>
+  <div class="body nav-split">
+    <div class="funnel">
+      <div class="stage"><p class="n">Phase 1</p><p class="t">Understand the audience</p></div>
+      <div class="stage"><p class="n">Phase 2</p><p class="t">Settle the argument</p></div>
+      <div class="stage on"><p class="n">Phase 3</p><p class="t">Choose layouts</p></div>
+      <div class="stage"><p class="n">Phase 4</p><p class="t">Render and check</p></div>
+    </div>
+    <div class="card detail">
+      <p class="h2">Choose layouts</p>
+      <div class="kv"><span class="chip">Input</span><span class="v">Deck spec</span></div>
+      <div class="kv"><span class="chip">Rule</span><span class="v">Relationship before layout</span></div>
+      <div class="kv"><span class="chip">Output</span><span class="v">HTML and PPTX</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-layout="L6-three-columns">
+  <header class="tb"><p class="eyebrow">Type scale</p><h1 class="title">Three type levels carry most slides</h1></header>
+  <div class="body cols3">
+    <div class="card vcard"><p class="size">64</p><span class="chip dark">Title</span><p class="b">One assertion, one or two lines.</p></div>
+    <div class="card vcard"><p class="size">40</p><span class="chip dark">Card heading</span><p class="b">Names a single idea.</p></div>
+    <div class="card vcard"><p class="size">28</p><span class="chip dark">Body</span><p class="b">Supports it with evidence.</p></div>
+  </div>
+  <p class="src">Sizes in px on a 1920 × 1080 canvas.</p>
+</section>
+
+<section class="slide" data-layout="L7-summary">
+  <header class="tb"><p class="eyebrow">Summary</p><h1 class="title">Four rules keep the two versions consistent</h1></header>
+  <div class="body summary">
+    <p class="lab">Grid</p><div><p class="h3">Same grid, same margins</p><p class="bl">Both languages use the 12-column grid and 112 px side margins.</p></div>
+    <p class="lab">Scale</p><div><p class="h3">Chinese headings run smaller</p><p class="bl">Chinese titles are about 10% smaller than English titles.</p></div>
+    <p class="lab">Leading</p><div><p class="h3">Chinese needs more air</p><p class="bl">Body line height is 1.6 in Chinese and 1.3 in English.</p></div>
+    <p class="lab">Mixing</p><div><p class="h3">One rule for mixed text</p><p class="bl">Latin words and numbers use the English typeface.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-layout="L8-discussion">
+  <header class="tb"><p class="eyebrow">Discussion</p><h1 class="title">Mixed-script text needs one rule applied everywhere</h1></header>
+  <div class="body"><div class="card disc">
+    <svg viewBox="0 0 1100 520"><path class="edge" d="M478 204L372 318M622 204L728 318M410 396H690"/>
+      <circle class="node" cx="550" cy="116" r="112"/><text class="node-t" x="550" y="124" text-anchor="middle">Typeface</text>
+      <circle class="node" cx="290" cy="396" r="112"/><text class="node-t" x="300" y="414" text-anchor="middle">Spacing</text>
+      <circle class="node" cx="810" cy="396" r="112"/><text class="node-t" x="800" y="414" text-anchor="middle" style="font-size:30px">Punctuation</text>
+      <text class="node-t" x="550" y="320" text-anchor="middle" style="fill:var(--accent)">Mixed text</text></svg>
+    <p class="lead">Pick one rule for each of the three, then apply it on every slide.</p>
+  </div></div>
+</section>
+
+<section class="slide dark" data-layout="L9-dark-showcase">
+  <header class="tb"><p class="eyebrow">Prototype</p><h1 class="title">Dark slides are reserved for product screens</h1></header>
+  <div class="body show">
+    <div class="screen">Screenshot slot</div>
+    <div class="callouts">
+      <div class="callout"><p class="h3">Real screens only</p><p class="b">Use captured product screens, never redrawn mockups.</p></div>
+      <div class="callout"><p class="h3">Callouts name one step</p><p class="b">Each callout explains one visible part of the screen.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide field thanks" data-layout="L10-thanks">
+  <div class="photo-slot" data-label="PHOTO SLOT"></div>
+  <p class="big" style="position:relative">THANK<br>YOU</p>
+  <div class="contact"><div class="qr">QR slot</div><div><p style="font:700 var(--h3)/1 var(--f-head)">CONTACT</p><p class="cap" style="color:var(--on-field);margin-top:12px">name@example.edu</p></div></div>
+</section>
+</div>
+
+<!-- ========================= 繁體中文 ========================= -->
+<p class="deck-label">繁體中文排版</p>
+<div class="deck" lang="zh-Hant">
+
+<section class="slide field cover" data-layout="L1-cover">
+  <div class="photo-slot" data-label="照片位置 · 雙色調 15%"></div>
+  <p class="logo" style="position:relative">標誌</p>
+  <div class="inst">機構章</div>
+  <h1 class="display" style="position:relative">以單一視覺標準建立的<br>中英雙語簡報系統</h1>
+  <p class="sub" style="position:relative">繁體中文與英文研究簡報的排版規則</p>
+  <div class="foot"><span class="date">2026 年 11 月</span><span class="aff">國立臺灣科技大學<br>設計系</span><span class="who"><span class="avatar">照片</span>報告者姓名</span></div>
+</section>
+
+<section class="slide field statement" data-layout="L2-statement">
+  <div class="photo-slot" data-label="照片位置"></div>
+  <p class="kicker" style="position:relative">我們該如何</p>
+  <p class="big" style="position:relative">讓兩種語言共用一套視覺標準，<br>同時各自遵守自己的排版規則？</p>
+</section>
+
+<section class="slide" data-layout="L3-stacked-cards">
+  <header class="tb"><p class="eyebrow">排版原則<span class="en">Typesetting</span></p><h1 class="title">兩種語言共用格線，但不共用字級</h1></header>
+  <div class="body stack">
+    <div class="card hcard"><svg class="icon" viewBox="0 0 128 128"><rect x="20" y="20" width="88" height="88" rx="8"/><path d="M44 52h40M44 76h40M64 36v56"/></svg>
+      <p class="h3">中文字面占滿整個字身框</p><p class="cite">（設計說明）</p>
+      <p class="bl measure">同樣的像素大小，中文看起來比英文更大、更密，所以中文標題縮小約一成，並加大行距。</p></div>
+    <div class="card hcard"><svg class="icon" viewBox="0 0 128 128"><path d="M16 64h96M28 48l-12 16 12 16M100 48l12 16-12 16"/></svg>
+      <p class="h3">英文標題收緊字距，中文標題不收</p><p class="cite">（設計說明）</p>
+      <p class="bl measure">英文大標與標題使用略為負的字距；中文維持 0，字距收窄會讓字與字黏在一起。</p></div>
+  </div>
+  <p class="src">示意內容：說明本範本自身的規則。</p>
+</section>
+
+<section class="slide" data-layout="L4-lead-columns">
+  <header class="tb"><p class="eyebrow">行長<span class="en">Line length</span></p><h1 class="title">兩種語言的易讀行長要分開計算</h1></header>
+  <div class="body"><div class="card split">
+    <p class="lead">英文內文每行 60–75 個字元最好讀；中文每行 22–32 個字。</p>
+    <hr class="rule">
+    <div class="cols">
+      <div class="col"><svg class="icon" viewBox="0 0 128 128"><path d="M24 96L52 28l28 68M34 72h36M88 52h20M88 76h20"/></svg><div><p class="h3">英文</p><p class="b">以字元計，含空白。依單字斷行，標題不使用連字號。</p></div></div>
+      <div class="col"><svg class="icon" viewBox="0 0 128 128"><rect x="24" y="24" width="80" height="80" rx="6"/><path d="M24 64h80M64 24v80"/></svg><div><p class="h3">中文</p><p class="b">以全形字計。句末標點不放在行首。</p></div></div>
+    </div>
+  </div></div>
+</section>
+
+<section class="slide" data-layout="L5-navigator-detail">
+  <header class="tb"><p class="eyebrow">流程<span class="en">Process</span></p><h1 class="title">每個階段頁都標出聽眾現在在哪裡</h1></header>
+  <div class="body nav-split">
+    <div class="funnel">
+      <div class="stage"><p class="n">階段 1</p><p class="t">理解聽眾</p></div>
+      <div class="stage"><p class="n">階段 2</p><p class="t">確定論述</p></div>
+      <div class="stage on"><p class="n">階段 3</p><p class="t">選擇版型</p></div>
+      <div class="stage"><p class="n">階段 4</p><p class="t">渲染與檢查</p></div>
+    </div>
+    <div class="card detail">
+      <p class="h2">選擇版型</p>
+      <div class="kv"><span class="chip">輸入</span><span class="v">內容規格</span></div>
+      <div class="kv"><span class="chip">原則</span><span class="v">先看關係，再選版型</span></div>
+      <div class="kv"><span class="chip">產出</span><span class="v">HTML 與 PPTX</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-layout="L6-three-columns">
+  <header class="tb"><p class="eyebrow">字級<span class="en">Type scale</span></p><h1 class="title">三個字級撐起大部分頁面</h1></header>
+  <div class="body cols3">
+    <div class="card vcard"><p class="size">56</p><span class="chip dark">標題</span><p class="b">一個斷言，一到兩行。</p></div>
+    <div class="card vcard"><p class="size">36</p><span class="chip dark">卡片標題</span><p class="b">點出一個概念。</p></div>
+    <div class="card vcard"><p class="size">28</p><span class="chip dark">內文</span><p class="b">用證據支撐它。</p></div>
+  </div>
+  <p class="src">字級單位為 px，畫布 1920 × 1080。</p>
+</section>
+
+<section class="slide" data-layout="L7-summary">
+  <header class="tb"><p class="eyebrow">重點整理<span class="en">Summary</span></p><h1 class="title">四條規則讓中英兩版保持一致</h1></header>
+  <div class="body summary">
+    <p class="lab">格線</p><div><p class="h3">同一套格線與邊界</p><p class="bl">兩種語言都用 12 欄格線，左右邊界 112 px。</p></div>
+    <p class="lab">字級</p><div><p class="h3">中文標題較小</p><p class="bl">中文標題比英文標題小約一成。</p></div>
+    <p class="lab">行距</p><div><p class="h3">中文需要更多呼吸</p><p class="bl">內文行高中文 1.6，英文 1.3。</p></div>
+    <p class="lab">混排</p><div><p class="h3">混排只用一條規則</p><p class="bl">中文裡的英文與數字用英文字型，前後各留半形空白。</p></div>
+  </div>
+</section>
+
+<section class="slide" data-layout="L8-discussion">
+  <header class="tb"><p class="eyebrow">討論<span class="en">Discussion</span></p><h1 class="title">中英混排要用同一條規則貫徹全篇</h1></header>
+  <div class="body"><div class="card disc">
+    <svg viewBox="0 0 1100 520"><path class="edge" d="M478 204L372 318M622 204L728 318M410 396H690"/>
+      <circle class="node" cx="550" cy="116" r="112"/><text class="node-t" x="550" y="124" text-anchor="middle">字型</text>
+      <circle class="node" cx="290" cy="396" r="112"/><text class="node-t" x="300" y="414" text-anchor="middle">間距</text>
+      <circle class="node" cx="810" cy="396" r="112"/><text class="node-t" x="800" y="414" text-anchor="middle">標點</text>
+      <text class="node-t" x="550" y="320" text-anchor="middle" style="fill:var(--accent)">混排文字</text></svg>
+    <p class="lead">三件事各選一條規則，每一頁都照做。</p>
+  </div></div>
+</section>
+
+<section class="slide dark" data-layout="L9-dark-showcase">
+  <header class="tb"><p class="eyebrow">原型<span class="en" style="color:#BBB">Prototype</span></p><h1 class="title">深色頁只用於展示產品畫面</h1></header>
+  <div class="body show">
+    <div class="screen">截圖位置</div>
+    <div class="callouts">
+      <div class="callout"><p class="h3">只放真實畫面</p><p class="b">使用實際擷取的產品畫面，不重畫示意圖。</p></div>
+      <div class="callout"><p class="h3">一個說明框講一個步驟</p><p class="b">每個說明框只解釋畫面上看得到的一個部分。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide field thanks" data-layout="L10-thanks">
+  <div class="photo-slot" data-label="照片位置"></div>
+  <p class="big" style="position:relative">謝謝聆聽</p>
+  <div class="contact"><div class="qr">QR 位置</div><div><p style="font:700 var(--h3)/1 var(--f-head)">聯絡方式</p><p class="cap" style="color:var(--on-field);margin-top:12px">name@example.edu</p></div></div>
+</section>
+</div>
+</body>
+</html>
